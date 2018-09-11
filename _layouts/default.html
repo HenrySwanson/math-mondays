@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
+
+    {% include meta.html %}
+
+    <!-- TODO i don't understand these sections -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="{{ site.name }} - {{ site.description }}" href="{{ site.baseurl }}/feed.xml" />
+
+    {% if page.use_math %}
+      {% include mathjax.html %}
+    {% endif %}
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-name">{{ site.name }}</div>
+        <div class="navbar">
+          <a class="sub" href="{{ site.baseurl }}/">home</a>
+          &ndash;
+          <a class="sub" href="dual-spaces.html">link 1</a>
+          &ndash;
+          <a class="sub" href="tensors.html">link 2</a>
+        </div>
+      </header>
+    </div>
+
+    <div class="main container">
+      {{ content }}
+    </div>
+
+    <footer class="footer container">
+      {% include svg-icons.html %}
+    </footer>
+
+  </body>
+</html>
