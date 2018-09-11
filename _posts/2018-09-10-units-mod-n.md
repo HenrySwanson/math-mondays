@@ -83,15 +83,15 @@ As a generator, it has order $p^{k-1} (p-1)$ in $U_{p^k}$, and so its order in $
 Consider $g^{p^{k-2} (p-1)}$. By Euler's theorem, $g^{p^{k-2} (p-1)} \equiv 1 \pmod{p^{k-1}}$. But it can't also be $1$ mod $p^k$, because $g$ is a generator and has order $p^{k-1} (p-1)$ there. So $g^{p^{k-2} (p-1)} = 1 + a p^{k-1}$ where $p \nmid a$.
 
 Now we can expand $g^{p^{k-1} (p-1)}$ with this substitution and the binomial theorem:
-\\[ g^{p^{k-1} (p-1)} = (g^{p^{k-2} (p-1)})^p = (1 + a p^{k-1})^p = 1 + p a p^{k-1} + \sum_{i = 2}^p \binom{p}{i} (a p^{k-1})^i \\]
+\\[ g^{p^{k-1} (p-1)} = (g^{p^{k-2} (p-1)})^p = (1 + a p^{k-1})^p = 1 + p a p^{k-1} + \sum_{i = 2}^{p-1} \binom{p}{i} (a p^{k-1})^i + (a p^{k-1})^p \\]
 
-Each term in the big sum has $1 + (k-1)i \ge 1 + 2(k-1) = 2k-1$ factors of $p$ in it, and so it is killed mod $p^{k+1}$ (recall $k \ge 2$). So we are left with $g^{p^{k-1} (p-1)} \equiv 1 + a p^k \pmod{p^{k+1}}$, which shows that $g$ does not have order $p^{k-1} (p - 1)$. Thus, $g$ must be a generator mod $p^{k+1}$.
+Each term in the big sum has $1 + (k-1)i \ge 1 + 2(k-1) = 2k-1$ factors of $p$ in it, and so it is killed mod $p^{k+1}$ (recall $k \ge 2$). The last term has $(k-1)p \ge 3k-3$ factors of $p$, and so it likewise vanishes. So we are left with $g^{p^{k-1} (p-1)} \equiv 1 + a p^k \pmod{p^{k+1}}$, which shows that $g$ does not have order $p^{k-1} (p - 1)$. Thus, $g$ must be a generator mod $p^{k+1}$.
 
 By induction, this shows that $U_{p^k}$ is cyclic for all $k$.
 
 ---
 
-Note that the above argument *almost* works for $p = 2$; the base case goes through, and the inductive step only when $k = 2$. If there were generators for $U_8$, then they would lift to generators for $U_{16}$, and those to $U_{32}$, and so on. But we just barely fail the jump from $k = 2$ to $k = 3$ (verify this yourself!), and this is why $p = 2$ is different from its odd peers.
+Note that the above argument *almost* works for $p = 2$; the base case goes through, and the inductive step fails only when $k = 2$, on the last term. If there were generators for $U_8$, then they would lift to generators for $U_{16}$, and those to $U_{32}$, and so on. But we just barely fail the jump from $k = 2$ to $k = 3$ (verify this yourself!), and this is why $p = 2$ is different from its odd peers.
 
 Still though, we can modify our argument slightly to derive the structure of $U_{2^k}$ for $k \ge 3$. Since $U_8$ is non-cyclic, there is no chance for any higher $U_{2^k}$ to be cyclic. But we will show they're pretty darn close.
 
