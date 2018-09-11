@@ -1,4 +1,4 @@
-name: This Needs A Title
+name: Math Mondays
 
 baseurl: ""  # change if this becomes a project-page
 
@@ -14,7 +14,7 @@ strict_front_matter: true
 # TODO understand below this line
 
 # Short bio or description (displayed in the header)
-description: 
+description: It's a work in progress
 
 #
 # Flags below are optional
