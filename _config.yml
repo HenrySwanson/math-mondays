@@ -6,15 +6,10 @@ version: v3.6.2
 
 strict_front_matter: true
 
-
-
-
-
-
-# TODO understand below this line
-
 # Short bio or description (displayed in the header)
 description: It's a work in progress
+
+excerpt_separator: <!--more-->
 
 #
 # Flags below are optional
@@ -38,7 +33,7 @@ footer-links:
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url:
+url: henryswanson.github.io
 
 #
 # !! You don't need to change any of the configuration flags below !!

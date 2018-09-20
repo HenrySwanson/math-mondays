@@ -16,7 +16,7 @@ He only stops when he runs out of bread, or he creates $N$ new loaves (at which 
 
 The question is: what is the probability that he can successfully feed everyone?
 
-
+<!--more-->
 ---
 
 For small values of $N$, we can manage this by hand:

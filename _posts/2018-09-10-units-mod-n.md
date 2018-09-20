@@ -20,6 +20,7 @@ Examples:
 
 Of particular interest are cases where $U_n$ is cyclic.
 
+<!--more-->
 ---
 
 The most powerful tool we have at our disposal is the Chinese Remainder Theorem, which (as a special case) says that, for $m$, $n$ coprime, the rings $\ZZn{m} \times \ZZn{n}$ and $\ZZn{mn}$ are isomorphic. This induces an isomorphism on the units as well (can you see why?).
