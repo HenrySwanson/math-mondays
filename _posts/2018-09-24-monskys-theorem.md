@@ -6,6 +6,7 @@ use_math: true
 <div style="display: none;">
 $\newcommand{\RR}{\Bbb R}
 \newcommand{\QQ}{\Bbb Q}
+\newcommand{\ZZ}{\Bbb Z}
 \newcommand{\abs}[1]{|{#1}|_2}$
 </div>
 
@@ -21,11 +22,11 @@ It was first solved in 1970, by Paul Monsky. Despite the completely geometric na
 
 If you have a napkin on hand, it should be straightforward to come up with a solution for $n = 2$ and $4$. A little more thought should yield solutions for any even $n$. One such scheme is depicted below:
 
-TODO diagram
+![Equidissection when n is even](/assets/monsky-even.svg){:width="100%" height="auto"}
 
 But when $n$ is odd, you will have considerably more trouble. Monsky's theorem states that such a task is, in fact, impossible.
 
-Monsky's Theorem: The unit square cannot be dissected into an odd number of triangles of equal area. TODO theorem-box
+Monsky's Theorem: The unit square cannot be dissected into an odd number of triangles of equal area. <!--TODO theorem-box-->
 
 The result clearly extends to squares of any size, and in fact, arbitrary parallelograms.
 
@@ -51,21 +52,25 @@ A **Sperner coloring** is a coloring of the vertices of $T_i$, using three color
 
 For example, the following are Sperner colorings:
 
-TODO diagram
+![Sperner Coloring 1](/assets/monsky-sperner-1.svg){:width="30%" height="auto"}
+![Sperner Coloring 2](/assets/monsky-sperner-2.svg){:width="30%" height="auto"}
 
-But these are not:
+But these are not -- the first has lines of more than two colors, and the second has an even number of purple boundary segments:
 
-TODO diagram
+![Non-Sperner Coloring 1](/assets/monsky-sperner-3.svg){:width="30%" height="auto"}
+![Non-Sperner Coloring 2](/assets/monsky-sperner-4.svg){:width="30%" height="auto"}
 
 In this format, Sperner's lemma can be stated as:
 
-Sperner's Lemma: Given a Sperner coloring of $(P, T_i)$, there is at least one trichromatic triangle. TODO theorem-box
+Sperner's Lemma: Given a Sperner coloring of $(P, T_i)$, there is at least one trichromatic triangle. <!--TODO theorem-box-->
+
+Check the examples above, both Sperner colorings have trichromatic triangles. The first non-Sperner coloring has one, but the other does not.
 
 *Proof*: First, we establish a lemma: a triangle $T$ is trichromatic iff its faces have an odd number of purple segments.
 
-This is because, if we delete vertices lying on the faces of $T$, it won't change whether the number of purple segments is even or odd. And of course, since we're not touching the corners, it can't change whether $T$ is trichromatic or not. This relies on the first property of Sperner colorings: that no face can use all three colors. If the face contains green at all, then it can't ever have purple segments, as it must omit either red or blue vertices. The remaining cases are shown below:
+This is because, if we delete vertices lying on the faces of $T$, it won't change whether the number of purple segments is even or odd. And of course, since we're not touching the corners, it can't change whether $T$ is trichromatic or not. This relies on the first property of Sperner colorings: that no face can use all three colors. If the face contains green at all, then it can't ever have purple segments, as it must omit either red or blue vertices. This is also true if the face is monochromatic. The remaining cases are shown below:
 
-TODO diagram
+![Illustration of the cases](/assets/monsky-delete-purple.svg){:width="100%" height="auto"}
 
 Thus, we can reduce to the case where $T$ has no vertices lying on its faces. But from here, the casework is easy: a trichromatic triangle has exactly one purple segment, and otherwise, it has zero or two.
 
@@ -88,14 +93,14 @@ Before we describe our coloring, we'll take an unexpected detour into the land o
 A **valuation** is a way of defining the size of a number. More concretely, a valuation on a ring $R$ is a function $\| \cdot \|$ from $R$ to the non-negative reals such that:
 * $\|x\| = 0$ if and only if $x = 0$
 * $\|xy\| = \|x\| \cdot \|y\|$
-* $\|x + y\| \le \max(\|x\|, \|y\|)$, with equality iff $\|x\| \ne \|y\|$
+* $\|x + y\| \le \max(\|x\|, \|y\|)$
 
 The last of these is often called the **strong triangle inequality**, since it implies the normal triangle inequality, $\|x + y\| \le \|x\| + \|y\|$.
 
-Together, these imply a property you'd expect from an absolute value: $\| -x \|= \|x\|$. Assume otherwise, that there's some $x$ for which $\|x\| \ne \|-x\|$. Obviously $x \ne 0$, so $\|x\|$ and $\|-x\|$ are both strictly positive. But then the strong triangle inequality tells us that
-\\[ 0 = \| 0 \| = \| x + (-x) \| = \max(\|x\|, \|-x\|) \\]
-
-By contradiction, a valuation must always have $\|x\| = \|-x\|$ for all $x$.
+It is a good exercise to derive the following properties, the last of which is particularly important:
+* $\| 1 \| = 1$
+* $\| -x \| = \| x \|$
+* if $\|x\| > \|y\|$, then $\| x+y \| = \max(\|x\|, \|y\|) = \|x\|$
 
 ---
 
@@ -104,13 +109,13 @@ The particular valuation we're interested in the $2$-adic valuation, which measu
 Any rational number $q$ can be written in the form $q = 2^n \frac{a}{b}$, where $a$ and $b$ are odd. For nonzero $q$, there is a unique such $n$, and we define $\abs{q}$ to be $(1/2)^n$. If $q = 0$, we declare its valuation to be $0$. (This isn't unreasonable; zero is "infinitely divisible" by two, in some sense.) Some examples to prime your intuition:
 \\[ \abs{4} = 1/4 \qquad \abs{3} = 1 \qquad \abs{6} = 1/2 \qquad \abs{3/8} = 8 \qquad \abs{12/5} = 1/4 \\]
 
-We claim this is a valuation. The first property is trivial; we essentially declared it by fiat. The second property is also easy to verify. The third one is worth writing out though. Say $x = 2^n \frac{a}{b}$ and $y = 2^m \frac{c}{d}$, and without loss of generality let $n \ge m$. Then,
+We claim this is a valuation. The first property is trivial; we essentially declared it by fiat. Multiplicativity is also easy to verify. The strong triangle inequality is worth writing out though. Say $x = 2^n \frac{a}{b}$ and $y = 2^m \frac{c}{d}$, and without loss of generality let $n \ge m$. Then,
 \\[ x + y = 2^n \frac{a}{b} + 2^m \frac{c}{d} = 2^m \left( \frac{2^{n-m} a}{b} + \frac{c}{d} \right) = 2^m \frac{2^{n-m} ad + bc}{bd} \\]
 
 The valuation of this can be found from its parts. Note that $bd$ is an odd integer, and so has valuation $1$:
 \\[ \abs{x + y} = \abs{2^m} \frac{\abs{2^{n-m} ad + bc}}{\abs{bd}} = (1/2)^m \abs{2^{n-m} ad + bc} \\]
 
-Since $2^{n-m} ad + bc$ is an integer, it has valuation $\le 1$, so $\abs{x + y} \le (1/2)^m$. We get equality exactly when $\abs{2^{n-m} ad + bc} = 1$, i.e., when it is odd. But this occurs exactly when $n > m$. Since $(1/2)^m = \max(\|x\|, \|y\|)$, this demonstrates the third property.
+Since $2^{n-m} ad + bc$ is an integer, it has valuation $\le 1$, so $\abs{x + y} \le (1/2)^m$. Since $(1/2)^m = \max(\|x\|, \|y\|)$, this demonstrates the third property.
 
 So $\abs{\cdot}$ is an honest-to-god valuation on $\QQ$. By a theorem of Chevalley, we can extend this to a valuation on $\RR$. The details are not particularly important, and the curious reader can find them at the end of this post.
 
@@ -165,7 +170,20 @@ Let's revisit our second claim. Strong as it is, we can squeeze just a tiny bit 
 
 But because $n$ is odd, $\abs{1/n} = 1$. Contradiction.
 
-
 # Appendix
 
-Remember that theorem by Chevalley, TODO explain that.
+We promised a proof that a valuation on $\QQ$ can be extended to a valuation on $\RR$. More generally, for a field extension $L/K$, a valuation $\nu$ on $K$ can be extended to a valuation on $L$.
+
+Unfortunately, I've got diagrams to finish making before Monday ends, so I'll amend this later ;)
+
+<!--
+*Proof*: We'll extend one element at a time. If we have a valuation on $K$, we'll extend it to a valuation on $K(\alpha)$, where $\alpha \in L$.
+
+If $\alpha$ is transcendental over $K$, then we will write it as $t$ instead. First we extend the valuation to the polynomial ring $K[t]$, by defining $\nu(\sum_i a_i t^i)$ to be $\max(\nu(a_i))$. After that, we'll extend it to the fraction field $K(t)$ by defining $\nu(p/q) = \nu(p) / \nu(q)$, which will be a valuation for the same reason we could extend from $\ZZ$ to $\QQ$ earlier.
+
+To show that what we defined on $K[t]$ is a valuation, let $p = \sum_i a_i t^i$ and $q = \sum_i b_i t^i$. If $\nu(p) = \max(\nu(a_i))$ is zero, then all the $\nu(a_i)$ are zero. But then all the $a_i$ must have been zero, giving $p = 0$.
+
+Showing multiplicativity is an exercise to the reader cause I'm actually stuck on it lol TODO
+
+If $\alpha$ is algebraic, then let $f(x) = x^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0$ be the minimal polynomial of $\alpha$. We define
+-->
