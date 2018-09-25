@@ -106,16 +106,13 @@ It is a good exercise to derive the following properties, the last of which is p
 
 The particular valuation we're interested in the $2$-adic valuation, which measures how divisible by two a number is. The more $2$s fit into a number, the smaller its valuation is.
 
-Any rational number $q$ can be written in the form $q = 2^n \frac{a}{b}$, where $a$ and $b$ are odd. For nonzero $q$, there is a unique such $n$, and we define $\abs{q}$ to be $(1/2)^n$. If $q = 0$, we declare its valuation to be $0$. (This isn't unreasonable; zero is "infinitely divisible" by two, in some sense.) Some examples to prime your intuition:
+Any rational number $q$ can be written in the form $q = 2^n \frac{a}{b}$, where $a$ and $b$ are odd. For nonzero $q$, there is a unique such $n$, and we define $\abs{q}$ to be $1/2^n$. If $q = 0$, we declare its valuation to be $0$. (This isn't unreasonable; zero is "infinitely divisible" by two, in some sense.) Some examples to prime your intuition:
 \\[ \abs{4} = 1/4 \qquad \abs{3} = 1 \qquad \abs{6} = 1/2 \qquad \abs{3/8} = 8 \qquad \abs{12/5} = 1/4 \\]
 
-We claim this is a valuation. The first property is trivial; we essentially declared it by fiat. Multiplicativity is also easy to verify. The strong triangle inequality is worth writing out though. Say $x = 2^n \frac{a}{b}$ and $y = 2^m \frac{c}{d}$, and without loss of generality let $n \ge m$. Then,
+We claim this is a valuation. The first property is trivial; we essentially declared it by fiat. Multiplicativity is also easy to verify. The strong triangle inequality is worth writing out though. Let $x = 2^n \frac{a}{b}$ and $y = 2^m \frac{c}{d}$, and without loss of generality, $n \ge m$. Then we must show that $\abs{x+y}$ is less than the larger of $\abs{x}$, $\abs{y}$, i.e., that it's less than $1/2^m$.
 \\[ x + y = 2^n \frac{a}{b} + 2^m \frac{c}{d} = 2^m \left( \frac{2^{n-m} a}{b} + \frac{c}{d} \right) = 2^m \frac{2^{n-m} ad + bc}{bd} \\]
 
-The valuation of this can be found from its parts. Note that $bd$ is an odd integer, and so has valuation $1$:
-\\[ \abs{x + y} = \abs{2^m} \frac{\abs{2^{n-m} ad + bc}}{\abs{bd}} = (1/2)^m \abs{2^{n-m} ad + bc} \\]
-
-Since $2^{n-m} ad + bc$ is an integer, it has valuation $\le 1$, so $\abs{x + y} \le (1/2)^m$. Since $(1/2)^m = \max(\|x\|, \|y\|)$, this demonstrates the third property.
+Since $2^{n-m} ad + bc$ is an integer, and $bd$ is odd, $x + y$ has at least $m$ factors of $2$, and so $\abs{x + y} \le 1/2^m$, as desired.
 
 So $\abs{\cdot}$ is an honest-to-god valuation on $\QQ$. By a theorem of Chevalley, we can extend this to a valuation on $\RR$. The details are not particularly important, and the curious reader can find them at the end of this post.
 
