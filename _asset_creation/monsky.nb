@@ -10,16 +10,14 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     39261,        987]
-NotebookOptionsPosition[     38313,        950]
-NotebookOutlinePosition[     38655,        965]
-CellTagsIndexPosition[     38612,        962]
+NotebookDataLength[     41208,       1038]
+NotebookOptionsPosition[     40284,       1003]
+NotebookOutlinePosition[     40626,       1018]
+CellTagsIndexPosition[     40583,       1015]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
 Notebook[{
-
-Cell[CellGroupData[{
 Cell[BoxData[{
  RowBox[{
   RowBox[{"a", "=", 
@@ -148,40 +146,95 @@ Cell[BoxData[{
        RowBox[{"{", 
         RowBox[{
          RowBox[{
-          RowBox[{"2", "a"}], "+", "1"}], ",", "1"}], "}"}]}], "}"}], "]"}]}],
-    "\[IndentingNewLine]", "}"}], "]"}]}], "Input",
+          RowBox[{"2", "a"}], "+", "1"}], ",", "1"}], "}"}]}], "}"}], "]"}], 
+    ",", "\[IndentingNewLine]", "White", ",", "\[IndentingNewLine]", 
+    RowBox[{"Line", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0", ",", 
+         RowBox[{
+          RowBox[{"-", "1"}], "/", "4"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"2", "a"}], "+", "1"}], ",", 
+         RowBox[{
+          RowBox[{"-", "1"}], "/", "4"}]}], "}"}]}], "}"}], "]"}]}], 
+   "\[IndentingNewLine]", "}"}], "]"}]}], "Input",
  CellChangeTimes->{{3.7468141148123145`*^9, 3.746814150771371*^9}, {
   3.7468141817021403`*^9, 3.7468142121828837`*^9}, {3.746814263131798*^9, 
   3.7468143785143976`*^9}, {3.746814446656295*^9, 3.746814649170878*^9}, {
-  3.7468151284342904`*^9, 3.746815130058383*^9}}],
+  3.7468151284342904`*^9, 3.746815130058383*^9}, {3.746997072127486*^9, 
+  3.7469971140208817`*^9}, {3.746997173837303*^9, 3.7469972002558146`*^9}}],
 
 Cell[BoxData[
- GraphicsBox[
-  {GrayLevel[1], EdgeForm[Thickness[Large]], RectangleBox[{0, 0}], 
-   RectangleBox[NCache[{Rational[3, 2], 0}, {1.5, 0}]], RectangleBox[{3, 0}], 
-   {GrayLevel[0], Dashing[{Small, Small}], LineBox[{{0, 0}, {1, 1}}], 
-    LineBox[{{2, 0}, {2, 1}}], 
-    LineBox[NCache[{{Rational[3, 2], 0}, {2, 1}}, {{1.5, 0}, {2, 1}}]], 
-    LineBox[NCache[{{2, 0}, {Rational[5, 2], 1}}, {{2, 0}, {2.5, 1}}]], 
-    LineBox[NCache[{{Rational[10, 3], 0}, {Rational[10, 3], 1}}, {{
-       3.3333333333333335`, 0}, {3.3333333333333335`, 1}}]], 
-    LineBox[NCache[{{Rational[11, 3], 0}, {Rational[11, 3], 1}}, {{
-       3.6666666666666665`, 0}, {3.6666666666666665`, 1}}]], 
-    LineBox[NCache[{{3, 0}, {Rational[10, 3], 1}}, {{3, 0}, {
-       3.3333333333333335`, 1}}]], 
-    LineBox[NCache[{{Rational[10, 3], 0}, {Rational[11, 3], 1}}, {{
-       3.3333333333333335`, 0}, {3.6666666666666665`, 1}}]], 
-    LineBox[NCache[{{Rational[11, 3], 0}, {4, 1}}, {{
-       3.6666666666666665`, 0}, {4, 1}}]]}},
-  ImageSize->{638., Automatic}]], "Output",
- CellChangeTimes->{
-  3.746814151257399*^9, {3.746814270185201*^9, 3.7468143023360405`*^9}, {
-   3.746814335132916*^9, 3.746814378843416*^9}, {3.746814452195612*^9, 
-   3.7468144636362658`*^9}, {3.7468145018774533`*^9, 3.746814562269908*^9}, {
-   3.7468146147379084`*^9, 3.7468146494608946`*^9}, 3.7468151306014147`*^9, 
-   3.746819142278869*^9, {3.746819899242165*^9, 3.7468199252316513`*^9}, 
-   3.7468200787274313`*^9}]
-}, Open  ]],
+ GraphicsBox[{
+   {GrayLevel[1], EdgeForm[Thickness[Large]], RectangleBox[{0, 0}], 
+    RectangleBox[{
+     1.5000000000000002`, -4.440892098500626*^-16}, \
+{2.4999999999999996`, 0.9999999999999998}], RectangleBox[{3, 0}], 
+    {GrayLevel[0], Dashing[{Small, Small}], LineBox[{{0, 0}, {1, 1}}], 
+     LineBox[{{2, 0}, {2, 1}}], 
+     LineBox[NCache[{{Rational[3, 2], 0}, {2, 1}}, {{1.5, 0}, {2, 1}}]], 
+     LineBox[NCache[{{2, 0}, {Rational[5, 2], 1}}, {{2, 0}, {2.5, 1}}]], 
+     LineBox[NCache[{{Rational[10, 3], 0}, {Rational[10, 3], 1}}, {{
+        3.3333333333333335`, 0}, {3.3333333333333335`, 1}}]], 
+     LineBox[NCache[{{Rational[11, 3], 0}, {Rational[11, 3], 1}}, {{
+        3.6666666666666665`, 0}, {3.6666666666666665`, 1}}]], 
+     LineBox[NCache[{{3, 0}, {Rational[10, 3], 1}}, {{3, 0}, {
+        3.3333333333333335`, 1}}]], 
+     LineBox[NCache[{{Rational[10, 3], 0}, {Rational[11, 3], 1}}, {{
+        3.3333333333333335`, 0}, {3.6666666666666665`, 1}}]], 
+     LineBox[NCache[{{Rational[11, 3], 0}, {4, 1}}, {{
+        3.6666666666666665`, 0}, {4, 1}}]], 
+     {GrayLevel[1], 
+      LineBox[NCache[{{0, Rational[-1, 4]}, {4, Rational[-1, 4]}}, {{
+         0, -0.25}, {4, -0.25}}]]}}}, 
+   {EdgeForm[{GrayLevel[0.3333333333333333], Opacity[0.33]}], FaceForm[{
+    GrayLevel[0.49999237048905165`], Opacity[0.33]}], 
+    RectangleBox[{0.26282051282051266`, -0.09307692307692239}, \
+{0.26282051282051255`, -0.09948717948717833}]}, InsetBox[
+    StyleBox[
+     TagBox["",
+      "RawBoxes"],
+     Background->GrayLevel[
+      1.]], {0.21153846153846145`, -0.1635897435897431}, {Left, Baseline},
+    Alignment->{Left, Top}], {
+    StyleBox[InsetBox[
+      TagBox[
+       RowBox[{"n", "=", "2"}],
+       "RawBoxes"], {0.33017459223524004`, -0.17631748219618704`}, {
+      Left, Baseline},
+      Alignment->{Left, Top}],
+     FontSize->48,
+     FontOpacity->1.,
+     Background->RGBColor[1., 0.7648648648648648, 0.21621621621621623`, 0.]], 
+    StyleBox[InsetBox[
+      TagBox[
+       RowBox[{"n", "=", "4"}],
+       "RawBoxes"], {1.8363197794624395`, -0.17631748219618704`}, {
+      Left, Baseline},
+      Alignment->{Left, Top}],
+     FontSize->48,
+     FontOpacity->1.,
+     Background->RGBColor[1., 0.7648648648648648, 0.21621621621621623`, 0.]], 
+    StyleBox[InsetBox[
+      TagBox[
+       RowBox[{"n", "=", "6"}],
+       "RawBoxes"], {3.34964392373076, -0.17631748219618704`}, {
+      Left, Baseline},
+      Alignment->{Left, Top}],
+     FontSize->48,
+     FontOpacity->1.,
+     Background->RGBColor[1., 0.7648648648648648, 0.21621621621621623`, 0.]]}},
+  ImagePadding->{{0., 0.}, {0., 0.}},
+  ImageSize->{1451., Automatic},
+  PlotRange->{{-0.08333333333333334, 4.083333333333333}, {-0.33, 1.08}},
+  PlotRangePadding->Automatic]], "Input",
+ CellChangeTimes->{{3.7469972263473067`*^9, 3.7469973299122305`*^9}, {
+  3.7469973956419897`*^9, 3.7469973956539907`*^9}, {3.746997512224658*^9, 
+  3.746997512229658*^9}}],
 
 Cell[BoxData[{
  RowBox[{
@@ -948,8 +1001,8 @@ Cell[BoxData[
    3.7468200789434433`*^9}]
 }, Open  ]]
 },
-WindowSize->{767, 873},
-WindowMargins->{{Automatic, 568}, {44, Automatic}},
+WindowSize->{1920, 998},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
 FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
 StyleDefinitions->"Default.nb"
 ]
@@ -964,30 +1017,28 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
+Cell[558, 20, 4843, 148, 432, "Input"],
+Cell[5404, 170, 2940, 66, 506, InheritFromParent],
+Cell[8347, 238, 5346, 128, 832, "Input"],
 Cell[CellGroupData[{
-Cell[580, 22, 4301, 133, 392, "Input"],
-Cell[4884, 157, 1477, 25, 193, "Output"]
-}, Open  ]],
-Cell[6376, 185, 5346, 128, 832, "Input"],
-Cell[CellGroupData[{
-Cell[11747, 317, 2028, 61, 132, "Input"],
-Cell[13778, 380, 2973, 55, 374, "Output"]
+Cell[13718, 370, 2028, 61, 112, "Input"],
+Cell[15749, 433, 2973, 55, 374, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[16788, 440, 1984, 60, 132, "Input"],
-Cell[18775, 502, 2941, 55, 374, "Output"]
+Cell[18759, 493, 1984, 60, 132, "Input"],
+Cell[20746, 555, 2941, 55, 374, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[21753, 562, 1860, 58, 132, "Input"],
-Cell[23616, 622, 3054, 59, 374, "Output"]
+Cell[23724, 615, 1860, 58, 132, "Input"],
+Cell[25587, 675, 3054, 59, 374, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[26707, 686, 2076, 61, 132, "Input"],
-Cell[28786, 749, 3081, 57, 401, "Output"]
+Cell[28678, 739, 2076, 61, 132, "Input"],
+Cell[30757, 802, 3081, 57, 401, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[31904, 811, 2738, 68, 492, "Input"],
-Cell[34645, 881, 3652, 66, 150, "Output"]
+Cell[33875, 864, 2738, 68, 492, "Input"],
+Cell[36616, 934, 3652, 66, 150, "Output"]
 }, Open  ]]
 }
 ]

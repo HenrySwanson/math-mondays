@@ -6,8 +6,7 @@ use_math: true
 <div style="display: none;">
 $\newcommand{\RR}{\Bbb R}
 \newcommand{\QQ}{\Bbb Q}
-\newcommand{\ZZ}{\Bbb Z}
-\newcommand{\abs}[1]{|{#1}|_2}$
+\newcommand{\ZZ}{\Bbb Z}$
 </div>
 
 For which $n$ can you cut a square into $n$ triangles of equal area?
@@ -90,31 +89,39 @@ Since there are an odd number of purple segments on the boundary of $P$, there a
 
 Before we describe our coloring, we'll take an unexpected detour into the land of valuations.
 
-A **valuation** is a way of defining the size of a number. More concretely, a valuation on a ring $R$ is a function $\| \cdot \|$ from $R$ to the non-negative reals such that:
-* $\|x\| = 0$ if and only if $x = 0$
-* $\|xy\| = \|x\| \cdot \|y\|$
-* $\|x + y\| \le \max(\|x\|, \|y\|)$
+A **valuation** is a function that assigns a notion of "value" or "size" to numbers. There's multiple conventions, but we one we'll use is that a valuation on a ring $R$ is a function $\nu$ from $R$ to $\RR^+ \cup \{ \infty \}$ such that:
+* $\nu(x) = \infty$ if and only if $x = 0$
+* $\nu(xy) = \nu(x) + \nu(y)$
+* $\nu(x + y) \ge \min(\nu(x), \nu(y))$
 
-The last of these is often called the **strong triangle inequality**, since it implies the normal triangle inequality, $\|x + y\| \le \|x\| + \|y\|$.
+We'll assign the obvious rules to $\infty$, such as, $a + \infty = \infty$, and $\min(a, \infty) = a$.
 
-It is a good exercise to derive the following properties, the last of which is particularly important:
-* $\| 1 \| = 1$
-* $\| -x \| = \| x \|$
-* if $\|x\| > \|y\|$, then $\| x+y \| = \max(\|x\|, \|y\|) = \|x\|$
+One example of a valuation, that might help guide your intuition, is the "multiplicity of a root". For some polynomial $p(x) = a_0 + a_1 x + \cdots + a_n x^n$, let $\nu(p)$ be the index of the first non-zero coefficient. For example, $\nu(3x^4 - x^5 + 7x^8) = 4$, and $\nu(1 + x - x^2) = 0$. If all coefficients are zero, define $\nu(p) = \infty$. In essence, $\nu(p)$ is "how many" roots $p$ has at $0$; e.g., is $0$ a single root? A double root? Not a root at all?
+
+Is this a valuation?
+
+Well we satisfied the first property by fiat. The second one is pretty easy to see; when you multiply two polynomials, the lowest term has the sum of the degrees. And the third one ain't too bad either. If both $p$ and $q$ have zero coefficients on $x^k$, $p+q$ certainly will too. The converse isn't true though, it's possible that the low-degree terms in $p$ and $q$ could cancel, and so $\nu(p+q)$ could be larger than either $\nu(p)$ or $\nu(q)$. This is why we have an inequality, instead of an equality.
 
 ---
 
-The particular valuation we're interested in the $2$-adic valuation, which measures how divisible by two a number is. The more $2$s fit into a number, the smaller its valuation is.
+The particular valuation we're interested in the $2$-adic valuation, which measures how divisible by two a number is. The more factors of $2$ a number has, the bigger its valuation is.
 
-Any rational number $q$ can be written in the form $q = 2^n \frac{a}{b}$, where $a$ and $b$ are odd. For nonzero $q$, there is a unique such $n$, and we define $\abs{q}$ to be $1/2^n$. If $q = 0$, we declare its valuation to be $0$. (This isn't unreasonable; zero is "infinitely divisible" by two, in some sense.) Some examples to prime your intuition:
-\\[ \abs{4} = 1/4 \qquad \abs{3} = 1 \qquad \abs{6} = 1/2 \qquad \abs{3/8} = 8 \qquad \abs{12/5} = 1/4 \\]
+For example, $\nu_2(2) = \nu_2(6) = \nu_2(-22) = 1$, since they all have a single factor of $2$. Odd integers have $\nu_2$ of $0$, since they have no factors of $2$ at all. And because $0$ can be factored as $2^k \cdot 0$ for any $k$, no matter how big, it makes sense to say $\nu_2(0) = \infty$.
 
-We claim this is a valuation. The first property is trivial; we essentially declared it by fiat. Multiplicativity is also easy to verify. The strong triangle inequality is worth writing out though. Let $x = 2^n \frac{a}{b}$ and $y = 2^m \frac{c}{d}$, and without loss of generality, $n \ge m$. Then we must show that $\abs{x+y}$ is less than the larger of $\abs{x}$, $\abs{y}$, i.e., that it's less than $1/2^m$.
+To extend this to rational numbers, we consider $2$s in the denominator to count as negative. Consider the following examples until they make sense:
+\\[ \nu_2(1/4) = -2 \qquad \nu_2(1/3) = 0 \qquad \nu_2(2/3) = 1 \qquad \nu(3/8) = -3 \qquad \nu_2(12/5) = 2 \\]
+
+We claim this is also a valuation.
+
+Again, we get the first property simply because we defined it to be so. The second one is also easy to verify, but the third one needs some work.
+
+Let $x$ and $y$ be rational numbers. By pulling out all the factors of $2$ from numerator and denominator, they can be written as $x = 2^n \frac{a}{b}$ and $y = 2^m \frac{c}{d}$, where $a$, $b$, $c$, and $d$ are odd. (Note that any of these, including $n$ and $m$, may be negative.) Without loss of generality, let $n \ge m$. We'd like to show that $\nu_2(x + y)$ is at least $\min(\nu_2(x), \nu_2(y)) = m$.
 \\[ x + y = 2^n \frac{a}{b} + 2^m \frac{c}{d} = 2^m \left( \frac{2^{n-m} a}{b} + \frac{c}{d} \right) = 2^m \frac{2^{n-m} ad + bc}{bd} \\]
 
-Since $2^{n-m} ad + bc$ is an integer, and $bd$ is odd, $x + y$ has at least $m$ factors of $2$, and so $\abs{x + y} \le 1/2^m$, as desired.
+Since $2^{n-m} ad + bc$ is an integer, and $bd$ is odd, $x + y$ has at least $m$ factors of $2$, and so $\nu_2(x + y) \ge m$, as desired. Notably, if $n$ is strictly larger than $m$, i.e., $\nu(x) > \nu(y)$, then $2^{n-m} ad + bc$ is odd, and we can guarantee that $\nu_2(x+y)$ is exactly $\nu(y)$. This is actually a property true of all valuations, so we'll state it again:
+* $\nu(x + y) \ge \min(\nu(x), \nu(y))$, **and if $\nu(x) \ne \nu(y)$ this is an equality**
 
-So $\abs{\cdot}$ is an honest-to-god valuation on $\QQ$. By a theorem of Chevalley, we can extend this to a valuation on $\RR$. The details are not particularly important, and the curious reader can find them at the end of this post.
+So $\nu_2$ is an honest-to-god valuation on $\QQ$. By a theorem of Chevalley, we can extend this to a valuation on $\RR$. The details are not particularly important, and the curious reader can find them at the end of this post.
 
 
 # Coloring The Plane
@@ -122,15 +129,15 @@ So $\abs{\cdot}$ is an honest-to-god valuation on $\QQ$. By a theorem of Chevall
 Our coloring of the dissection will use the (extended) $2$-adic valuation. Our choice of coloring is peculiar enough that it deserves its own section though.
 
 Given a point $(x,y)$ in the plane, we'll color it:
-* red if $\abs{x} < 1$ and $\abs{y} < 1$
-* green if $\abs{x} \ge 1$ and $\abs{x} \ge \abs{y}$
-* blue if $\abs{y} \ge 1$ and $\abs{y} > \abs{x}$
+* red if $\nu_2(x) > 0$ and $\nu_2(y) > 0$
+* green if $\nu_2(x) \le 0$ and $\nu_2(x) \le \nu_2(y)$
+* blue if $\nu_2(y) \le 0$ and $\nu_2(y) < \nu_2(x)$
 
 This coloring has some interesting properties, which we'll establish quickly.
 
 Claim: if $P$ is a red point, then $Q$ and $Q-P$ have the same color.
 
-*Proof*: This is a good exercise for the reader. Make use of the fact that, if $\abs{a} < 1$ and $\abs{x} \ge 1$, then $\abs{x - a} \le \max(\abs{x}, \abs{-a}) = \abs{x}$. On the other hand, if $\abs{x} < 1$, then $\abs{x - a} < 1$ as well.
+*Proof*: This is a good exercise for the reader. Make use of the fact that, if $\nu_2(a) > 0$ and $\nu_2(x) \le 0$, then $\nu_2(x - a) \ge \min(\nu_2(x), \nu_2(a)) = \nu_2(x)$. On the other hand, if $\nu_2(x) > 0$, then $\nu_2(x - a) > 0$ as well.
 
 Claim: If we forget the dissection for a second, and pick *any* three collinear points in the plane, they cannot all be different colors.
 
@@ -147,7 +154,7 @@ x_g y_b - x_b y_g
 
 To show that $\det M$ is non-zero, we can show that its $2$-adic valuation is nonzero. This might seem harder, but since the only thing we know about these points is their valuations, it's the only shot we have!
 
-By the previous claim, $P_g - P_r$ is green, and $P_b - P_r$ is blue. From the coloring rules, we then know that $\abs{y_b} > \abs{x_b}$ and $\abs{x_g} \ge \abs{y_g}$. So $\abs{x_g y_b}$ is strictly greater than $\abs{x_b y_g}$. The strong triangle inequality then tells us that $\abs{\det M} = \abs{x_g y_b} \ge 1$. Therefore, $\det M \ne 0$, and so $P_r$, $P_g$, and $P_b$ cannot be collinear.
+By the previous claim, $P_g - P_r$ is green, and $P_b - P_r$ is blue. From the coloring rules, we then know that $\nu_2(y_b) < \nu_2(x_b)$ and $\nu_2(x_g) \le \nu_2(y_g)$. So $\nu_2(x_g y_b)$ is strictly less than $\nu_2(x_b y_g)$. The third property then tells us that $\nu_2(\det M) = \nu_2(x_g y_b) \le 0$. Therefore, $\det M \ne 0$, and so $P_r$, $P_g$, and $P_b$ cannot be collinear.
 
 
 # Putting it Together
@@ -163,9 +170,10 @@ The only segments that could be purple lie between $(0, 0)$ and $(0, 1)$. And be
 
 Therefore, this coloring is a Sperner coloring, and so somewhere, there is a trichromatic triangle. To finish the proof, we must show that this triangle can't have area $1/n$.
 
-Let's revisit our second claim. Strong as it is, we can squeeze just a tiny bit more out of it. Using the same notation as before, basic coordinate geometry tells us that the area of the triangle formed by $P_r$, $P_g$, and $P_b$ is $K = \frac{1}{2} \det M$. By showing that $\det M \ne 0$, we showed that this triangle was not degenerate, i.e., the three points were not collinear. But we actually showed a little more than that; we showed that $\abs{\det M} \ge 1$. Therefore, if a trichromatic triangle has area $K$, then $\abs{K} = \abs{1/2} \abs{\det M} \ge 2$.
+Let's revisit our second claim. Strong as it is, we can squeeze just a tiny bit more out of it. Using the same notation as before, basic coordinate geometry tells us that the area of the triangle formed by $P_r$, $P_g$, and $P_b$ is $K = \frac{1}{2} \det M$. By showing that $\det M \ne 0$, we showed that this triangle was not degenerate, i.e., the three points were not collinear. But we actually showed a little more than that; we showed that $\nu_2(\det M) \le 0$. Therefore, if a trichromatic triangle has area $K$, then $\nu_2(K) = \nu_2(\frac{1}{2} \det M) \le -1$.
 
-But because $n$ is odd, $\abs{1/n} = 1$. Contradiction.
+But because $n$ is odd, $\nu_2(1/n) = 0$. Contradiction.
+
 
 # Appendix
 
