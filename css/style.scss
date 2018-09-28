@@ -8,9 +8,13 @@
 //
 
 body {
-  background-color: $white;
+  background-color: $background;
   font-family: Georgia, serif;
   font-size: 12pt;
+}
+
+h1 {
+  text-align: center;
 }
 
 header {
@@ -50,6 +54,7 @@ footer {
 
 .theorem-box {
   background-color: $theorem-box;
+  margin: 0 20px;
   padding: 0 10px 5px;
   border-radius: 10px;
   border: 1px solid $theorem-title;
@@ -58,7 +63,8 @@ footer {
 .theorem-box .theorem-title {
   background-color: $theorem-title;
   font-weight: bold;
-  margin: 0 -10px;
+  font-size: 13pt;
+  margin: 0 -10px 5px;
   padding: 5px 10px;
   border-radius: 10px 10px 0 0;
 }
