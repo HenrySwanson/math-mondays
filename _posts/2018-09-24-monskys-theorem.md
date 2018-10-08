@@ -74,11 +74,11 @@ Check the examples above, both Sperner colorings have trichromatic triangles. Th
 
 *Proof*: First, we establish a lemma: a triangle $T$ is trichromatic iff its faces have an odd number of purple segments.
 
-This is because, if we delete vertices lying on the faces of $T$, it won't change whether the number of purple segments is even or odd. And of course, since we're not touching the corners, it can't change whether $T$ is trichromatic or not. This relies on the first property of Sperner colorings: that no face can use all three colors. If the face contains green at all, then it can't ever have purple segments, as it must omit either red or blue vertices. This is also true if the face is monochromatic. The remaining cases are shown below:
+This is easy to see if there are no vertices lying on the faces of $T$: a trichromatic triangle has exactly one purple segment, and otherwise, it has zero or two.
+
+We can reduce to this case by deleting vertices that lie on the faces of $T$. We claim that this won't change whether the number of purple segments is even or odd. And of course, since we aren't touching the corners, it can't change whether or not the triangle is trichromatic. Consider some vertex on a face of $T$. If that face contains green at all, then by the first property of Sperner colorings, it can't ever have purple segments, as it must omit either red or blue vertices. Monochromatic faces also present no concern, because they also cannot have purple segments. The remaining cases are shown below:
 
 ![Illustration of the cases](/assets/monsky-delete-purple.svg){:width="100%" height="auto"}
-
-Thus, we can reduce to the case where $T$ has no vertices lying on its faces. But from here, the casework is easy: a trichromatic triangle has exactly one purple segment, and otherwise, it has zero or two.
 
 ---
 
