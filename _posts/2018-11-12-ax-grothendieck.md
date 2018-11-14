@@ -101,7 +101,7 @@ This proof is magical in two ways.
 
 One is that, despite there being no homomorphisms between $\FFx{p}$ and $\CC$, we were able to somehow transport a claim between the two. This was possible not by looking at the structure of $\CC$ and $\FFx{p}$ themselves, but by using the structure of their axiomatizations. The reduction to only finitely many axioms is an example of the [compactness theorem](https://en.wikipedia.org/wiki/Compactness_theorem), a very useful logical principle.
 
-The other is that we never actually made use of $\phi_d$! All we knew is that it was a first-order sentence, and that it was false in some model of $\FFx{p}$ for each $p$. Generalizing this argument, we get the following principle:
+The other is that we never actually made use of $\phi_d$! All we knew is that it was a first-order sentence, and that it was true in some model of $\FFx{p}$ for each $p$. Generalizing this argument, we get the following principle:
 
 <div class="theorem-box">
 <div class="theorem-title">Robinson's Principle</div>
