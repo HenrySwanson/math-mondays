@@ -51,7 +51,7 @@ Now for the exciting stuff.
 
 We have to figure out a way of taking proofs over $\CC$, and translating them into proofs over $\FFx{p}$. This is daunting, but it's made easier by the fact that they are both algebraically closed fields, and so they have a shared pool of axioms. Of course, they are very different in other ways: $\CC$ is uncountable while $\FFx{p}$ is countable, they have different characteristic, etc. We have to show that our proof manipulations aren't affected by these differences.
 
-Since this isn't an intro to model theory post, I've pushed all the definitions to the bottom of the post, and I might someday extract them into their own little deal. Scroll down there if you see a term you don't recognize.<!--TODO-->
+Since this isn't an intro to model theory post, I won't be defining the basic terms. If these look unfamiliar, check out [this post](https://www.lesswrong.com/posts/F6BrJFkqEhh22rFsZ/very-basic-model-theory).
 
 Let $\ACF$ be the theory of algebraically closed fields. We claim that it's first-order, and it's _almost_ complete.
 
@@ -156,14 +156,4 @@ We'd like to apply the Łoś–Vaught test to $\ACF_p$ and $\ACF_0$. Since all a
 
 *Proof*: Let $r$ be a prime or $0$, and $\kappa$ be an uncountable cardinal. Let $K$ be an algebraically closed field of size $\kappa$ with characteristic $r$, and $B$ be a transcendence basis of $K$ over its prime subfield ($\FF_p$ or $\QQ$). [A cardinality argument](https://proofwiki.org/wiki/Field_of_Uncountable_Cardinality_K_has_Transcendence_Degree_K) shows that $\\|B\\| = \kappa$ (this is where the uncountability of $\kappa$ is used; for example, $\overline{\QQ}(t_1, \ldots, t_n)$ has transcendence degree $n$, but cardinality $\aleph_0$). So, if $K'$ is another such field, and we pick a transcendence basis $B'$, it will also have cardinality $\kappa$. The bijection between $B$ and $B'$ induces an isomorphism between $k(B)$ and $k(B')$. But since $K$ and $K'$ are algebraically closed, and algebraic over $k(B) \cong k(B')$, they are algebraic closures of the same field, and are thus isomorphic!
 
-This proves that $\ACF_p$ and $\ACF_0$ are $\kappa$-categorical for uncountable cardinals $\kappa$. Therefore, we can apply the Łoś–Vaught test, and conclude they are complete.
-
----
-
-TODO model theory definitions. Will flesh out later, but TL;DR:
-
-A theory is a set of axioms, and all the consequences you can derive purely by syntax. I don't care about true or false, only if statements are provable or unprovable.
-
-A model is a thing. It's a set and it's got operations, and you can talk about whether things are true or false.
-
-At the intersection of the two: a model $M$ *satisfies* a theory $\cT$ if you can assign a meaning to the symbols in $\cT$ such that every sentence in $\cT$ is true in $M$. For example, $\CC$ satisfies the theory of fields (which is essentially just "the field axioms, written out one at a time").
+This proves that $\ACF_p$ and $\ACF_0$ are $\kappa$-categorical for uncountable cardinals $\kappa$. In particular, they're $\kappa$-categorical for at least one infinite cardinal, and so via the Łoś–Vaught test, we conclude they are complete.
