@@ -54,13 +54,19 @@ A **Sperner coloring** is a coloring of the vertices of $T_i$, using three color
 
 For example, the following are Sperner colorings:
 
-![Sperner Coloring 1](/assets/monsky-sperner-1.svg){:width="30%" height="auto"}
-![Sperner Coloring 2](/assets/monsky-sperner-2.svg){:width="30%" height="auto"}
+<div class="image-container" markdown="1">
+![Sperner Coloring 1](/assets/monsky-sperner-1.svg){:height="200px"}
+
+![Sperner Coloring 2](/assets/monsky-sperner-2.svg){:height="200px"}
+</div>
 
 But these are not -- the first has lines of more than two colors, and the second has an even number of purple boundary segments:
 
-![Non-Sperner Coloring 1](/assets/monsky-sperner-3.svg){:width="30%" height="auto"}
-![Non-Sperner Coloring 2](/assets/monsky-sperner-4.svg){:width="30%" height="auto"}
+<div class="image-container" markdown="1">
+![Non-Sperner Coloring 1](/assets/monsky-sperner-3.svg){:height="200px"}
+
+![Non-Sperner Coloring 2](/assets/monsky-sperner-4.svg){:height="200px"}
+</div>
 
 In this format, Sperner's lemma can be stated as:
 

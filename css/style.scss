@@ -2,6 +2,8 @@
 ---
 
 @import "variables";
+@import "svg-icons";
+
 
 //
 // GENERAL
@@ -13,7 +15,7 @@ body {
   font-size: 12pt;
 }
 
-h1 {
+h1, h2, h3 {
   text-align: center;
 }
 
@@ -48,6 +50,26 @@ footer {
   text-align: right;
 }
 
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+//
+// IMAGES
+//
+
+.image-container {
+    display: flex;
+    justify-content:space-evenly;
+}
+
 //
 // MATH
 //
@@ -68,5 +90,3 @@ footer {
   padding: 5px 10px;
   border-radius: 10px 10px 0 0;
 }
-
-@import "svg-icons";
