@@ -1,5 +1,6 @@
 "use strict";
 
+// Constants
 var NODE_DIAM = 0.5;
 var NODE_SPACING = 1;
 var LEVEL_SPACING = 2;
@@ -9,13 +10,21 @@ var V_PADDING = 0.7;
 var H_PADDING = 0.5;
 
 var DIE_DURATION = 500;
-var MOVE_DURATION = 1000;
+var MOVE_DURATION = 700;
 var CLONE_DURATION = 200;
 
-var CLONE_COLOR = "#422aa8"
+var CLONE_COLOR = "#422aa8";
 
-// TODO scale viewbox with hydra
-var drawing = SVG("test-image").viewbox(-H_PADDING-NODE_DIAM/2, -V_PADDING-NODE_DIAM/2, 10, 100);
+// DOM elements
+var resetButton = document.getElementById("reset-button");
+var clickCounter = document.getElementById("click-counter");
+var drawing = SVG("hydra-interactive");  // really an svg.js element
+
+// Keeps track of number of clicks
+var numClicks = 0;
+function updateCounter() {
+	clickCounter.textContent = "Clicks: " + numClicks;
+}
 
 class HydraNode {
 	constructor(parent=null) {
@@ -228,6 +237,13 @@ function computeHydraLayout(hydra) {
 	}
 }
 
+function getHydraWidth(hydra) {
+	// Leftmost node is zero, so we just get the largest x, which isn't
+	// necessarily the rightmost child
+	var xValues = hydra.children.map(child => getHydraWidth(child));
+	return xValues.reduce((a, b) => Math.max(a, b), hydra.targetX);
+}
+
 function moveHydraHead(node, head) {
 	// Can be applied to the SVG node or its animation
 	return head.center(node.targetY, node.targetX);
@@ -260,6 +276,19 @@ function drawHydraImmediately(node) {
 	}
 }
 
+function resizeViewbox(drawing, hydra) {
+	var treeWidth = getHydraWidth(hydra);
+	var boxWidth = 3 * LEVEL_SPACING;
+	var boxHeight = treeWidth * NODE_SPACING;
+
+	drawing.viewbox(
+		-(H_PADDING + NODE_DIAM/2),
+		-(V_PADDING + NODE_DIAM/2),
+		boxWidth +  2*H_PADDING + NODE_DIAM,
+		boxHeight + 2*V_PADDING + NODE_DIAM
+	)
+}
+
 function setListeners(node, hydra) {
 
 	// Apply recursively to children
@@ -269,13 +298,17 @@ function setListeners(node, hydra) {
 
 	// Data passed between callbacks
 	var svgGroup;
+	var wasClicked = false;
 
 	// We've got a sequence of animation callbacks
-	// TODO disable clicks while animation is happening!
 	function cut() {
-		if (node.isRoot() || !node.isLeaf()) {
-			return;
-		}
+		// Return immediately if we should ignore the click
+		if (node.isRoot() || !node.isLeaf() || wasClicked) {return;}
+
+		// Increment counter
+		wasClicked = true;
+		numClicks += 1;
+		updateCounter();
 
 		// Opacity has to be controlled as a group or else the overlap causes
 		// problems. But make sure to kill the group later.
@@ -289,28 +322,48 @@ function setListeners(node, hydra) {
 
 		// Our parent should clone itself, unless it's root
 		if (!node.parent.isRoot()) {
-			var copy = node.parent.clone();
-			setListeners(copy, hydra);  // important lol
+			var copy1 = node.parent.clone();
+			var copy2 = node.parent.clone();
+
+			setListeners(copy1, hydra);  // important lol
+			setListeners(copy2, hydra);
 
 			// Didn't compute layout, so copy will be on top of parent
 			drawHydraImmediately(hydra);
 
 			makeBlue(node.parent);
-			makeBlue(copy).afterAll(cut3);
+			makeBlue(copy1);
+			makeBlue(copy2).afterAll(cut3);
 		} else {
 			cut3(); // call immediately
 		}
 	}
 
 	function cut3() {
+		// Layout the tree again, and move everything to its final position
 		computeHydraLayout(hydra);
+		resizeViewbox(
+			drawing.animate(MOVE_DURATION, "<", 0),
+			hydra
+		);
+
 		return animateHydra(
 			hydra,
 			MOVE_DURATION,
 			"<",
 			(node, head) => moveHydraHead(node, head.fill("#000")),
 			(node, neck) => moveHydraNeck(node, neck.stroke("#000")),
-		);
+		).afterAll(cut4);
+	}
+
+	function cut4() {
+		if (hydra.isLeaf()) {
+			alert(
+				"Wow... I can't believe you actually did it!\n" +
+				"Sorry I didn't write anything cool for you yet. " + 
+				"Perhaps I'll add something later."
+			);
+		}
 	}
 
 	// helper function
@@ -325,49 +378,29 @@ function setListeners(node, hydra) {
 	}
 }
 
-function getTestHydra() {
-	var rootNode = new HydraNode();
-	var jw = new HydraNode(rootNode);
-	var bk = new HydraNode(jw);
-	var wh = new HydraNode(bk);
-	var se = new HydraNode(bk);
-	var qi = new HydraNode(bk);
-	var kx = new HydraNode(bk);
-	var ka = new HydraNode(kx);
-	var hh = new HydraNode(jw);
-	var dn = new HydraNode(hh);
-	var kt = new HydraNode(hh);
-	var jb = new HydraNode(kt);
-	var um = new HydraNode(kt);
-	var al = new HydraNode(kt);
-	var fr = new HydraNode(kt);
-	var we = new HydraNode(hh);
-	var co = new HydraNode(we);
-	var le = new HydraNode(we);
-	var lo = new HydraNode(we);
-	var yi = new HydraNode(hh);
-	var ei = new HydraNode(yi);
-	var dj = new HydraNode(yi);
-	var sh = new HydraNode(yi);
-	var bs = new HydraNode(jw);
-	var sp = new HydraNode(bs);
-	var sb = new HydraNode(jw);
-	var gq = new HydraNode(sb);
-	var js = new HydraNode(gq);
-	var ht = new HydraNode(sb);
-	var mb = new HydraNode(ht);
-	var mf = new HydraNode(ht);
-	var fw = new HydraNode(sb);
-	var gm = new HydraNode(fw);
-	var xt  = new HydraNode(fw);
-	var vq = new HydraNode(fw);
-	return rootNode;
+// Recreates and redraws the hydra
+function resetHydra() {
+	// Clear existing state
+	drawing.clear();
+	numClicks = 0;
+	updateCounter();
+
+	// Create the original hydra
+	var hydra = new HydraNode();
+	var child = new HydraNode(hydra);
+	var gchild = new HydraNode(child);
+	var ggchild1 = new HydraNode(gchild);
+	var ggchild2 = new HydraNode(gchild);
+
+	// Then draw it
+	computeHydraLayout(hydra);
+	drawHydraImmediately(hydra);
+	resizeViewbox(drawing, hydra);
+
+	// Lastly, hook up the listeners
+	setListeners(hydra, hydra);
+
 }
 
-// Create the hydra
-var hydra = new HydraNode();
-var child = new HydraNode(hydra);
-new HydraNode(child);new HydraNode(child);new HydraNode(child);
-setListeners(hydra, hydra);
-computeHydraLayout(hydra);
-drawHydraImmediately(hydra);
+resetHydra(); // init hydra
+resetButton.addEventListener("click", resetHydra);
