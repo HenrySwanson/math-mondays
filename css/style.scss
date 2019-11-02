@@ -1,53 +1,121 @@
 ---
 ---
 
-@import "variables";
+@import "fonts";
 @import "svg-icons";
+@import "variables";
 
 
-//
 // GENERAL
-//
 
 body {
-  background-color: $background;
-  font-family: Georgia, serif;
-  font-size: 12pt;
+  background-color: $COLOR_BACKGROUND;
+  margin: 0 auto;
+  max-width: 850px;
+
+  color: $COLOR_TEXT;
+  font-family: $FONT_BODY;
+  font-size: 14pt;
 }
 
 h1, h2, h3 {
   text-align: center;
+  color: $COLOR_PRIMARY;
+  font-family: $FONT_TITLE;
 }
+
+a:link {
+  color: $COLOR_LINK_UNVISITED;
+}
+
+a:visited {
+  color: $COLOR_LINK_VISITED;
+}
+
+hr {
+  color: $COLOR_PRIMARY;
+}
+
+
+// HEADER + FOOTER
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  border-bottom: 3px solid $header-blue;
+  background-color: $COLOR_PRIMARY;
+  border-radius: 0px 0px $ROUNDING_HEADER $ROUNDING_HEADER;
+  padding: 50px 0 10px 30px;
 }
 
-.container {
-  margin: 0 auto;
-  max-width: 750px;
+header h1 {
+  color: $COLOR_BACKGROUND;
+  font-family: $FONT_TITLE;
+  font-size: 40pt;
+  text-align: left;
+  text-transform: uppercase;
 }
 
-.header-name {
-  font-size: 24pt;
-}
-
-.navbar a {
-  color: $header-blue;
-  text-decoration: none;
-}
-
-.navbar a:hover {
-  color: $navbar-blue;
-  border-bottom: 3px solid $navbar-blue;
+header h2 {
+  color: $COLOR_BACKGROUND;
+  font-family: $FONT_TITLE;
+  font-weight: normal;
+  text-align: left;
 }
 
 footer {
-  border-top: 3px solid $header-blue;
+  border-top: 4px solid $COLOR_PRIMARY;
   text-align: right;
+}
+
+
+// POST TITLES + CONTAINERS
+
+.post-container {
+  border: 4px solid $COLOR_PRIMARY;
+  border-radius: $ROUNDING_HEADER;
+  padding: 5px 20px;
+  margin: 20px 0;
+}
+
+.post-title {
+  font-family: $FONT_TITLE;
+}
+
+.post-title h1 {
+  margin: 0.25em;
+}
+
+.post-title p {
+  color: $COLOR_SECONDARY;
+  font-size: 1em;
+  text-align: center;
+  margin: 0;
+}
+
+
+// THEOREM BOXES
+
+.theorem-box {
+  background-color: $COLOR_TBOX_INNER;
+  margin: 0 20px;
+  padding: 0 10px 5px;
+  border-radius: $ROUNDING_TBOX;
+  border: 1px solid $COLOR_PRIMARY;
+  overflow: hidden;
+}
+
+.theorem-box .theorem-title {
+  background-color: $COLOR_PRIMARY;
+  font-weight: bold;
+  font-size: 13pt;
+  margin: 0 -10px 5px;
+  padding: 5px 10px;
+}
+
+
+// OTHER
+
+.image-container {
+    display: flex;
+    justify-content:space-evenly;
 }
 
 table {
@@ -59,34 +127,4 @@ table {
 
 table, th, td {
   border: 1px solid black;
-}
-
-//
-// IMAGES
-//
-
-.image-container {
-    display: flex;
-    justify-content:space-evenly;
-}
-
-//
-// MATH
-//
-
-.theorem-box {
-  background-color: $theorem-box;
-  margin: 0 20px;
-  padding: 0 10px 5px;
-  border-radius: 10px;
-  border: 1px solid $theorem-title;
-}
-
-.theorem-box .theorem-title {
-  background-color: $theorem-title;
-  font-weight: bold;
-  font-size: 13pt;
-  margin: 0 -10px 5px;
-  padding: 5px 10px;
-  border-radius: 10px 10px 0 0;
 }

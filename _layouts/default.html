@@ -18,21 +18,16 @@
   </head>
 
   <body>
-    <div class="container">
-      <header>
-        <div class="header-name">{{ site.name }}</div>
-        <div class="navbar">
-          <a class="sub" href="{{ site.baseurl }}/">home</a>
-          <!-- separate these with &ndash; if you add more of them -->
-        </div>
-      </header>
-    </div>
+    <header>
+      <h1>{{ site.name }}</h1>
+      <h2>A work in progress.</h2>
+    </header>
 
-    <div class="main container">
+    <section>
       {{ content }}
-    </div>
+    </section>
 
-    <footer class="footer container">
+    <footer>
       {% include svg-icons.html %}
     </footer>
 

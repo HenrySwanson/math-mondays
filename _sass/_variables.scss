@@ -1,18 +1,16 @@
-
-//
-// VARIABLES
-//
+// Font Stacks
+$FONT_TITLE: "Alte DIN 1451", sans-serif;
+$FONT_BODY: "Goudy Bookletter", serif;
 
 // Colors
-$background: #eeeeff;
+$COLOR_BACKGROUND: #eae4e5;
+$COLOR_PRIMARY: #5c6679;
+$COLOR_SECONDARY: #aab1b8;
+$COLOR_LINK_UNVISITED: #e86655;
+$COLOR_LINK_VISITED: #ba5144;
+$COLOR_TEXT: #2e333c;
+$COLOR_TBOX_INNER: #ffffff;
 
-$header-blue: #000066;
-$navbar-blue: #0000ff;
-
-$theorem-box: #ffffff;
-$theorem-title: #8888dd;
-
-// Font stacks TODO
-$helvetica: Helvetica, Arial, sans-serif;
-$helveticaNeue: "Helvetica Neue", Helvetica, Arial, sans-serif;
-$georgia: Georgia, serif;
+// Border Radii
+$ROUNDING_HEADER: 20px;
+$ROUNDING_TBOX: 10px;

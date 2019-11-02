@@ -1,0 +1,34 @@
+// Font Directories
+$AD_DIR: '../fonts/alte-din-1451-mittelschrift/';
+$GD_DIR: '../fonts/goudy-bookletter-1911/';
+
+
+// Goudy Bookletter
+
+@font-face {
+    font-family: 'Goudy Bookletter';
+    src: url($GD_DIR + 'goudy_bookletter_1911-webfont.eot');
+    src: url($GD_DIR + 'goudy_bookletter_1911-webfont.eot?#iefix') format('embedded-opentype'),
+         url($GD_DIR + 'goudy_bookletter_1911-webfont.woff') format('woff'),
+         url($GD_DIR + 'goudy_bookletter_1911-webfont.ttf') format('truetype'),
+         url($GD_DIR + 'goudy_bookletter_1911-webfont.svg#webfontiT6p4ac4') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+// Alte DIN 1451
+
+@font-face {
+    font-family: 'Alte DIN 1451';
+    src: url($AD_DIR + 'din1451alt.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Alte DIN 1451';
+    src: url($AD_DIR + 'din1451alt G.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
