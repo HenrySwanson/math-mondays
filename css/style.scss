@@ -25,12 +25,13 @@ h1, h2, h3 {
   font-family: $FONT_TITLE;
 }
 
-a:link {
-  color: $COLOR_LINK_UNVISITED;
-}
-
-a:visited {
-  color: $COLOR_LINK_VISITED;
+a {
+  &:link {
+    color: $COLOR_LINK_UNVISITED;
+  }
+  &:visited {
+    color: $COLOR_LINK_VISITED;
+  }
 }
 
 hr {
@@ -43,45 +44,42 @@ hr {
 header {
   background-color: $COLOR_PRIMARY;
   border-radius: 0px 0px $ROUNDING_HEADER $ROUNDING_HEADER;
-  color: $COLOR_BACKGROUND;
-  font-family: $FONT_TITLE;
   padding: 10px 30px 10px;
   margin-bottom: 20px;
-}
 
-header h1 {
-  color: $COLOR_BACKGROUND;
-  font-family: $FONT_TITLE;
-  font-size: 2.5em;
-  font-weight: normal;
-  text-align: left;
-  text-transform: uppercase;
-}
+  // Font
+  h1, h2, a:link, a:visited {
+    color: $COLOR_BACKGROUND;
+    font-family: $FONT_TITLE;
+  }
 
-header h2 {
-  color: $COLOR_BACKGROUND;
-  font-weight: normal;
-  text-align: left;
-}
-
-header nav {
-  float: right;
-}
-
-header ul {
-  list-style-type: none;
-  margin: 0 0 0 0;
-  padding: 0;
-  text-align: right;
-}
-
-header li {
-  display: inline;
-  margin: 0 5px;
-}
-
-header a:link, header a:visited {
-  color: $COLOR_BACKGROUND;
+  h1 {
+    font-size: 2.5em;
+    font-weight: normal;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  
+  h2 {
+    font-weight: normal;
+    text-align: left;
+  }
+  
+  nav {
+    float: right;
+  }
+  
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+  }
+  
+  li {
+    display: inline;
+    margin: 0 5px;
+  }
 }
 
 footer {
@@ -102,17 +100,17 @@ footer {
 
 .post-title {
   font-family: $FONT_TITLE;
-}
-
-.post-title h1 {
-  margin: 0.25em;
-}
-
-.post-title p {
-  color: $COLOR_SECONDARY;
-  font-size: 1em;
   text-align: center;
-  margin: 0;
+
+  h1 {
+    margin: 0.25em;
+  }
+
+  p {
+    color: $COLOR_SECONDARY;
+    font-size: 1em;
+    margin: 0;
+  }
 }
 
 
@@ -121,9 +119,10 @@ footer {
 .theorem-box {
   background-color: $COLOR_TBOX_INNER;
   margin: 0 20px;
-  padding: 0 10px 5px;
+  padding: 0 $PADDING_TBOX 5px;
   border-radius: $ROUNDING_TBOX;
   border: 1px solid $COLOR_PRIMARY;
+  // allows title color to fill up the top completely
   overflow: hidden;
 }
 
@@ -132,7 +131,7 @@ footer {
   color: $COLOR_BACKGROUND;
   font-family: $FONT_TITLE;
   // side margin is to over-reach the padding inside .theorem-box
-  margin: 0 -10px 5px;
+  margin: 0 (-$PADDING_TBOX) 5px;
   padding: 5px 10px;
 }
 
