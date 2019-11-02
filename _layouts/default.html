@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
+    <title>
+      {% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}
+    </title>
 
     {% include meta.html %}
 
@@ -19,6 +21,13 @@
 
   <body>
     <header>
+      <nav>
+        <ul>
+          <li><a href="{{ site.baseurl }}">home</a></li>
+          <li><a href="{{ site.baseurl }}/about">about</a></li>
+          <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source</a></li>
+        </ul>
+      </nav>
       <h1>{{ site.name }}</h1>
       <h2>A work in progress.</h2>
     </header>
