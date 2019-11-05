@@ -3,9 +3,6 @@ layout: post
 title: Linearity of Expectation
 use_math: true
 ---
-<div style="display: none;">
-$\newcommand{\RR}{\Bbb R}$
-</div>
 
 To introduce this topic, let's start with an innocuous problem:
 

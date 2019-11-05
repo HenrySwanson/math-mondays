@@ -3,14 +3,16 @@ layout: post
 title: Ax-Grothendieck Theorem
 use_math: true
 ---
-<div style="display: none;">
-$\newcommand{\CC}{\Bbb C}
+<div class="mathdefs">
+$
+\newcommand{\CC}{\Bbb C}
 \newcommand{\FF}{\Bbb F}
 \newcommand{\QQ}{\Bbb Q}
 \newcommand{\FFx}[1]{\overline{\FF_{#1}}}
 \newcommand{\ACF}{\mathbf{ACF}}
 \newcommand{\cL}{\mathcal{L}}
-\newcommand{\cT}{\mathcal{T}}$
+\newcommand{\cT}{\mathcal{T}}
+$
 </div>
 
 The Ax-Grothendieck theorem is the statement:

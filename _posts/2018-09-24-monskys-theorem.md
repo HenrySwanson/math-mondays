@@ -3,10 +3,12 @@ layout: post
 title: Monsky's Theorem
 use_math: true
 ---
-<div style="display: none;">
-$\newcommand{\RR}{\Bbb R}
+<div class="mathdefs">
+$
+\newcommand{\RR}{\Bbb R}
 \newcommand{\QQ}{\Bbb Q}
-\newcommand{\ZZ}{\Bbb Z}$
+\newcommand{\ZZ}{\Bbb Z}
+$
 </div>
 
 For which $n$ can you cut a square into $n$ triangles of equal area?
