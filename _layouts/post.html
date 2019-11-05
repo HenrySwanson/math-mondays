@@ -3,7 +3,7 @@ layout: default
 ---
 
 <div class="post-title">
-  <h1><a href="{{ site.baseurl }}{{ page.url }}">{{ page.title }}</a></h1>
+  <h1><a href="{{ page.url | relative_url }}">{{ page.title }}</a></h1>
   <p>{{ page.date | date: "%B %e, %Y" }}</p>
 </div>
 
