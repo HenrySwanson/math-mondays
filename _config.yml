@@ -65,3 +65,5 @@ exclude:
   - LICENSE
   - README.md
   - CNAME
+  - node_modules
+  - package-lock.json

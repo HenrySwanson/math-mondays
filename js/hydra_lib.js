@@ -15,20 +15,12 @@ var CLONE_DURATION = 200;
 
 var CLONE_COLOR = "#422aa8";
 
-// DOM elements
-var resetButton = document.getElementById("reset-button");
-var clickCounter = document.getElementById("click-counter");
-var drawing = SVG("hydra-interactive");  // really an svg.js element
-
-// Keeps track of number of clicks
-var numClicks = 0;
-function updateCounter() {
-	clickCounter.textContent = "Clicks: " + numClicks;
-}
+/* Hydra Structure */
 
 class HydraNode {
-	constructor(parent=null) {
-		// SVG elements to draw on canvas
+	constructor(drawing, parent=null) {
+		// SVG canvas and elements to draw on it
+		this.drawing = drawing;
 		this.svgHead = drawing.circle(NODE_DIAM);
 		this.svgNeck = null;
 
@@ -57,6 +49,10 @@ class HydraNode {
 		return (this.children.length === 0);
 	}
 
+	appendChild() {
+		return new HydraNode(this.drawing, this);
+	}
+
 	getLeftSiblings() {
 		if (this.isRoot()) {
 			return [];
@@ -70,19 +66,22 @@ class HydraNode {
 			throw "Can't clone root!"
 		}
 
+		// Bind drawing outside the lambda (late binding is awful)
+		drawing = this.drawing;
+
 		// Make a copy of this and its children. Also set SVG position.
 		function copySubtrees(src, dst) {
 			dst.targetX = src.targetX;
 			dst.targetY = src.targetY;
 			dst.offsetX = src.offsetX;
 			src.children.forEach(
-				child => copySubtrees(child, new HydraNode(dst))
+				child => copySubtrees(child, dst.appendChild())
 			);
 		}
 
 		// Note that this attaches the copy to the parent, but at the end,
 		// not next to the original
-		var copy = new HydraNode(this.parent);
+		var copy = this.parent.appendChild();
 		copySubtrees(this, copy);
 
 		// Put the copy next to the original
@@ -244,6 +243,8 @@ function getHydraWidth(hydra) {
 	return xValues.reduce((a, b) => Math.max(a, b), hydra.targetX);
 }
 
+/* Animation */
+
 function moveHydraHead(node, head) {
 	// Can be applied to the SVG node or its animation
 	return head.center(node.targetY, node.targetX);
@@ -289,10 +290,15 @@ function resizeViewbox(drawing, hydra) {
 	)
 }
 
-function setListeners(node, hydra) {
+/* Listeners */
+
+function setListeners(node, hydra, clickCallback) {
+	// TODO this is kinda gross; the way we wait is to define a second (third,
+	// fourth, ...) callback, and call that after an afterAll(). Can I put
+	// together something better?
 
 	// Apply recursively to children
-	node.children.forEach(child => setListeners(child, hydra));
+	node.children.forEach(child => setListeners(child, hydra, clickCallback));
 	// Assign the click handler
 	node.svgHead.click(cut);
 
@@ -308,7 +314,7 @@ function setListeners(node, hydra) {
 		// Increment counter
 		wasClicked = true;
 		numClicks += 1;
-		updateCounter();
+		clickCallback();
 
 		// Opacity has to be controlled as a group or else the overlap causes
 		// problems. But make sure to kill the group later.
@@ -325,8 +331,8 @@ function setListeners(node, hydra) {
 			var copy1 = node.parent.clone();
 			var copy2 = node.parent.clone();
 
-			setListeners(copy1, hydra);  // important lol
-			setListeners(copy2, hydra);
+			setListeners(copy1, hydra, clickCallback);  // important lol
+			setListeners(copy2, hydra, clickCallback);
 
 			// Didn't compute layout, so copy will be on top of parent
 			drawHydraImmediately(hydra);
@@ -378,29 +384,18 @@ function setListeners(node, hydra) {
 	}
 }
 
-// Recreates and redraws the hydra
-function resetHydra() {
-	// Clear existing state
-	drawing.clear();
-	numClicks = 0;
-	updateCounter();
+// Fancy business to make this browser and node compatible. Every day I hate JS
+// more and more. Just export the stuff I need for making diagrams.
+// Taken from: https://caolan.org/posts/writing_for_node_and_the_browser.html
+(function(exports){
+	exports.NODE_DIAM = NODE_DIAM;
+	exports.NODE_SPACING = NODE_SPACING;
+	exports.LEVEL_SPACING = LEVEL_SPACING;
 
-	// Create the original hydra
-	var hydra = new HydraNode();
-	var child = new HydraNode(hydra);
-	var gchild = new HydraNode(child);
-	var ggchild1 = new HydraNode(gchild);
-	var ggchild2 = new HydraNode(gchild);
+	exports.CLONE_COLOR = CLONE_COLOR;
 
-	// Then draw it
-	computeHydraLayout(hydra);
-	drawHydraImmediately(hydra);
-	resizeViewbox(drawing, hydra);
-
-	// Lastly, hook up the listeners
-	setListeners(hydra, hydra);
-
-}
-
-resetHydra(); // init hydra
-resetButton.addEventListener("click", resetHydra);
+	exports.HydraNode = HydraNode;
+	exports.getHydraWidth = getHydraWidth;
+	exports.computeHydraLayout = computeHydraLayout;
+	exports.drawHydraImmediately = drawHydraImmediately;
+}(typeof exports === 'undefined' ? {} : exports));
