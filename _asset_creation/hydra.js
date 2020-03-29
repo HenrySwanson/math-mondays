@@ -1,165 +1,19 @@
 "use strict";
 
-//------------------------------------------
-// Nonsense for setting up fonts and canvases
-//-------------------------------------------
+// Import our utils library and initialize mathjax+svg
+const asset_utils = require("./_utils.js");
+asset_utils.initMathJax();
+asset_utils.initSvg();
 
-// Set up a fake DOM with a single SVG element at the root
-const window = require('svgdom');
-const SVG = require('svg.js')(window)
-
-//--------------------------------
-// Nonsense for setting up MathJax
-//--------------------------------
-
-const PACKAGES = 'base, autoload, require, ams, newcommand';
-global.MathJax = {
-    tex: {packages: PACKAGES.split(/\s*,\s*/)},
-    svg: {fontCache: 'local'},
-    startup: {typeset: false}
-};
-
-require('mathjax/es5/startup.js');
-require('mathjax/es5/core.js');
-require('mathjax/es5/adaptors/liteDOM.js');
-require('mathjax/es5/input/tex-base.js');
-require('mathjax/es5/input/tex/extensions/all-packages.js');
-require('mathjax/es5/output/svg.js');
-require('mathjax/es5/output/svg/fonts/tex.js');
-
-MathJax.loader.preLoad(
-    'core',
-    'adaptors/liteDOM',
-    'input/tex-base',
-    '[tex]/all-packages',
-    'output/svg',
-    'output/svg/fonts/tex'
-);
-
-MathJax.config.startup.ready();
-
-//------------------------------
-// Now we can write our own code
-//------------------------------
-
-const fs = require('fs');
-const TextToSVG = require('text-to-svg');
+// Import other libraries
 const util = require('util');
-
 const hydralib = require("../js/hydra_lib.js");
 
-const ALTE_DIN = TextToSVG.loadSync("fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
-
-function shrinkCanvas(canvas) {
-	// Computes bounding box over all elements in the canvas, and resizes the
-	// viewbox to fit it.
-	var box = canvas.bbox();
-
-	function merge(element) {
-		// Explicitly exclude defs, because they're not really in the doc
-		if (element.type == 'defs') {
-			return;
-		}
-		// SVG.js creates an zero-opacity SVG.js for 'parsing'; we want to omit
-		// this from our calculations
-		if (element.type === "svg" && element.style("opacity") === "0") {
-			return;
-		}
-		if (element instanceof SVG.Shape && element.visible()) {
-			box = box.merge(element.rbox(canvas));
-		}
-		if (element instanceof SVG.Container) {
-			element.children().forEach(merge);
-		}
-	}
-
-	merge(canvas);
-	canvas.viewbox(box.x, box.y, box.w, box.h);
-}
-
-function scaleFromOrigin(svgObj, scaleFactor) {
-	// Oftentimes, mostly for text, we want to scale from the origin, not from
-	// the upper-left corner. So we do it here.
-	var oldBBox = svgObj.bbox();
-	svgObj.size(oldBBox.width * scaleFactor);
-
-	// We know where the upper-left corner of the bbox should be, because
-	// scaling from the origin is easy. So let's move the object there.
-	svgObj.move(oldBBox.x * scaleFactor, oldBBox.y * scaleFactor);
-}
-
-function makeTextPath(canvas, textToSvgObj, text, fontSizePx) {
-	// 72 is big enough to render crisply
-	var path = canvas.path(textToSvgObj.getD(text, {fontSize: 72}));
-
-	// The text is created with the start of the baseline at the origin, so
-	// we use scaleFromOrigin, and not size().
-	var scaleFactor = fontSizePx / 72;
-	scaleFromOrigin(path, scaleFactor);
-
-	// TODO there's still some weird leading space at the beginning?
-
-	return path;
-}
-
-function makeMathSvg(canvas, tex, fontSizePx) {
-	// Returns some math text with the baseline at the origin.
-	const adaptor = MathJax.startup.adaptor;
-	const node = MathJax.tex2svg(tex, {display: true});
-	var svgText = adaptor.outerHTML(node.children[0]);
-	canvas.svg(svgText);  // add inner SVG element to the canvas
-
-	// get the last element, which is our svg object
-	var children = canvas.children();
-	var mathSvg = children[children.length-1];
-
-	// Unfortunately, MathJax outputs units of ex, but that's not compatible
-	// with svg.js. Fortunately, we can ask it for its context.
-	var metrics = MathJax.getMetricsFor(node, true);
-	var exToPx = metrics.ex / metrics.scale;
-
-	// Now we change the units to px (this should not change the visual size).
-	var heightEx = +mathSvg.height().slice(0,-2);
-	mathSvg.size(null, heightEx * exToPx);
-
-	// Next, we shift it so that the baseline is at zero. To do this, we have to
-	// inspect the "style" property of the object; specifically, the property
-	// vertical-align. Fortunately, that should be the only thing in there.
-	var regex = /vertical-align:(-?\d*\.?\d*)(ex)?/
-	var verticalAlignEx = +regex.exec(mathSvg.attr("style"))[1];
-
-	// Currently the upper-left corner is at the origin, so we want to raise it
-	// by the height, and then by vertical-align. But this all has to be done
-	// in units of px, not ex.
-	mathSvg.dy(-exToPx * (heightEx + verticalAlignEx));
-
-	// Now the baseline is at the origin, so let's scale from the origin. The font
-	// is, by default, 1 em tall, so that's what we put in our denominator.
-	var scaleFactor = fontSizePx / metrics.em * metrics.scale;
-	scaleFromOrigin(mathSvg, scaleFactor);
-	
-	// Lastly, clear the style element so it can't interfere with us
-	mathSvg.attr("style", "");
-
-	return mathSvg;
-}
-
-function saveImgToFile(canvas, filename, highlightBackground) {
-	if (highlightBackground) {
-		var bbox = canvas.viewbox();
-		canvas.rect(bbox.width, bbox.height).move(bbox.x, bbox.y).back().fill("#ffff00");
-	}
-
-	// clear the parser object (can't delete it or it'll confuse SVG.js)
-	SVG.parser.path.instance.attr("d", "");
-
-	fs.writeFileSync(filename, canvas.svg());
-}
-
+const ALTE_DIN = asset_utils.loadFont("fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
 
 // Start creating some diagrams!
 // This is the actual canvas we want to work on
-var canvas = SVG(window.document.documentElement);
+var canvas = asset_utils.createCanvas();
 
 // makes hydra creation much easier
 function makeHydra(str) {
@@ -187,8 +41,8 @@ hydralib.drawHydraImmediately(hydra);
 
 // now place the text
 var textColor = "#7c7c7c";
-makeTextPath(canvas, ALTE_DIN, "body", 0.75).fill(textColor).move(-3, 0);
-makeTextPath(canvas, ALTE_DIN, "heads", 0.75).fill(textColor).move(6, 2);
+asset_utils.makeTextPath(canvas, ALTE_DIN, "body", 0.75).fill(textColor).move(-3, 0);
+asset_utils.makeTextPath(canvas, ALTE_DIN, "heads", 0.75).fill(textColor).move(6, 2);
 
 // and arrows (TODO compute the endpoints?)
 var stroke = { color: textColor, width: 0.06, linecap: 'round', linejoin: 'round'};
@@ -215,8 +69,8 @@ canvas.path("M 5.8,2.4 C 4.8,2.4 5,2.5 4,2.5 S 3.6,2 2.6,2").stroke(stroke).fill
 canvas.path(makeCubicPath(2.5, 3, 1, 1)).stroke(stroke).fill('none').marker('end', marker);
 
 // make it the right size
-shrinkCanvas(canvas);
-saveImgToFile(canvas, "assets/hydra/anatomy.svg");
+asset_utils.shrinkCanvas(canvas);
+asset_utils.saveImgToFile(canvas, "assets/hydra/anatomy.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #1
@@ -326,8 +180,8 @@ colorNode(hydraB.children[1].children[0]);
 colorNode(hydraB.children[2].children[0]);
 
 // save to disk
-shrinkCanvas(canvas);
-saveImgToFile(canvas, "assets/hydra/example-1.svg");
+asset_utils.shrinkCanvas(canvas);
+asset_utils.saveImgToFile(canvas, "assets/hydra/example-1.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #2
@@ -343,8 +197,8 @@ colorNode(hydraB.children[1]);
 colorNode(hydraB.children[2]);
 colorNode(hydraB.children[3]);
 
-shrinkCanvas(canvas);
-saveImgToFile(canvas, "assets/hydra/example-2.svg");
+asset_utils.shrinkCanvas(canvas);
+asset_utils.saveImgToFile(canvas, "assets/hydra/example-2.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #3
@@ -360,8 +214,8 @@ addX(hydraA.children[3]);
 
 // no coloring this time
 
-shrinkCanvas(canvas);
-saveImgToFile(canvas, "assets/hydra/example-3.svg");
+asset_utils.shrinkCanvas(canvas);
+asset_utils.saveImgToFile(canvas, "assets/hydra/example-3.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #4
@@ -383,8 +237,8 @@ addX(hydraB.children[3]);
 
 // no coloring on C
 
-shrinkCanvas(canvas);
-saveImgToFile(canvas, "assets/hydra/example-4.svg");
+asset_utils.shrinkCanvas(canvas);
+asset_utils.saveImgToFile(canvas, "assets/hydra/example-4.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #5
@@ -416,7 +270,7 @@ var mouth = groupC.path("M -1,1 A 1.2,1.2 0 0,1 1,1").size(0.27)
 	.stroke(stroke).fill("none").center(0, 0.1);
 
 // don't shrink canvas, so we have the same size as before
-saveImgToFile(canvas, "assets/hydra/example-5.svg");
+asset_utils.saveImgToFile(canvas, "assets/hydra/example-5.svg");
 
 
 //------------------------------------------------
@@ -444,7 +298,7 @@ for (var i=0; i < 8; i++) {
 	grp.dy(-h.svgHead.y())  // put the root at y=0
 	grp.dmove(cellX, cellY);  // put into the proper cell
 
-	var value = makeMathSvg(canvas, values[i], 1);
+	var value = asset_utils.makeMathSvg(canvas, values[i], 1);
 	// put the center of the bottom at the origin
 	value.dx(-value.width() / 2);
 	value.dmove(cellX + 2, cellY + 4);
@@ -452,4 +306,4 @@ for (var i=0; i < 8; i++) {
 // TODO some bug in shrinkCanvas when math is present, gotta do it manually
 canvas.viewbox(-0.5, -2, 3 * 8 + 4 + 1, 14);
 
-saveImgToFile(canvas, "assets/hydra/ordinals.svg");
+asset_utils.saveImgToFile(canvas, "assets/hydra/ordinals.svg");
