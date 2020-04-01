@@ -124,7 +124,7 @@ function makeMathSvg(canvas, tex, fontSizePx) {
 // Saving images to file
 //--------------------------------
 
-function shrinkCanvas(canvas) {
+function shrinkCanvas(canvas, margin=0) {
 	// Computes bounding box over all elements in the canvas, and resizes the
 	// viewbox to fit it.
 	var box = canvas.bbox();
@@ -148,7 +148,17 @@ function shrinkCanvas(canvas) {
 	}
 
 	merge(canvas);
-	canvas.viewbox(box.x, box.y, box.w, box.h);
+	canvas.viewbox(
+		box.x - margin, box.y - margin,	box.w + 2 * margin, box.h + 2 * margin
+	);
+}
+
+function adjustCanvas(canvas, left, right, top, bottom) {
+	var viewbox = canvas.viewbox();
+	canvas.viewbox(
+		viewbox.x - left, viewbox.y - top,
+		viewbox.width + left + right, viewbox.height + top + bottom
+	);
 }
 
 function saveImgToFile(canvas, filename, highlightBackground) {
@@ -172,5 +182,6 @@ module.exports = {
 	makeTextPath,
 	makeMathSvg,
 	shrinkCanvas,
+	adjustCanvas,
     saveImgToFile
 }
