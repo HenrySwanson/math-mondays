@@ -24,7 +24,11 @@ AUTHOR_FEED_RSS = None
 # RELATIVE_URLS = True
 
 # Plugins and other functionality
-PLUGINS = ["render_math", "pelican_webassets"]
+PLUGINS = [
+    "render_math",
+    "pelican_webassets",
+    "minchin.pelican.plugins.summary",
+]
 MARKDOWN = {
     "extension_configs": {
         "markdown.extensions.extra": {},
@@ -66,3 +70,4 @@ FOOTER_LINKS = {
     "stackoverflow": "https://stackexchange.com/users/2216552/henry-swanson",
 }
 FILENAME_METADATA = r"(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)"
+SUMMARY_END_MARKER = "<!-- more -->"

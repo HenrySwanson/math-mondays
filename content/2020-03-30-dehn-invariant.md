@@ -12,7 +12,9 @@ Fans of wooden children's toys may remember [tangrams](https://en.wikipedia.org/
 
 ![Tangrams in square and cat configurations](/images/dehn/tangrams.svg)
 
-As mathematicians, we're interested in shapes that are slightly simpler than cats or houses. <!-- more --> For example, we might try to design a set of tangrams that can be rearranged into an equilateral triangle. One possibility is shown below.
+As mathematicians, we're interested in shapes that are slightly simpler than cats or houses.
+<!-- more -->
+For example, we might try to design a set of tangrams that can be rearranged into an equilateral triangle. One possibility is shown below.
 
 ![Equidecomposition of square and triangle](/images/dehn/square-to-triangle.svg)
 
