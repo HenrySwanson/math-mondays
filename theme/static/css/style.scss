@@ -1,0 +1,167 @@
+@import "fonts";
+@import "svg-icons";
+@import "variables";
+
+
+// GENERAL
+
+body {
+  background-color: $COLOR_BACKGROUND;
+  margin: 0 auto;
+  padding: 0 10px;
+  max-width: 850px;
+
+  color: $COLOR_TEXT;
+  font-family: $FONT_BODY;
+  font-size: 16pt;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  color: $COLOR_PRIMARY;
+  font-family: $FONT_TITLE;
+}
+
+a {
+  &:link {
+    color: $COLOR_LINK_UNVISITED;
+  }
+  &:visited {
+    color: $COLOR_LINK_VISITED;
+  }
+}
+
+hr {
+  border-top: 1px solid $COLOR_PRIMARY;
+}
+
+
+// HEADER
+
+.site-header {
+  background-color: $COLOR_PRIMARY;
+  border-radius: 0px 0px $ROUNDING_HEADER $ROUNDING_HEADER;
+  padding: 10px 30px 10px;
+  margin-bottom: 20px;
+
+  // Font
+  h1, h2, a:link, a:visited {
+    color: $COLOR_BACKGROUND;
+    font-family: $FONT_TITLE;
+  }
+
+  h1 {
+    font-size: 2.5em;
+    font-weight: normal;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  
+  h2 {
+    font-weight: normal;
+    text-align: left;
+  }
+  
+  nav {
+    float: right;
+  }
+  
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+  }
+  
+  li {
+    display: inline;
+    margin: 0 5px;
+  }
+}
+
+// FOOTER
+
+.site-footer {
+  border-top: 4px solid $COLOR_PRIMARY;
+  padding-top: 6px;
+  text-align: right;
+}
+
+// ARTICLE TITLES + CONTAINERS
+
+.article-container {
+  border: 4px solid $COLOR_PRIMARY;
+  border-radius: $ROUNDING_HEADER;
+  padding: 5px 20px;
+  margin: 20px 0;
+}
+
+.article-title {
+  font-family: $FONT_TITLE;
+  text-align: center;
+  margin: 0.25em;
+}
+
+.article-date {
+  font-family: $FONT_TITLE;
+  text-align: center;
+  color: $COLOR_SECONDARY;
+  font-size: 1em;
+  margin: 0;
+}
+
+.article-tags {
+  font-family: $FONT_BODY;
+  text-align: right;
+  color: $COLOR_SECONDARY;
+  font-size: 1em;
+}
+
+
+// THEOREM BOXES
+
+.theorem-box {
+  background-color: $COLOR_TBOX_INNER;
+  margin: 0 20px;
+  padding: 0 $PADDING_TBOX 5px;
+  border-radius: $ROUNDING_TBOX;
+  border: 1px solid $COLOR_PRIMARY;
+  // allows title color to fill up the top completely
+  overflow: hidden;
+
+  p {
+    margin: 0
+  }
+}
+
+.theorem-title {
+  background-color: $COLOR_PRIMARY;
+  color: $COLOR_BACKGROUND;
+  font-family: $FONT_TITLE;
+  // side margin is to over-reach the padding inside .theorem-box
+  margin: 0 (-$PADDING_TBOX) 5px;
+  padding: 5px 10px;
+}
+
+
+// OTHER
+
+.image-container {
+    display: flex;
+    justify-content:space-evenly;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+.mathdefs {
+  display: none;
+}

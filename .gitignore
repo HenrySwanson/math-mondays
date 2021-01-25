@@ -3,3 +3,6 @@ _drafts/
 .sass-cache/
 node_modules/
 package-lock.json
+__pycache__/
+output/
+venv/

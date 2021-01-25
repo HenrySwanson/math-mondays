@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITENAME }} - {{ article.title  }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+
+{% if article.description %}
+  <meta name="description" content="{{article.description}}" />
+{% endif %}
+
+{% for tag in article.tags %}
+  <meta name="tags" content="{{tag}}" />
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<section>
+  <header>
+    <h1 class="article-title">
+      <a href="{{ SITEURL }}/{{ article.url }}" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a>
+    </h1>
+    <div class="article-date">{{ article.locale_date }}</div>
+
+    {% if article.tags %}
+    <div class="article-tags">
+      tags:
+      {% for tag in article.tags %}
+      <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  <section>{{ article.content }}</section>
+
+  <footer>
+    {% if article.modified %}
+    <time class="modified" datetime="{{ article.modified.isoformat() }}">
+      {{ article.locale_modified }}
+    </time>
+    {% endif %}
+  </footer>
+
+</section>
+{% endblock %}

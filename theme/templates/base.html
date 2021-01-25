@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+  <title>{% block title %}{{ SITENAME }}{% endblock title %}</title>
+
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <!-- import meta.html stuff -->
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  {% assets filters="libsass,cssmin", output="css/style.min.css", "css/style.scss" %}
+  <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/{{ ASSET_URL }}" />
+  {% endassets %}
+
+  <!-- TODO i don't understand feeds yet
+  <link href="{{ FEED_DOMAIN }}/{% if FEED_ALL_ATOM_URL %}{{ FEED_ALL_ATOM_URL }}{% else %}{{ FEED_ALL_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+  <link href="{{ FEED_DOMAIN }}/{% if FEED_ALL_RSS_URL %}{{ FEED_ALL_RSS_URL }}{% else %}{{ FEED_ALL_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+  <link href="{{ FEED_DOMAIN }}/{%if FEED_ATOM_URL %}{{ FEED_ATOM_URL }}{% else %}{{ FEED_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+  <link href="{{ FEED_DOMAIN }}/{% if FEED_RSS_URL %}{{ FEED_RSS_URL }}{% else %}{{ FEED_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" /> -->
+        
+</head>
+
+<body>
+  <header class="site-header">
+  	<nav>
+      <ul>
+        <li><a href="{{ SITEURL }}/">home</a></li>
+        <li><a href="{{ SITEURL }}/about">about</a></li>
+        <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source</a></li>
+      </ul>
+    </nav>
+    <h1>{{ SITENAME }}</h1>
+    <h2>A work in progress.</h2>
+  </header>
+
+  {% block content %}{% endblock %}
+  <!-- TODO make sure filtering on tags and stuff works -->
+
+  <footer class="site-footer">
+  	<!-- TODO apparently this background color is in a few of the icons -->
+  	{% for icon_name, link in FOOTER_LINKS.items() %}
+  	<a href="{{ link }}"><i class="svg-icon {{icon_name}}"></i></a>
+  	{% endfor %}
+  </footer>
+  <!-- TODO powered by pelican -->
+
+  </body>
+</html>

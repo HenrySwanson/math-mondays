@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+
+{% block content_title %}
+<h2>Posts</h2>
+{% endblock %}
+
+{% for article in articles_page.object_list %}
+<div class="article-container">
+  <header>
+    <h1 class="article-title">
+      <a href="{{ SITEURL }}/{{ article.url }}" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a>
+    </h1>
+    <div class="article-date">{{ article.locale_date }}</div>
+
+    {% if article.tags %}
+    <div class="article-tags">
+      tags:
+      {% for tag in article.tags %}
+      <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  <!-- get summaries working again -->
+  <section>{{ article.summary }}</section>
+</div>
+{% endfor %}
+
+{% if articles_page.has_other_pages() %}
+{% include 'pagination.html' %}
+{% endif %}
+
+</section>
+{% endblock content %}
