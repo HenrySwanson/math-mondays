@@ -39,7 +39,11 @@ MARKDOWN = {
 }
 
 # Path inputs
-STATIC_PATHS = ["images", "js"]
+STATIC_PATHS = ["extra", "images", "js"]
+EXTRA_PATH_METADATA = {
+    "extra/CNAME": {"path": "CNAME"},
+    "extra/.nojekyll": {"path": ".nojekyll"},
+}
 
 # Path and URL outputs
 ARTICLE_URL = "{slug}"
