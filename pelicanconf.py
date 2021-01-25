@@ -25,6 +25,14 @@ AUTHOR_FEED_RSS = None
 
 # Plugins and other functionality
 PLUGINS = ["render_math", "pelican_webassets"]
+MARKDOWN = {
+    "extension_configs": {
+        "markdown.extensions.extra": {},
+        "markdown.extensions.meta": {},
+        "markdown.extensions.smarty": {},
+    },
+    "output_format": "html5",
+}
 
 # Path inputs
 STATIC_PATHS = ["images", "js"]
