@@ -27,6 +27,7 @@ AUTHOR_FEED_RSS = None
 PLUGINS = [
     "render_math",
     "pelican_webassets",
+    "sitemap",
     "minchin.pelican.plugins.summary",
 ]
 MARKDOWN = {
@@ -41,8 +42,8 @@ MARKDOWN = {
 # Path inputs
 STATIC_PATHS = ["extra", "images", "js"]
 EXTRA_PATH_METADATA = {
-    "extra/CNAME": {"path": "CNAME"},
-    "extra/.nojekyll": {"path": ".nojekyll"},
+    f"extra/{filename}": {"path": filename}
+    for filename in ["CNAME", ".nojekyll", "robots.txt"]
 }
 
 # Path and URL outputs
@@ -70,7 +71,7 @@ PAGINATION_PATTERNS = (
 FOOTER_LINKS = {
     "email": "mailto:henryswanson94@gmail.com",
     "github": "https://github.com/HenrySwanson",
-    "rss": "feed.xml",  # TODO  does this work for prod?
+    "rss": "feed.xml",
     "stackoverflow": "https://stackexchange.com/users/2216552/henry-swanson",
 }
 FILENAME_METADATA = r"(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)"
