@@ -41,4 +41,4 @@ jobs:
       - name: Commit to gh-pages branch
         run: |
           ghp-import output -b gh-pages
-          git push gh-pages
+          git push -f origin gh-pages
