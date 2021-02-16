@@ -1,6 +1,6 @@
 Title: Safes and Keys
 Date: 2018-11-16
-Tags: puzzle, combinatorics
+Tags: puzzles, combinatorics
 
 Here's a few similar puzzles with a common story:
 
