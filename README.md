@@ -1,3 +1,5 @@
+![build status badge](https://github.com/HenrySwanson/HenrySwanson.github.io/actions/workflows/build-site.yml/badge.svg)
+
 Sometimes I like to write about math.
 
 Fonts are used under the SIL Open Font License, and were downloaded from:
