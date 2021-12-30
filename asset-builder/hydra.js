@@ -7,9 +7,9 @@ asset_utils.initSvg();
 
 // Import other libraries
 const util = require('util');
-const hydralib = require("../js/hydra_lib.js");
+const hydralib = require("../content/js/hydra_lib.js");
 
-const ALTE_DIN = asset_utils.loadFont("fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
+const ALTE_DIN = asset_utils.loadFont("theme/static/fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
 
 // Start creating some diagrams!
 // This is the actual canvas we want to work on
@@ -70,7 +70,7 @@ canvas.path(makeCubicPath(2.5, 3, 1, 1)).stroke(stroke).fill('none').marker('end
 
 // make it the right size
 asset_utils.shrinkCanvas(canvas);
-asset_utils.saveImgToFile(canvas, "assets/hydra/anatomy.svg");
+asset_utils.saveImgToFile(canvas, "content/images/hydra/anatomy.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #1
@@ -181,7 +181,7 @@ colorNode(hydraB.children[2].children[0]);
 
 // save to disk
 asset_utils.shrinkCanvas(canvas);
-asset_utils.saveImgToFile(canvas, "assets/hydra/example-1.svg");
+asset_utils.saveImgToFile(canvas, "content/images/hydra/example-1.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #2
@@ -198,7 +198,7 @@ colorNode(hydraB.children[2]);
 colorNode(hydraB.children[3]);
 
 asset_utils.shrinkCanvas(canvas);
-asset_utils.saveImgToFile(canvas, "assets/hydra/example-2.svg");
+asset_utils.saveImgToFile(canvas, "content/images/hydra/example-2.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #3
@@ -215,7 +215,7 @@ addX(hydraA.children[3]);
 // no coloring this time
 
 asset_utils.shrinkCanvas(canvas);
-asset_utils.saveImgToFile(canvas, "assets/hydra/example-3.svg");
+asset_utils.saveImgToFile(canvas, "content/images/hydra/example-3.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #4
@@ -238,7 +238,7 @@ addX(hydraB.children[3]);
 // no coloring on C
 
 asset_utils.shrinkCanvas(canvas);
-asset_utils.saveImgToFile(canvas, "assets/hydra/example-4.svg");
+asset_utils.saveImgToFile(canvas, "content/images/hydra/example-4.svg");
 
 // ------------------------------
 // Diagram: Attacking a Hydra: #5
@@ -270,7 +270,7 @@ var mouth = groupC.path("M -1,1 A 1.2,1.2 0 0,1 1,1").size(0.27)
 	.stroke(stroke).fill("none").center(0, 0.1);
 
 // don't shrink canvas, so we have the same size as before
-asset_utils.saveImgToFile(canvas, "assets/hydra/example-5.svg");
+asset_utils.saveImgToFile(canvas, "content/images/hydra/example-5.svg");
 
 
 //------------------------------------------------
@@ -306,4 +306,4 @@ for (var i=0; i < 8; i++) {
 // TODO some bug in shrinkCanvas when math is present, gotta do it manually
 canvas.viewbox(-0.5, -2, 3 * 8 + 4 + 1, 14);
 
-asset_utils.saveImgToFile(canvas, "assets/hydra/ordinals.svg");
+asset_utils.saveImgToFile(canvas, "content/images/hydra/ordinals.svg");

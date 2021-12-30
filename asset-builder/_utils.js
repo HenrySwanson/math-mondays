@@ -38,11 +38,12 @@ function initMathJax() {
 
 function initSvg() {
 	// Set up a fake DOM with a single SVG element at the root
-	global.SVG = require('svg.js')(svgdom);
+	global.svg_global_window = svgdom.createSVGWindow();
+	global.SVG = require('svg.js')(svg_global_window);	
 }
 
 function createCanvas() {
-	return SVG(svgdom.document.documentElement);
+	return SVG(svg_global_window.document.documentElement);
 }
 
 //--------------------------------

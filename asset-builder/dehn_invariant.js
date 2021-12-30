@@ -160,7 +160,7 @@ verticalAlign([leftGroup, rightGroup]);
 
 // Shrink and save
 asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "assets/dehn/tangrams.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/tangrams.svg");
 
 // TODO add house?
 
@@ -219,7 +219,7 @@ verticalAlign([leftGroup, rightGroup]);
 
 // Shrink and save
 asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "assets/dehn/square-to-triangle.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/square-to-triangle.svg");
 
 
 // -------------------------------------
@@ -308,7 +308,7 @@ verticalAlign([leftGroup, rightGroup]);
 
 // Shrink and save
 asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "assets/dehn/square-to-pentagon.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/square-to-pentagon.svg");
 
 // -------------------------------------
 // Diagram: Star <-> Triangle Tangrams
@@ -381,7 +381,7 @@ pieces[4].rotate(-120, pts[5][0], pts[5][1]);
 
 // Shrink and save
 asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "assets/dehn/star-to-triangle.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/star-to-triangle.svg");
 
 
 // --------------------------
@@ -414,7 +414,7 @@ makeTriangle(rightGroup, pts, [1, 2, 4]).dmove(0.2, 0);
 makeTriangle(rightGroup, pts, [2, 3, 4]).dmove(0.2, 0.4);
 
 asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "assets/dehn/wbg-1.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/wbg-1.svg");
 
 // -- next, triangle -> rectangle
 
@@ -438,7 +438,7 @@ rightGroup.line([B, D]).stroke(dashedStroke);
 rightGroup.line([C, E]).stroke(dashedStroke);
 
 asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "assets/dehn/wbg-2.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/wbg-2.svg");
 
 // -- next, rectangle -> half-rectangle
 
@@ -454,7 +454,7 @@ rightGroup.rect(3.5, 3).fill(YELLOW).stroke(solidStroke);
 rightGroup.line(0, 1.5, 3.5, 1.5).stroke(dashedStroke);
 
 asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "assets/dehn/wbg-3.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/wbg-3.svg");
 
 // -- lastly, rectangle -> rectangle with width 1 (but we'll make it 2 here
 // because units are made up)
@@ -506,7 +506,7 @@ uell = uell.clone().addTo(rightGroup).move(0.6, -0.7);
 var viewbox = canvas.viewbox();
 canvas.viewbox(viewbox.x - 1, viewbox.y - 1, viewbox.width + 2, viewbox.height + 1);
 
-asset_utils.saveImgToFile(canvas, "assets/dehn/wbg-4.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/wbg-4.svg");
 
 // ----------------------
 // Diagrams: Edge cutting
@@ -556,7 +556,7 @@ var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 = \\theta_2
 mathAngle.move(13, 8);
 
 asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
-asset_utils.saveImgToFile(canvas, "assets/dehn/edge-cut-transverse.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/edge-cut-transverse.svg");
 
 // -- edge-on cut --
 
@@ -600,4 +600,4 @@ var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 + \\theta_2
 mathAngle.move(13, 8);
 
 asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
-asset_utils.saveImgToFile(canvas, "assets/dehn/edge-cut-lengthwise.svg");
+asset_utils.saveImgToFile(canvas, "content/images/dehn/edge-cut-lengthwise.svg");

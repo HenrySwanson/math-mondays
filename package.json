@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "gl-matrix": "^3.4.3",
+    "mathjax": "^3.2.0",
+    "svg.js": "^2.7.1",
+    "svgdom": "^0.1.10",
+    "text-to-svg": "^3.1.5"
+  }
+}
