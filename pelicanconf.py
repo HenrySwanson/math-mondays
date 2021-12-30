@@ -25,10 +25,10 @@ AUTHOR_FEED_RSS = None
 
 # Plugins and other functionality
 PLUGINS = [
-    "pelican_webassets",
     "plugins.summary",
     "render_math",
     "sitemap",
+    "webassets",
 ]
 MARKDOWN = {
     "extension_configs": {
