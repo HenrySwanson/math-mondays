@@ -34,17 +34,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # THIS IS A BAD HACK, DELETE WHEN POSSIBLE
-      - name: patch in a fix for summary plugin
-        run: |
-           MODULE_PATH=$(
-               pip show minchin.pelican.plugins.summary | \
-               grep 'Location:' | \
-               awk '{print $2}'
-           )
-           FILE_PATH=$MODULE_PATH/minchin/pelican/plugins/summary/summary.py
-           sed -i 's/instance._summary/instance.metadata["summary"]/' $FILE_PATH
-
       - name: Build site
         run: |
           pelican content -o output -s publishconf.py
