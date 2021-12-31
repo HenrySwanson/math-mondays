@@ -54,17 +54,17 @@ declare var MathJax: any;
 })();
 
 // private global for svgdom's window
-var _svgdom_window = svgdom.createSVGWindow();
+var svgdom_window = svgdom.createSVGWindow();
 
 // Set up a fake DOM with a single SVG element at the root
-var SVG: svgjs.Library = require('svg.js')(_svgdom_window);
+var SVG: svgjs.Library = require('svg.js')(svgdom_window);
 
-var _createCanvas = once_only(function (): svgjs.Container {
-	return SVG(_svgdom_window.document.documentElement);
+var createCanvas = once_only(function (): svgjs.Container {
+	return SVG(svgdom_window.document.documentElement);
 });
 
-function getCanvas(): svgjs.Container {
-	var canvas = _createCanvas();
+export function getCanvas(): svgjs.Container {
+	var canvas = createCanvas();
 	canvas.clear();
 	return canvas;
 }
@@ -73,7 +73,7 @@ function getCanvas(): svgjs.Container {
 // SVG helper methods
 //--------------------------------
 
-function loadFont(fontPath: string): TextToSVG {
+export function loadFont(fontPath: string): TextToSVG {
 	return TextToSVG.loadSync(fontPath);
 }
 
@@ -88,7 +88,7 @@ function scaleFromOrigin(svgObj: svgjs.Shape, scaleFactor: number): void {
 	svgObj.move(oldBBox.x * scaleFactor, oldBBox.y * scaleFactor);
 }
 
-function makeTextPath(canvas: svgjs.Container, fontObj: TextToSVG, text: string, fontSizePx: number): svgjs.Path {
+export function makeTextPath(canvas: svgjs.Container, fontObj: TextToSVG, text: string, fontSizePx: number): svgjs.Path {
 	// 72 is big enough to render crisply
 	var path = canvas.path(fontObj.getD(text, { fontSize: 72 }));
 
@@ -102,7 +102,7 @@ function makeTextPath(canvas: svgjs.Container, fontObj: TextToSVG, text: string,
 	return path;
 }
 
-function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: number): svgjs.Element {
+export function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: number): svgjs.Element {
 	// Returns some math text with the baseline at the origin.
 	const adaptor = MathJax.startup.adaptor;
 	const node = MathJax.tex2svg(tex, { display: true });
@@ -148,7 +148,7 @@ function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: number): 
 // Saving images to file
 //--------------------------------
 
-function shrinkCanvas(canvas: svgjs.Container, margin: number = 0): void {
+export function shrinkCanvas(canvas: svgjs.Container, margin: number = 0): void {
 	// Computes bounding box over all elements in the canvas, and resizes the
 	// viewbox to fit it.
 	var box: svgjs.Box = canvas.bbox();
@@ -178,7 +178,7 @@ function shrinkCanvas(canvas: svgjs.Container, margin: number = 0): void {
 	);
 }
 
-function adjustCanvas(canvas: svgjs.Container, left: number, right: number, top: number, bottom: number) {
+export function adjustCanvas(canvas: svgjs.Container, left: number, right: number, top: number, bottom: number) {
 	var viewbox = canvas.viewbox();
 	canvas.viewbox(
 		viewbox.x - left, viewbox.y - top,
@@ -186,7 +186,7 @@ function adjustCanvas(canvas: svgjs.Container, left: number, right: number, top:
 	);
 }
 
-function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackground: boolean) {
+export function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackground: boolean = false) {
 	if (highlightBackground) {
 		var bbox = canvas.viewbox();
 		canvas.rect(bbox.width, bbox.height).move(bbox.x, bbox.y).back().fill("#ffff00");
@@ -199,15 +199,4 @@ function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackg
 	parser.poly.instance.attr("points", "");
 
 	fs.writeFileSync(filename, canvas.svg());
-}
-
-module.exports = {
-	getCanvas,
-	loadFont,
-	scaleFromOrigin,
-	makeTextPath,
-	makeMathSvg,
-	shrinkCanvas,
-	adjustCanvas,
-	saveImgToFile
 }
