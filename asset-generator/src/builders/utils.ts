@@ -1,17 +1,19 @@
 "use strict;"
 
-const fs = require('fs');
-const svgdom = require('svgdom');
-const TextToSVG = require('text-to-svg');
+import fs = require('fs');
+// @ts-ignore
+import svgdom = require('svgdom');
+import TextToSVG = require('text-to-svg');
+import type { svgjs } from "svg.js";
 
 //--------------------------------
 // Nonsense for setting up modules
 //--------------------------------
 
-function once_only(fn) {
+function once_only<T>(fn: () => T) {
 	var called = false;
-	var result;
-	return function () {
+	var result: T;
+	return function (): T {
 		if (!called) {
 			called = true;
 			result = fn();
@@ -20,8 +22,11 @@ function once_only(fn) {
 	}
 }
 
-var initMathJax = once_only(function () {
+// Initialize MathJax
+declare var MathJax: any;
+(function (): any {
 	const PACKAGES = 'base, autoload, require, ams, newcommand';
+	// @ts-ignore
 	global.MathJax = {
 		tex: { packages: PACKAGES.split(/\s*,\s*/) },
 		svg: { fontCache: 'local' },
@@ -46,19 +51,19 @@ var initMathJax = once_only(function () {
 	);
 
 	MathJax.config.startup.ready();
+})();
+
+// private global for svgdom's window
+var _svgdom_window = svgdom.createSVGWindow();
+
+// Set up a fake DOM with a single SVG element at the root
+var SVG: svgjs.Library = require('svg.js')(_svgdom_window);
+
+var _createCanvas = once_only(function (): svgjs.Container {
+	return SVG(_svgdom_window.document.documentElement);
 });
 
-var initSvg = once_only(function () {
-	// Set up a fake DOM with a single SVG element at the root
-	global.svg_global_window = svgdom.createSVGWindow();
-	global.SVG = require('svg.js')(svg_global_window);
-});
-
-var _createCanvas = once_only(function () {
-	return SVG(svg_global_window.document.documentElement);
-});
-
-function getCanvas() {
+function getCanvas(): svgjs.Container {
 	var canvas = _createCanvas();
 	canvas.clear();
 	return canvas;
@@ -68,11 +73,11 @@ function getCanvas() {
 // SVG helper methods
 //--------------------------------
 
-function loadFont(fontPath) {
+function loadFont(fontPath: string): TextToSVG {
 	return TextToSVG.loadSync(fontPath);
 }
 
-function scaleFromOrigin(svgObj, scaleFactor) {
+function scaleFromOrigin(svgObj: svgjs.Shape, scaleFactor: number): void {
 	// Oftentimes, mostly for text, we want to scale from the origin, not from
 	// the upper-left corner. So we do it here.
 	var oldBBox = svgObj.bbox();
@@ -83,7 +88,7 @@ function scaleFromOrigin(svgObj, scaleFactor) {
 	svgObj.move(oldBBox.x * scaleFactor, oldBBox.y * scaleFactor);
 }
 
-function makeTextPath(canvas, fontObj, text, fontSizePx) {
+function makeTextPath(canvas: svgjs.Container, fontObj: TextToSVG, text: string, fontSizePx: number): svgjs.Path {
 	// 72 is big enough to render crisply
 	var path = canvas.path(fontObj.getD(text, { fontSize: 72 }));
 
@@ -97,7 +102,7 @@ function makeTextPath(canvas, fontObj, text, fontSizePx) {
 	return path;
 }
 
-function makeMathSvg(canvas, tex, fontSizePx) {
+function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: number): svgjs.Element {
 	// Returns some math text with the baseline at the origin.
 	const adaptor = MathJax.startup.adaptor;
 	const node = MathJax.tex2svg(tex, { display: true });
@@ -114,14 +119,14 @@ function makeMathSvg(canvas, tex, fontSizePx) {
 	var exToPx = metrics.ex / metrics.scale;
 
 	// Now we change the units to px (this should not change the visual size).
-	var heightEx = +mathSvg.height().slice(0, -2);
-	mathSvg.size(null, heightEx * exToPx);
+	var heightEx = mathSvg.height();// TODO +XXX.slice(0, -2);
+	mathSvg.size(undefined, heightEx * exToPx);
 
 	// Next, we shift it so that the baseline is at zero. To do this, we have to
 	// inspect the "style" property of the object; specifically, the property
 	// vertical-align. Fortunately, that should be the only thing in there.
 	var regex = /vertical-align:(-?\d*\.?\d*)(ex)?/
-	var verticalAlignEx = +regex.exec(mathSvg.attr("style"))[1];
+	var verticalAlignEx = +regex.exec(mathSvg.attr("style"))![1];
 
 	// Currently the upper-left corner is at the origin, so we want to raise it
 	// by the height, and then by vertical-align. But this all has to be done
@@ -143,18 +148,19 @@ function makeMathSvg(canvas, tex, fontSizePx) {
 // Saving images to file
 //--------------------------------
 
-function shrinkCanvas(canvas, margin = 0) {
+function shrinkCanvas(canvas: svgjs.Container, margin: number = 0): void {
 	// Computes bounding box over all elements in the canvas, and resizes the
 	// viewbox to fit it.
-	var box = canvas.bbox();
+	var box: svgjs.Box = canvas.bbox();
 
-	function merge(element) {
+	function merge(element: svgjs.Element) {
 		// Explicitly exclude defs, because they're not really in the doc
 		if (element.type == 'defs') {
 			return;
 		}
 		// SVG.js creates an zero-opacity SVG.js for 'parsing'; we want to omit
 		// this from our calculations
+		// @ts-ignore
 		if (element.type === "svg" && element.style("opacity") === "0") {
 			return;
 		}
@@ -162,7 +168,7 @@ function shrinkCanvas(canvas, margin = 0) {
 			box = box.merge(element.rbox(canvas));
 		}
 		if (element instanceof SVG.Container) {
-			element.children().forEach(merge);
+			(element as svgjs.Container).children().forEach(merge);
 		}
 	}
 
@@ -172,7 +178,7 @@ function shrinkCanvas(canvas, margin = 0) {
 	);
 }
 
-function adjustCanvas(canvas, left, right, top, bottom) {
+function adjustCanvas(canvas: svgjs.Container, left: number, right: number, top: number, bottom: number) {
 	var viewbox = canvas.viewbox();
 	canvas.viewbox(
 		viewbox.x - left, viewbox.y - top,
@@ -180,22 +186,22 @@ function adjustCanvas(canvas, left, right, top, bottom) {
 	);
 }
 
-function saveImgToFile(canvas, filename, highlightBackground) {
+function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackground: boolean) {
 	if (highlightBackground) {
 		var bbox = canvas.viewbox();
 		canvas.rect(bbox.width, bbox.height).move(bbox.x, bbox.y).back().fill("#ffff00");
 	}
 
 	// clear the parser object (can't delete it or it'll confuse SVG.js)
-	SVG.parser.path.instance.attr("d", "");
-	SVG.parser.poly.instance.attr("points", "");
+	// @ts-ignore
+	var parser = SVG.parser;
+	parser.path.instance.attr("d", "");
+	parser.poly.instance.attr("points", "");
 
 	fs.writeFileSync(filename, canvas.svg());
 }
 
 module.exports = {
-	initMathJax,
-	initSvg,
 	getCanvas,
 	loadFont,
 	scaleFromOrigin,

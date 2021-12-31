@@ -1,9 +1,7 @@
 "use strict";
 
 // Import our utils library and initialize mathjax+svg
-const asset_utils = require("./utils.js");
-asset_utils.initMathJax();
-asset_utils.initSvg();
+const asset_utils = require("./utils");
 
 // Import other libraries
 const util = require('util');
