@@ -18,7 +18,7 @@ var CLONE_COLOR = "#422aa8";
 /* Hydra Structure */
 
 class HydraNode {
-	constructor(drawing, parent=null) {
+	constructor(drawing, parent = null) {
 		// SVG canvas and elements to draw on it
 		this.drawing = drawing;
 		this.svgHead = drawing.circle(NODE_DIAM);
@@ -36,7 +36,7 @@ class HydraNode {
 		// Stuff to do for non-root nodes
 		if (parent !== null) {
 			parent.children.push(this);
-			this.svgNeck = drawing.line().stroke({width: NECK_WIDTH});
+			this.svgNeck = drawing.line().stroke({ width: NECK_WIDTH });
 			this.svgNeck.back();  // put it behind head
 		}
 	}
@@ -150,7 +150,7 @@ function computeHydraLayout(hydra) {
 			// Grab the sibling and its contour
 			var sibling = siblings[idx];
 			var rightContour = findContour(sibling, Math.max);
-			
+
 			// Find the minimum gap (maybe negative) between the contours
 			var gap = NODE_SPACING;
 			var contourLength = Math.min(rightContour.length, leftContour.length);
@@ -162,7 +162,7 @@ function computeHydraLayout(hydra) {
 			if (gap >= NODE_SPACING) {
 				continue;
 			}
-			
+
 			// Otherwise, we'll have to move ourselves a total of
 			// (NODE_SPACING - gap) away. But we distribute it across all
 			// the siblings between us.
@@ -174,7 +174,7 @@ function computeHydraLayout(hydra) {
 				siblings[idx + i].targetX += totalShift * i / numGaps;
 				siblings[idx + i].offsetX += totalShift * i / numGaps;
 			}
-			
+
 			// Move ourselves, and also update our contour
 			node.targetX += totalShift;
 			node.offsetX += totalShift;
@@ -184,10 +184,10 @@ function computeHydraLayout(hydra) {
 
 	// Second, we do a pre-order traversal to correct our guesses, and to set
 	// Y positions. We also take this opportunity to find the leftmost node.
-	function secondPass(node, totalOffset=0) {
+	function secondPass(node, totalOffset = 0) {
 
 		// Set Y position
-		if (! node.isRoot()) {
+		if (!node.isRoot()) {
 			node.targetY = node.parent.targetY + LEVEL_SPACING;
 		} else {
 			node.targetY = 0;
@@ -283,10 +283,10 @@ function resizeViewbox(drawing, hydra) {
 	var boxHeight = treeWidth * NODE_SPACING;
 
 	drawing.viewbox(
-		-(H_PADDING + NODE_DIAM/2),
-		-(V_PADDING + NODE_DIAM/2),
-		boxWidth +  2*H_PADDING + NODE_DIAM,
-		boxHeight + 2*V_PADDING + NODE_DIAM
+		-(H_PADDING + NODE_DIAM / 2),
+		-(V_PADDING + NODE_DIAM / 2),
+		boxWidth + 2 * H_PADDING + NODE_DIAM,
+		boxHeight + 2 * V_PADDING + NODE_DIAM
 	)
 }
 
@@ -309,7 +309,7 @@ function setListeners(node, hydra, clickCallback) {
 	// We've got a sequence of animation callbacks
 	function cut() {
 		// Return immediately if we should ignore the click
-		if (node.isRoot() || !node.isLeaf() || wasClicked) {return;}
+		if (node.isRoot() || !node.isLeaf() || wasClicked) { return; }
 
 		// Increment counter
 		wasClicked = true;
@@ -366,7 +366,7 @@ function setListeners(node, hydra, clickCallback) {
 		if (hydra.isLeaf()) {
 			alert(
 				"Wow... I can't believe you actually did it!\n" +
-				"Sorry I didn't write anything cool for you yet. " + 
+				"Sorry I didn't write anything cool for you yet. " +
 				"Perhaps I'll add something later."
 			);
 		}
@@ -387,7 +387,7 @@ function setListeners(node, hydra, clickCallback) {
 // Fancy business to make this browser and node compatible. Every day I hate JS
 // more and more. Just export the stuff I need for making diagrams.
 // Taken from: https://caolan.org/posts/writing_for_node_and_the_browser.html
-(function(exports){
+(function (exports) {
 	exports.NODE_DIAM = NODE_DIAM;
 	exports.NODE_SPACING = NODE_SPACING;
 	exports.LEVEL_SPACING = LEVEL_SPACING;

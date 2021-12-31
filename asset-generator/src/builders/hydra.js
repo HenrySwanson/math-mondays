@@ -18,7 +18,7 @@ var canvas = asset_utils.createCanvas();
 // makes hydra creation much easier
 function makeHydra(str) {
 	// (()())
-    var root = new hydralib.HydraNode(canvas);
+	var root = new hydralib.HydraNode(canvas);
 	var ptr = root;
 	for (var i = 0; i < str.length; i++) {
 		if (str[i] === "(") {
@@ -45,9 +45,9 @@ asset_utils.makeTextPath(canvas, ALTE_DIN, "body", 0.75).fill(textColor).move(-3
 asset_utils.makeTextPath(canvas, ALTE_DIN, "heads", 0.75).fill(textColor).move(6, 2);
 
 // and arrows (TODO compute the endpoints?)
-var stroke = { color: textColor, width: 0.06, linecap: 'round', linejoin: 'round'};
-var marker = canvas.marker(5, 5, function(add) {
-  add.polygon("0,0 5,2.5 0,5").fill(textColor);
+var stroke = { color: textColor, width: 0.06, linecap: 'round', linejoin: 'round' };
+var marker = canvas.marker(5, 5, function (add) {
+	add.polygon("0,0 5,2.5 0,5").fill(textColor);
 });
 
 canvas.path("M -2.3,0.8 Q -2.3,2 -0.6,2").stroke(stroke).fill('none').marker('end', marker);
@@ -117,17 +117,17 @@ function addX(node) {
 	var cross = canvas.path(
 		util.format(
 			"M %f,%f l %f,%f m %f,%f l %f,%f",
-			cx + size/2, cy + size/2,
+			cx + size / 2, cy + size / 2,
 			-size, -size,
 			0, size,
 			size, -size
 		)
 	);
-	cross.stroke({color: "#bf0000", width: 0.1});
+	cross.stroke({ color: "#bf0000", width: 0.1 });
 	cross.putIn(node.svgHead.parent());  // use same coordinates as head
 }
 
-function setupAttackingExample(startIdx, doThree=false) {
+function setupAttackingExample(startIdx, doThree = false) {
 	canvas.clear();
 
 	var spacing = doThree ? 6 : 8;
@@ -147,7 +147,7 @@ function setupAttackingExample(startIdx, doThree=false) {
 	// align vertically and space horizontally
 	group2.dmove(spacing, hydra1.svgHead.y() - hydra2.svgHead.y());
 
-	if (! doThree) {
+	if (!doThree) {
 		return [hydra1, hydra2];
 	}
 
@@ -262,7 +262,7 @@ addX(hydraB.children[2]);
 
 // TODO draw dead face
 var groupC = hydraC.svgHead.parent();
-var stroke = {color: "#ffffff", width: 0.025};
+var stroke = { color: "#ffffff", width: 0.025 };
 var lefteye = groupC.path("M -1,-1 L 1,1 M 1,-1 L -1,1")
 	.size(0.1).stroke(stroke).center(-0.1, -0.06);
 var rightEye = lefteye.clone().cx(0.1);
@@ -283,7 +283,7 @@ var values = [
 	"\\omega^2", "3 \\omega", "2 \\omega + 3", "2 \\omega",
 	"\\omega + 3", "\\omega", "3", "0",
 ];
-for (var i=0; i < 8; i++) {
+for (var i = 0; i < 8; i++) {
 	// Where's the UL corner of our cell?
 	var cellX = (i % 4) * 8;
 	var cellY = (i < 4) ? 0 : 8;

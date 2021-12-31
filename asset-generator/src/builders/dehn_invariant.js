@@ -15,7 +15,7 @@ const PURPLE = "#ba36ba";
 const YELLOW = "#f7ca36";
 const BROWN = "#ad5e0e";
 const DK_BLUE = "#4287f5";
-const LT_BLUE = "#5db3e8"; 
+const LT_BLUE = "#5db3e8";
 const MED_BLUE = "#5fbff9";
 
 // Some helpers for geometry
@@ -87,7 +87,7 @@ function makePiece(pts, string, color, stroke_width) {
 	for (var i = 0; i < string.length; i++) {
 		myPts.push(letterToPt(string[i], pts));
 	}
-	return canvas.polygon(myPts).fill(color).stroke({color: "#000", width: stroke_width, linejoin: "bevel"});
+	return canvas.polygon(myPts).fill(color).stroke({ color: "#000", width: stroke_width, linejoin: "bevel" });
 }
 
 function letterToPt(letter, pts) {
@@ -95,7 +95,7 @@ function letterToPt(letter, pts) {
 }
 
 function makePieces(group, pts, stroke_width, pieceDefs) {
-	var strokeStyle = {color: "#000", width: stroke_width, linejoin: "bevel"};
+	var strokeStyle = { color: "#000", width: stroke_width, linejoin: "bevel" };
 	var pieces = [];
 	for (var i = 0; i < pieceDefs.length; i++) {
 		var [string, color] = pieceDefs[i];
@@ -105,7 +105,7 @@ function makePieces(group, pts, stroke_width, pieceDefs) {
 	}
 	return pieces;
 }
-		
+
 
 function moveAlong(piece, start, end) {
 	// moves the piece so that start ends up at end. technically neither point needs
@@ -139,7 +139,7 @@ function verticalAlign(groups) {
 // +---------------+
 var pts = [[0, 0], [4, 0], [4, 4], [0, 4], [2, 2], [4, 2], [2, 4], [3, 1], [3, 3], [1, 3]];
 var pieceDefs = [["ABE", RED], ["ADE", GREEN], ["BFH", PURPLE],
-	["EHFI", YELLOW], ["EIJ", BROWN], ["DGIJ", DK_BLUE], ["CFG", LT_BLUE]];
+["EHFI", YELLOW], ["EIJ", BROWN], ["DGIJ", DK_BLUE], ["CFG", LT_BLUE]];
 var leftGroup = canvas.group();
 makePieces(leftGroup, pts, 0.06, pieceDefs);
 
@@ -196,7 +196,7 @@ function makeTrianglePoints() {
 // flip y-coords so it's right side up
 var pts = makeTrianglePoints().map(pt => [pt[0], -pt[1]]);
 
-var pieceDefs = [["DCEH", RED],	["ADHF", GREEN], ["BEIG", DK_BLUE], ["FGI", YELLOW]];
+var pieceDefs = [["DCEH", RED], ["ADHF", GREEN], ["BEIG", DK_BLUE], ["FGI", YELLOW]];
 var strokeWidth = 0.015;
 
 var leftGroup = canvas.group();
@@ -278,7 +278,7 @@ function makePentagonPoints() {
 // flip y-coords so it's right side up
 var pts = makePentagonPoints().map(pt => [pt[0], -pt[1]]);
 var pieceDefs = [["AEF", GREEN], ["ABF", YELLOW], ["EKLH", LT_BLUE],
-	["ILK", RED], ["BIJG", PURPLE],	["GCDHJ", BROWN]];
+["ILK", RED], ["BIJG", PURPLE], ["GCDHJ", BROWN]];
 
 var leftGroup = canvas.group();
 makePieces(leftGroup, pts, 0.03, pieceDefs);
@@ -361,7 +361,7 @@ function makeStarPoints() {
 // flip y-coords so it's right side up
 pts = makeStarPoints().map(pt => [pt[0], -pt[1]]);
 var pieceDefs = [["BCDEFJ", GREEN], ["BJKLM", RED], ["FNHIJ", LT_BLUE],
-    ["ABM", PURPLE], ["FNG", YELLOW]];
+["ABM", PURPLE], ["FNG", YELLOW]];
 
 var leftGroup = canvas.group();
 makePieces(leftGroup, pts, 0.03, pieceDefs);
@@ -396,8 +396,8 @@ var pts = [
 	[0, 0], [5, 1], [8, 4], [3, 6], [1, 4], [2, 2]
 ];
 
-var solidStroke = {width: 0.08};
-var dashedStroke = {width: 0.05, dasharray: 0.2};
+var solidStroke = { width: 0.08 };
+var dashedStroke = { width: 0.05, dasharray: 0.2 };
 var leftGroup = canvas.group();
 leftGroup.polygon(pts).fill(YELLOW).stroke(solidStroke);
 leftGroup.line([pts[1], pts[5]]).stroke(dashedStroke);
@@ -521,8 +521,8 @@ pts.push(interpolate(pts[0], pts[1], 0.1));
 pts.push(interpolate(pts[1], pts[2], 0.5));
 pts.push(interpolate(pts[4], pts[5], 0.7));
 
-var cutStroke = {color: RED, width: 0.1, dasharray: 0.2};
-var thickStroke = {width: 0.3};
+var cutStroke = { color: RED, width: 0.1, dasharray: 0.2 };
+var thickStroke = { width: 0.3 };
 
 var leftGroup = canvas.group();
 makePieces(
@@ -565,7 +565,7 @@ canvas.clear();
 var pts = pts.slice(0, 6);
 
 // add points on lines
-pts.push(interpolate(pts[3], pts[5], 2/3));
+pts.push(interpolate(pts[3], pts[5], 2 / 3));
 pts.push([12, 3]); // off in the distance a bit
 
 var leftGroup = canvas.group();

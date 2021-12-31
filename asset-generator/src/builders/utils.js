@@ -11,9 +11,9 @@ const TextToSVG = require('text-to-svg');
 function initMathJax() {
 	const PACKAGES = 'base, autoload, require, ams, newcommand';
 	global.MathJax = {
-		tex: {packages: PACKAGES.split(/\s*,\s*/)},
-		svg: {fontCache: 'local'},
-		startup: {typeset: false}
+		tex: { packages: PACKAGES.split(/\s*,\s*/) },
+		svg: { fontCache: 'local' },
+		startup: { typeset: false }
 	};
 
 	require('mathjax/es5/startup.js');
@@ -39,7 +39,7 @@ function initMathJax() {
 function initSvg() {
 	// Set up a fake DOM with a single SVG element at the root
 	global.svg_global_window = svgdom.createSVGWindow();
-	global.SVG = require('svg.js')(svg_global_window);	
+	global.SVG = require('svg.js')(svg_global_window);
 }
 
 function createCanvas() {
@@ -67,7 +67,7 @@ function scaleFromOrigin(svgObj, scaleFactor) {
 
 function makeTextPath(canvas, fontObj, text, fontSizePx) {
 	// 72 is big enough to render crisply
-	var path = canvas.path(fontObj.getD(text, {fontSize: 72}));
+	var path = canvas.path(fontObj.getD(text, { fontSize: 72 }));
 
 	// The text is created with the start of the baseline at the origin, so
 	// we use scaleFromOrigin, and not size().
@@ -82,13 +82,13 @@ function makeTextPath(canvas, fontObj, text, fontSizePx) {
 function makeMathSvg(canvas, tex, fontSizePx) {
 	// Returns some math text with the baseline at the origin.
 	const adaptor = MathJax.startup.adaptor;
-	const node = MathJax.tex2svg(tex, {display: true});
+	const node = MathJax.tex2svg(tex, { display: true });
 	var svgText = adaptor.outerHTML(node.children[0]);
 	canvas.svg(svgText);  // add inner SVG element to the canvas
 
 	// get the last element, which is our svg object
 	var children = canvas.children();
-	var mathSvg = children[children.length-1];
+	var mathSvg = children[children.length - 1];
 
 	// Unfortunately, MathJax outputs units of ex, but that's not compatible
 	// with svg.js. Fortunately, we can ask it for its context.
@@ -96,7 +96,7 @@ function makeMathSvg(canvas, tex, fontSizePx) {
 	var exToPx = metrics.ex / metrics.scale;
 
 	// Now we change the units to px (this should not change the visual size).
-	var heightEx = +mathSvg.height().slice(0,-2);
+	var heightEx = +mathSvg.height().slice(0, -2);
 	mathSvg.size(null, heightEx * exToPx);
 
 	// Next, we shift it so that the baseline is at zero. To do this, we have to
@@ -114,7 +114,7 @@ function makeMathSvg(canvas, tex, fontSizePx) {
 	// is, by default, 1 em tall, so that's what we put in our denominator.
 	var scaleFactor = fontSizePx / metrics.em * metrics.scale;
 	scaleFromOrigin(mathSvg, scaleFactor);
-	
+
 	// Lastly, clear the style element so it can't interfere with us
 	mathSvg.attr("style", "");
 
@@ -125,7 +125,7 @@ function makeMathSvg(canvas, tex, fontSizePx) {
 // Saving images to file
 //--------------------------------
 
-function shrinkCanvas(canvas, margin=0) {
+function shrinkCanvas(canvas, margin = 0) {
 	// Computes bounding box over all elements in the canvas, and resizes the
 	// viewbox to fit it.
 	var box = canvas.bbox();
@@ -150,7 +150,7 @@ function shrinkCanvas(canvas, margin=0) {
 
 	merge(canvas);
 	canvas.viewbox(
-		box.x - margin, box.y - margin,	box.w + 2 * margin, box.h + 2 * margin
+		box.x - margin, box.y - margin, box.w + 2 * margin, box.h + 2 * margin
 	);
 }
 
@@ -170,12 +170,13 @@ function saveImgToFile(canvas, filename, highlightBackground) {
 
 	// clear the parser object (can't delete it or it'll confuse SVG.js)
 	SVG.parser.path.instance.attr("d", "");
+	SVG.parser.poly.instance.attr("points", "");
 
 	fs.writeFileSync(filename, canvas.svg());
 }
 
 module.exports = {
-    initMathJax,
+	initMathJax,
 	initSvg,
 	createCanvas,
 	loadFont,
@@ -184,5 +185,5 @@ module.exports = {
 	makeMathSvg,
 	shrinkCanvas,
 	adjustCanvas,
-    saveImgToFile
+	saveImgToFile
 }
