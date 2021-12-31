@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "dist",
+        "strict": true,
+        "lib": [
+            "es2016"
+        ],
+        "sourceMap": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+}
