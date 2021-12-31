@@ -8,7 +8,19 @@ const TextToSVG = require('text-to-svg');
 // Nonsense for setting up modules
 //--------------------------------
 
-function initMathJax() {
+function once_only(fn) {
+	var called = false;
+	var result;
+	return function () {
+		if (!called) {
+			called = true;
+			result = fn();
+		}
+		return result;
+	}
+}
+
+var initMathJax = once_only(function () {
 	const PACKAGES = 'base, autoload, require, ams, newcommand';
 	global.MathJax = {
 		tex: { packages: PACKAGES.split(/\s*,\s*/) },
@@ -34,16 +46,22 @@ function initMathJax() {
 	);
 
 	MathJax.config.startup.ready();
-}
+});
 
-function initSvg() {
+var initSvg = once_only(function () {
 	// Set up a fake DOM with a single SVG element at the root
 	global.svg_global_window = svgdom.createSVGWindow();
 	global.SVG = require('svg.js')(svg_global_window);
-}
+});
 
-function createCanvas() {
+var _createCanvas = once_only(function () {
 	return SVG(svg_global_window.document.documentElement);
+});
+
+function getCanvas() {
+	var canvas = _createCanvas();
+	canvas.clear();
+	return canvas;
 }
 
 //--------------------------------
@@ -178,7 +196,7 @@ function saveImgToFile(canvas, filename, highlightBackground) {
 module.exports = {
 	initMathJax,
 	initSvg,
-	createCanvas,
+	getCanvas,
 	loadFont,
 	scaleFromOrigin,
 	makeTextPath,

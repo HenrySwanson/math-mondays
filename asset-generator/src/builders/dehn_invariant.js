@@ -6,7 +6,7 @@ asset_utils.initMathJax();
 asset_utils.initSvg();
 
 // Create the canvas to work on
-var canvas = asset_utils.createCanvas();
+var canvas = asset_utils.getCanvas();
 
 // Name some colors
 const RED = "#c91435";

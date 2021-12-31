@@ -13,7 +13,7 @@ const ALTE_DIN = asset_utils.loadFont("../theme/static/fonts/alte-din-1451-mitte
 
 // Start creating some diagrams!
 // This is the actual canvas we want to work on
-var canvas = asset_utils.createCanvas();
+var canvas = asset_utils.getCanvas();
 
 // makes hydra creation much easier
 function makeHydra(str) {
