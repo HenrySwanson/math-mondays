@@ -3,6 +3,7 @@ _drafts/
 .sass-cache/
 node_modules/
 dist/
+web-bundles/
 package-lock.json
 __pycache__/
 output/

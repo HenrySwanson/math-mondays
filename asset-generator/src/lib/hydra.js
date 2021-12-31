@@ -66,9 +66,6 @@ class HydraNode {
 			throw "Can't clone root!"
 		}
 
-		// Bind drawing outside the lambda (late binding is awful)
-		drawing = this.drawing;
-
 		// Make a copy of this and its children. Also set SVG position.
 		function copySubtrees(src, dst) {
 			dst.targetX = src.targetX;
@@ -296,6 +293,7 @@ function setListeners(node, hydra, clickCallback) {
 	// TODO this is kinda gross; the way we wait is to define a second (third,
 	// fourth, ...) callback, and call that after an afterAll(). Can I put
 	// together something better?
+	var drawing = hydra.drawing;
 
 	// Apply recursively to children
 	node.children.forEach(child => setListeners(child, hydra, clickCallback));
@@ -313,7 +311,6 @@ function setListeners(node, hydra, clickCallback) {
 
 		// Increment counter
 		wasClicked = true;
-		numClicks += 1;
 		clickCallback();
 
 		// Opacity has to be controlled as a group or else the overlap causes
@@ -398,4 +395,6 @@ function setListeners(node, hydra, clickCallback) {
 	exports.getHydraWidth = getHydraWidth;
 	exports.computeHydraLayout = computeHydraLayout;
 	exports.drawHydraImmediately = drawHydraImmediately;
+	exports.resizeViewbox = resizeViewbox;
+	exports.setListeners = setListeners;
 }(typeof exports === 'undefined' ? {} : exports));
