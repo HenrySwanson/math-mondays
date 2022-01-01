@@ -13,12 +13,23 @@ var DIE_DURATION = 500;
 var MOVE_DURATION = 700;
 var CLONE_DURATION = 200;
 
-var CLONE_COLOR = "#422aa8";
+export var CLONE_COLOR = "#422aa8";
 
 /* Hydra Structure */
 
-class HydraNode {
-	constructor(drawing, parent = null) {
+export class HydraNode {
+	drawing: svgjs.Container
+	svgHead: svgjs.Circle
+	svgNeck: svgjs.Line | null
+
+	parent: HydraNode | null
+	children: HydraNode[]
+
+	targetX: number | null
+	targetY: number | null
+	offsetX: number | null
+
+	constructor(drawing: svgjs.Container, parent: HydraNode | null = null) {
 		// SVG canvas and elements to draw on it
 		this.drawing = drawing;
 		this.svgHead = drawing.circle(NODE_DIAM);
@@ -36,29 +47,29 @@ class HydraNode {
 		// Stuff to do for non-root nodes
 		if (parent !== null) {
 			parent.children.push(this);
-			this.svgNeck = drawing.line().stroke({ width: NECK_WIDTH });
+			this.svgNeck = drawing.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
 			this.svgNeck.back();  // put it behind head
 		}
 	}
 
-	isRoot() {
+	isRoot(): boolean {
 		return (this.parent === null);
 	}
 
-	isLeaf() {
+	isLeaf(): boolean {
 		return (this.children.length === 0);
 	}
 
-	appendChild() {
+	appendChild(): HydraNode {
 		return new HydraNode(this.drawing, this);
 	}
 
-	getLeftSiblings() {
+	getLeftSiblings(): HydraNode[] {
 		if (this.isRoot()) {
 			return [];
 		}
-		var idx = this.parent.children.indexOf(this);
-		return this.parent.children.slice(0, idx);
+		var idx = this.parent!.children.indexOf(this);
+		return this.parent!.children.slice(0, idx);
 	}
 
 	clone() {
@@ -67,7 +78,7 @@ class HydraNode {
 		}
 
 		// Make a copy of this and its children. Also set SVG position.
-		function copySubtrees(src, dst) {
+		function copySubtrees(src: HydraNode, dst: HydraNode) {
 			dst.targetX = src.targetX;
 			dst.targetY = src.targetY;
 			dst.offsetX = src.offsetX;
@@ -78,32 +89,32 @@ class HydraNode {
 
 		// Note that this attaches the copy to the parent, but at the end,
 		// not next to the original
-		var copy = this.parent.appendChild();
+		var copy = this.parent!.appendChild();
 		copySubtrees(this, copy);
 
 		// Put the copy next to the original
-		var idx = this.parent.children.indexOf(this);
-		this.parent.children.splice(idx, 0, copy);
-		this.parent.children.pop();
+		var idx = this.parent!.children.indexOf(this);
+		this.parent!.children.splice(idx, 0, copy);
+		this.parent!.children.pop();
 
 		return copy;
 	}
 
-	die() {
+	die(): void {
 		if (!this.isLeaf()) {
 			throw "Only leaves can be killed!";
 		}
 		if (this.isRoot()) {
 			throw "Can't die as root!";
 		}
-		var idx = this.parent.children.indexOf(this);
-		this.parent.children.splice(idx, 1);
+		var idx = this.parent!.children.indexOf(this);
+		this.parent!.children.splice(idx, 1);
 		this.svgHead.remove();
-		this.svgNeck.remove();
+		this.svgNeck!.remove();
 	}
 }
 
-function computeHydraLayout(hydra) {
+export function computeHydraLayout(hydra: HydraNode): void {
 	var minX = Infinity;  // function scope :)
 
 	// We traverse the tree three times.
@@ -113,7 +124,7 @@ function computeHydraLayout(hydra) {
 
 	// First, we do a post-order traversal to compute initial guesses for the
 	// X positions for the nodes.
-	function firstPass(node) {
+	function firstPass(node: HydraNode) {
 		// Recursively apply to children
 		node.children.forEach(child => firstPass(child));
 
@@ -125,7 +136,7 @@ function computeHydraLayout(hydra) {
 		var siblings = node.getLeftSiblings();
 		if (siblings.length !== 0) {
 			var prevSibling = siblings[siblings.length - 1];
-			node.targetX = prevSibling.targetX + NODE_SPACING;
+			node.targetX = prevSibling.targetX! + NODE_SPACING;
 		} else {
 			node.targetX = 0;
 		}
@@ -134,7 +145,7 @@ function computeHydraLayout(hydra) {
 		if (!node.isLeaf()) {
 			var firstChild = node.children[0];
 			var lastChild = node.children[node.children.length - 1];
-			var center = (firstChild.targetX + lastChild.targetX) / 2;
+			var center = (firstChild.targetX! + lastChild.targetX!) / 2;
 			node.offsetX = node.targetX - center;
 		}
 
@@ -168,52 +179,52 @@ function computeHydraLayout(hydra) {
 
 			// Move our siblings
 			for (var i = 1; i < numGaps; i++) {
-				siblings[idx + i].targetX += totalShift * i / numGaps;
-				siblings[idx + i].offsetX += totalShift * i / numGaps;
+				siblings[idx + i].targetX! += totalShift * i / numGaps;
+				siblings[idx + i].offsetX! += totalShift * i / numGaps;
 			}
 
 			// Move ourselves, and also update our contour
 			node.targetX += totalShift;
-			node.offsetX += totalShift;
+			node.offsetX! += totalShift;
 			leftContour = leftContour.map(x => x + totalShift);
 		}
 	}
 
 	// Second, we do a pre-order traversal to correct our guesses, and to set
 	// Y positions. We also take this opportunity to find the leftmost node.
-	function secondPass(node, totalOffset = 0) {
+	function secondPass(node: HydraNode, totalOffset: number = 0) {
 
 		// Set Y position
 		if (!node.isRoot()) {
-			node.targetY = node.parent.targetY + LEVEL_SPACING;
+			node.targetY = node.parent!.targetY! + LEVEL_SPACING;
 		} else {
 			node.targetY = 0;
 		}
 
 		// Apply the offset
-		node.targetX += totalOffset;
-		minX = Math.min(minX, node.targetX);
+		node.targetX! += totalOffset;
+		minX = Math.min(minX, node.targetX!);
 
 		// Tack on our offset, and recursively apply to children
-		totalOffset += node.offsetX;
+		totalOffset += node.offsetX!;
 		node.children.forEach(child => secondPass(child, totalOffset));
 	}
 
 	// Lastly, we do another post-order traversal to shift everything back into
 	// the positive quadrant of the plane
-	function thirdPass(node) {
-		node.targetX -= minX;
+	function thirdPass(node: HydraNode) {
+		node.targetX! -= minX;
 		node.children.forEach(child => thirdPass(child));
 	}
 
-	function findContour(node, cmp) {
+	function findContour(node: HydraNode, cmp: (a: number, b: number) => number): number[] {
 		// This variable has a scope outside the helper function :)
-		var contour = [];
+		var contour: number[] = [];
 
 		// Evaluates a node and its children, affecting the `contour` variable
-		function helper(node, cmp, totalOffset, depth) {
+		function helper(node: HydraNode, cmp: (a: number, b: number) => number, totalOffset: number, depth: number) {
 			// Update the contour with ourselves
-			var realX = node.targetX + totalOffset;
+			var realX = node.targetX! + totalOffset;
 			if (depth < contour.length) {
 				contour[depth] = cmp(contour[depth], realX);
 			} else {
@@ -221,7 +232,7 @@ function computeHydraLayout(hydra) {
 			}
 
 			// Update the contour with our children
-			totalOffset += node.offsetX;
+			totalOffset += node.offsetX!;
 			node.children.forEach(
 				child => helper(child, cmp, totalOffset, depth + 1)
 			);
@@ -233,48 +244,48 @@ function computeHydraLayout(hydra) {
 	}
 }
 
-function getHydraWidth(hydra) {
+function getHydraWidth(hydra: HydraNode): number {
 	// Leftmost node is zero, so we just get the largest x, which isn't
 	// necessarily the rightmost child
 	var xValues = hydra.children.map(child => getHydraWidth(child));
-	return xValues.reduce((a, b) => Math.max(a, b), hydra.targetX);
+	return xValues.reduce((a, b) => Math.max(a, b), hydra.targetX!);
 }
 
 /* Animation */
 
-function moveHydraHead(node, head) {
+function moveHydraHead(node: HydraNode, head: svgjs.Circle) {
 	// Can be applied to the SVG node or its animation
-	return head.center(node.targetY, node.targetX);
+	return head.center(node.targetY!, node.targetX!);
 }
 
-function moveHydraNeck(node, neck) {
+function moveHydraNeck(node: HydraNode, neck: svgjs.Line) {
 	// Can be applied to the SVG node or its animation
 	return neck.plot(
-		node.targetY, node.targetX, node.parent.targetY, node.parent.targetX
+		node.targetY!, node.targetX!, node.parent!.targetY!, node.parent!.targetX!
 	);
 }
 
-function animateHydra(node, duration, ease, head_fn, neck_fn) {
+function animateHydra(node: HydraNode, duration: number, ease: string, head_fn: (h: HydraNode, head: svgjs.Animation) => svgjs.Animation, neck_fn: (h: HydraNode, neck: svgjs.Animation) => svgjs.Animation) {
 	// Apply animations recursively to a hydra
 	node.children.forEach(
 		child => animateHydra(child, duration, ease, head_fn, neck_fn)
 	);
 
 	if (!node.isRoot()) {
-		neck_fn(node, node.svgNeck.animate(duration, ease, 0));
+		neck_fn(node, node.svgNeck!.animate(duration, ease, 0));
 	}
 	return head_fn(node, node.svgHead.animate(duration, ease, 0));
 }
 
-function drawHydraImmediately(node) {
+export function drawHydraImmediately(node: HydraNode) {
 	node.children.forEach(child => drawHydraImmediately(child));
 	moveHydraHead(node, node.svgHead);
 	if (!node.isRoot()) {
-		moveHydraNeck(node, node.svgNeck);
+		moveHydraNeck(node, node.svgNeck!);
 	}
 }
 
-function resizeViewbox(drawing, hydra) {
+function resizeViewbox(drawing: svgjs.Container, hydra: HydraNode) {
 	var treeWidth = getHydraWidth(hydra);
 	var boxWidth = 3 * LEVEL_SPACING;
 	var boxHeight = treeWidth * NODE_SPACING;
@@ -289,7 +300,7 @@ function resizeViewbox(drawing, hydra) {
 
 /* Listeners */
 
-function setListeners(node, hydra, clickCallback) {
+function setListeners(node: HydraNode, hydra: HydraNode, clickCallback: () => void) {
 	// TODO this is kinda gross; the way we wait is to define a second (third,
 	// fourth, ...) callback, and call that after an afterAll(). Can I put
 	// together something better?
@@ -301,7 +312,7 @@ function setListeners(node, hydra, clickCallback) {
 	node.svgHead.click(cut);
 
 	// Data passed between callbacks
-	var svgGroup;
+	var svgGroup: svgjs.G;
 	var wasClicked = false;
 
 	// We've got a sequence of animation callbacks
@@ -315,7 +326,8 @@ function setListeners(node, hydra, clickCallback) {
 
 		// Opacity has to be controlled as a group or else the overlap causes
 		// problems. But make sure to kill the group later.
-		svgGroup = drawing.group().add(node.svgNeck).add(node.svgHead);
+		svgGroup = drawing.group().add(node.svgNeck!).add(node.svgHead);
+		// @ts-ignore
 		svgGroup.animate(DIE_DURATION, ">", 0).opacity(0).afterAll(cut2);
 	}
 
@@ -324,9 +336,9 @@ function setListeners(node, hydra, clickCallback) {
 		node.die();
 
 		// Our parent should clone itself, unless it's root
-		if (!node.parent.isRoot()) {
-			var copy1 = node.parent.clone();
-			var copy2 = node.parent.clone();
+		if (!node.parent!.isRoot()) {
+			var copy1 = node.parent!.clone();
+			var copy2 = node.parent!.clone();
 
 			setListeners(copy1, hydra, clickCallback);  // important lol
 			setListeners(copy2, hydra, clickCallback);
@@ -334,8 +346,9 @@ function setListeners(node, hydra, clickCallback) {
 			// Didn't compute layout, so copy will be on top of parent
 			drawHydraImmediately(hydra);
 
-			makeBlue(node.parent);
+			makeBlue(node.parent!);
 			makeBlue(copy1);
+			// @ts-ignore
 			makeBlue(copy2).afterAll(cut3);
 		} else {
 			cut3(); // call immediately
@@ -346,6 +359,7 @@ function setListeners(node, hydra, clickCallback) {
 		// Layout the tree again, and move everything to its final position
 		computeHydraLayout(hydra);
 		resizeViewbox(
+			// @ts-ignore
 			drawing.animate(MOVE_DURATION, "<", 0),
 			hydra
 		);
@@ -354,13 +368,17 @@ function setListeners(node, hydra, clickCallback) {
 			hydra,
 			MOVE_DURATION,
 			"<",
+			// @ts-ignore
 			(node, head) => moveHydraHead(node, head.fill("#000")),
+			// @ts-ignore
 			(node, neck) => moveHydraNeck(node, neck.stroke("#000")),
+			// @ts-ignore
 		).afterAll(cut4);
 	}
 
 	function cut4() {
 		if (hydra.isLeaf()) {
+			// @ts-ignore
 			alert(
 				"Wow... I can't believe you actually did it!\n" +
 				"Sorry I didn't write anything cool for you yet. " +
@@ -370,31 +388,15 @@ function setListeners(node, hydra, clickCallback) {
 	}
 
 	// helper function
-	function makeBlue(node) {
+	function makeBlue(node: HydraNode) {
 		return animateHydra(
 			node,
 			CLONE_DURATION,
 			"<",
+			// @ts-ignore
 			(node, head) => head.fill(CLONE_COLOR),
+			// @ts-ignore
 			(node, neck) => neck.stroke(CLONE_COLOR),
 		);
 	}
 }
-
-// Fancy business to make this browser and node compatible. Every day I hate JS
-// more and more. Just export the stuff I need for making diagrams.
-// Taken from: https://caolan.org/posts/writing_for_node_and_the_browser.html
-(function (exports) {
-	exports.NODE_DIAM = NODE_DIAM;
-	exports.NODE_SPACING = NODE_SPACING;
-	exports.LEVEL_SPACING = LEVEL_SPACING;
-
-	exports.CLONE_COLOR = CLONE_COLOR;
-
-	exports.HydraNode = HydraNode;
-	exports.getHydraWidth = getHydraWidth;
-	exports.computeHydraLayout = computeHydraLayout;
-	exports.drawHydraImmediately = drawHydraImmediately;
-	exports.resizeViewbox = resizeViewbox;
-	exports.setListeners = setListeners;
-}(typeof exports === 'undefined' ? {} : exports));

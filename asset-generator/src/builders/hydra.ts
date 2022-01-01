@@ -1,11 +1,11 @@
 "use strict";
 
 // Import our utils library and initialize mathjax+svg
-const asset_utils = require("./utils");
+import asset_utils = require("./utils");
 
 // Import other libraries
-const util = require('util');
-const hydralib = require("../lib/hydra.js");
+import util = require('util');
+import { HydraNode, computeHydraLayout, drawHydraImmediately, CLONE_COLOR } from "../lib/hydra";
 
 const ALTE_DIN = asset_utils.loadFont("../theme/static/fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
 
@@ -14,15 +14,15 @@ const ALTE_DIN = asset_utils.loadFont("../theme/static/fonts/alte-din-1451-mitte
 var canvas = asset_utils.getCanvas();
 
 // makes hydra creation much easier
-function makeHydra(str) {
+function makeHydra(str: string): HydraNode {
 	// (()())
-	var root = new hydralib.HydraNode(canvas);
+	var root = new HydraNode(canvas);
 	var ptr = root;
 	for (var i = 0; i < str.length; i++) {
 		if (str[i] === "(") {
 			ptr = ptr.appendChild();
 		} else if (str[i] === ")") {
-			ptr = ptr.parent;
+			ptr = ptr.parent!;
 		}
 	}
 	return root;
@@ -34,8 +34,8 @@ function makeHydra(str) {
 
 // make the hydra
 var hydra = makeHydra("( () () () ) () (())");
-hydralib.computeHydraLayout(hydra);
-hydralib.drawHydraImmediately(hydra);
+computeHydraLayout(hydra);
+drawHydraImmediately(hydra);
 
 // now place the text
 var textColor = "#7c7c7c";
@@ -43,14 +43,14 @@ asset_utils.makeTextPath(canvas, ALTE_DIN, "body", 0.75).fill(textColor).move(-3
 asset_utils.makeTextPath(canvas, ALTE_DIN, "heads", 0.75).fill(textColor).move(6, 2);
 
 // and arrows (TODO compute the endpoints?)
-var stroke = { color: textColor, width: 0.06, linecap: 'round', linejoin: 'round' };
+var stroke: svgjs.StrokeData = { color: textColor, width: 0.06, linecap: 'round', linejoin: 'round' };
 var marker = canvas.marker(5, 5, function (add) {
 	add.polygon("0,0 5,2.5 0,5").fill(textColor);
 });
 
 canvas.path("M -2.3,0.8 Q -2.3,2 -0.6,2").stroke(stroke).fill('none').marker('end', marker);
 
-function makeCubicPath(startHeight, endHeight, control1, control2) {
+function makeCubicPath(startHeight: number, endHeight: number, control1: number, control2: number) {
 	return util.format(
 		"M %f,%f C %f,%f %f,%f %f,%f",
 		5.8, startHeight,
@@ -88,9 +88,9 @@ var hydraStrs = [
 
 // A bunch of functions that'll make it easier to generate these very
 // similar scenes
-function groupHydra(hydra) {
+function groupHydra(hydra: HydraNode) {
 	var group = canvas.group();
-	function helper(node) {
+	function helper(node: HydraNode) {
 		group.add(node.svgHead);
 		if (node.svgNeck !== null) {
 			group.add(node.svgNeck);
@@ -102,13 +102,13 @@ function groupHydra(hydra) {
 	return group;
 }
 
-function colorNode(node) {
-	var color = hydralib.CLONE_COLOR;
+function colorNode(node: HydraNode) {
+	var color = CLONE_COLOR;
 	node.svgHead.fill(color);
-	node.svgNeck.stroke(color);
+	node.svgNeck!.stroke(color);
 }
 
-function addX(node) {
+function addX(node: HydraNode) {
 	var cx = node.svgHead.cx();
 	var cy = node.svgHead.cy();
 	var size = 0.6;
@@ -125,21 +125,21 @@ function addX(node) {
 	cross.putIn(node.svgHead.parent());  // use same coordinates as head
 }
 
-function setupAttackingExample(startIdx, doThree = false) {
+function setupAttackingExample(startIdx: number, doThree: boolean = false) {
 	canvas.clear();
 
 	var spacing = doThree ? 6 : 8;
 
 	// create first hydra
 	var hydra1 = makeHydra(hydraStrs[startIdx]);
-	hydralib.computeHydraLayout(hydra1);
-	hydralib.drawHydraImmediately(hydra1);
+	computeHydraLayout(hydra1);
+	drawHydraImmediately(hydra1);
 	var group1 = groupHydra(hydra1);
 
 	// create second hydra
 	var hydra2 = makeHydra(hydraStrs[startIdx + 1]);
-	hydralib.computeHydraLayout(hydra2);
-	hydralib.drawHydraImmediately(hydra2);
+	computeHydraLayout(hydra2);
+	drawHydraImmediately(hydra2);
 	var group2 = groupHydra(hydra2);
 
 	// align vertically and space horizontally
@@ -151,8 +151,8 @@ function setupAttackingExample(startIdx, doThree = false) {
 
 	// create third hydra
 	var hydra3 = makeHydra(hydraStrs[startIdx + 2]);
-	hydralib.computeHydraLayout(hydra3);
-	hydralib.drawHydraImmediately(hydra3);
+	computeHydraLayout(hydra3);
+	drawHydraImmediately(hydra3);
 	var group3 = groupHydra(hydra3);
 
 	// align vertically and space horizontally
@@ -260,7 +260,7 @@ addX(hydraB.children[2]);
 
 // TODO draw dead face
 var groupC = hydraC.svgHead.parent();
-var stroke = { color: "#ffffff", width: 0.025 };
+var stroke: svgjs.StrokeData = { color: "#ffffff", width: 0.025 };
 var lefteye = groupC.path("M -1,-1 L 1,1 M 1,-1 L -1,1")
 	.size(0.1).stroke(stroke).center(-0.1, -0.06);
 var rightEye = lefteye.clone().cx(0.1);
@@ -288,8 +288,8 @@ for (var i = 0; i < 8; i++) {
 
 	// Make the hydra
 	var h = makeHydra(hydraStrs[i]);
-	hydralib.computeHydraLayout(h);
-	hydralib.drawHydraImmediately(h);
+	computeHydraLayout(h);
+	drawHydraImmediately(h);
 
 	// Group the hydra so you can move it.
 	var grp = groupHydra(h);
