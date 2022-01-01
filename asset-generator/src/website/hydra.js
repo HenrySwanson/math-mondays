@@ -1,6 +1,6 @@
 "use_strict";
 
-import { HydraNode, computeHydraLayout, drawHydraImmediately, resizeViewbox, setListeners } from "../lib/hydra.js";
+import { HydraNode, computeHydraLayout, drawHydraImmediately, resizeViewbox, setListeners } from "../lib/hydra";
 
 var resetButton = document.getElementById("reset-button");
 var clickCounter = document.getElementById("click-counter");

@@ -5,7 +5,7 @@ import asset_utils = require("./utils");
 
 // Import other libraries
 import util = require('util');
-import { HydraNode, computeHydraLayout, drawHydraImmediately, CLONE_COLOR } from "../lib/hydra";
+import { HydraNode, computeHydraLayout, drawHydraImmediately, CLONE_COLOR, HydraSkeleton, SvgHydra } from "../lib/hydra";
 
 const ALTE_DIN = asset_utils.loadFont("../theme/static/fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
 
@@ -14,9 +14,25 @@ const ALTE_DIN = asset_utils.loadFont("../theme/static/fonts/alte-din-1451-mitte
 var canvas = asset_utils.getCanvas();
 
 // makes hydra creation much easier
+// TODO: old, delete this!
 function makeHydra(str: string): HydraNode {
 	// (()())
 	var root = new HydraNode(canvas);
+	var ptr = root;
+	for (var i = 0; i < str.length; i++) {
+		if (str[i] === "(") {
+			ptr = ptr.appendChild();
+		} else if (str[i] === ")") {
+			ptr = ptr.parent!;
+		}
+	}
+	return root;
+}
+
+// makes hydra creation much easier
+function makeHydraSkeleton(str: string): HydraSkeleton {
+	// (()())
+	var root = new HydraSkeleton([]);
 	var ptr = root;
 	for (var i = 0; i < str.length; i++) {
 		if (str[i] === "(") {
@@ -33,9 +49,9 @@ function makeHydra(str: string): HydraNode {
 // ---------------------------
 
 // make the hydra
-var hydra = makeHydra("( () () () ) () (())");
-computeHydraLayout(hydra);
-drawHydraImmediately(hydra);
+var hydra = makeHydraSkeleton("( () () () ) () (())");
+var svg_hydra = new SvgHydra(canvas, hydra);
+svg_hydra.repositionNodes();
 
 // now place the text
 var textColor = "#7c7c7c";
