@@ -80,12 +80,11 @@ export function loadFont(fontPath: string): TextToSVG {
 function scaleFromOrigin(svgObj: svgjs.Shape, scaleFactor: number): void {
 	// Oftentimes, mostly for text, we want to scale from the origin, not from
 	// the upper-left corner. So we do it here.
-	var oldBBox = svgObj.bbox();
-	svgObj.size(oldBBox.width * scaleFactor);
+	svgObj.size(svgObj.width() * scaleFactor, svgObj.height() * scaleFactor);
 
 	// We know where the upper-left corner of the bbox should be, because
 	// scaling from the origin is easy. So let's move the object there.
-	svgObj.move(oldBBox.x * scaleFactor, oldBBox.y * scaleFactor);
+	svgObj.move(svgObj.x() * scaleFactor, svgObj.y() * scaleFactor);
 }
 
 export function makeTextPath(canvas: svgjs.Container, fontObj: TextToSVG, text: string, fontSizePx: number): svgjs.Path {
@@ -110,22 +109,27 @@ export function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: nu
 	canvas.svg(svgText);  // add inner SVG element to the canvas
 
 	// get the last element, which is our svg object
-	var children = canvas.children();
-	var mathSvg = children[children.length - 1];
+	var mathSvg = canvas.last();
 
 	// Unfortunately, MathJax outputs units of ex, but that's not compatible
 	// with svg.js. Fortunately, we can ask it for its context.
 	var metrics = MathJax.getMetricsFor(node, true);
 	var exToPx = metrics.ex / metrics.scale;
 
+	// Note: despite the typestub, in this case mathSvg.height() returns a string
+	// like 20.5ex. So we have to strip off the unit ourselves, eluding the typechecker.
+	// @ts-ignore
+	var widthEx = +mathSvg.width().slice(0, -2);
+	// @ts-ignore
+	var heightEx = +mathSvg.height().slice(0, -2);
+	
 	// Now we change the units to px (this should not change the visual size).
-	var heightEx = mathSvg.height();// TODO +XXX.slice(0, -2);
-	mathSvg.size(undefined, heightEx * exToPx);
+	mathSvg.size(widthEx * exToPx, heightEx * exToPx);
 
 	// Next, we shift it so that the baseline is at zero. To do this, we have to
 	// inspect the "style" property of the object; specifically, the property
 	// vertical-align. Fortunately, that should be the only thing in there.
-	var regex = /vertical-align:(-?\d*\.?\d*)(ex)?/
+	var regex = /vertical-align: *(-?\d*\.?\d*)(ex)?/
 	var verticalAlignEx = +regex.exec(mathSvg.attr("style"))![1];
 
 	// Currently the upper-left corner is at the origin, so we want to raise it
@@ -137,7 +141,7 @@ export function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: nu
 	// is, by default, 1 em tall, so that's what we put in our denominator.
 	var scaleFactor = fontSizePx / metrics.em * metrics.scale;
 	scaleFromOrigin(mathSvg, scaleFactor);
-
+	
 	// Lastly, clear the style element so it can't interfere with us
 	mathSvg.attr("style", "");
 
