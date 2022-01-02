@@ -5,29 +5,13 @@ import asset_utils = require("./utils");
 
 // Import other libraries
 import util = require('util');
-import { HydraNode, computeHydraLayout, drawHydraImmediately, CLONE_COLOR, HydraSkeleton, SvgHydra } from "../lib/hydra";
+import { CLONE_COLOR, HydraSkeleton, SvgHydra, SvgHeadData } from "../lib/hydra";
 
 const ALTE_DIN = asset_utils.loadFont("../theme/static/fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
 
 // Start creating some diagrams!
 // This is the actual canvas we want to work on
 var canvas = asset_utils.getCanvas();
-
-// makes hydra creation much easier
-// TODO: old, delete this!
-function makeHydra(str: string): HydraNode {
-	// (()())
-	var root = new HydraNode(canvas);
-	var ptr = root;
-	for (var i = 0; i < str.length; i++) {
-		if (str[i] === "(") {
-			ptr = ptr.appendChild();
-		} else if (str[i] === ")") {
-			ptr = ptr.parent!;
-		}
-	}
-	return root;
-}
 
 // makes hydra creation much easier
 function makeHydraSkeleton(str: string): HydraSkeleton {
@@ -102,31 +86,15 @@ var hydraStrs = [
 	"",
 ]
 
-// A bunch of functions that'll make it easier to generate these very
-// similar scenes
-function groupHydra(hydra: HydraNode) {
-	var group = canvas.group();
-	function helper(node: HydraNode) {
-		group.add(node.svgHead);
-		if (node.svgNeck !== null) {
-			group.add(node.svgNeck);
-			node.svgNeck.back();  // to avoid overlap with parent
-		}
-		node.children.forEach(x => helper(x));
-	}
-	helper(hydra);
-	return group;
-}
-
-function colorNode(node: HydraNode) {
+function colorNode(node: SvgHeadData) {
 	var color = CLONE_COLOR;
-	node.svgHead.fill(color);
-	node.svgNeck!.stroke(color);
+	node.head.fill(color);
+	node.neck?.stroke(color);
 }
 
-function addX(node: HydraNode) {
-	var cx = node.svgHead.cx();
-	var cy = node.svgHead.cy();
+function drawRedX(node: SvgHeadData) {
+	var cx = node.head.cx();
+	var cy = node.head.cy();
 	var size = 0.6;
 	var cross = canvas.path(
 		util.format(
@@ -138,41 +106,35 @@ function addX(node: HydraNode) {
 		)
 	);
 	cross.stroke({ color: "#bf0000", width: 0.1 });
-	cross.putIn(node.svgHead.parent());  // use same coordinates as head
+	cross.putIn(node.head.parent());  // use same coordinates as head
 }
 
-function setupAttackingExample(startIdx: number, doThree: boolean = false) {
+function setupAttackingExample(startIdx: number, doThree: boolean = false): SvgHydra[] {
 	canvas.clear();
 
 	var spacing = doThree ? 6 : 8;
 
 	// create first hydra
-	var hydra1 = makeHydra(hydraStrs[startIdx]);
-	computeHydraLayout(hydra1);
-	drawHydraImmediately(hydra1);
-	var group1 = groupHydra(hydra1);
+	let hydra1 = new SvgHydra(canvas, makeHydraSkeleton(hydraStrs[startIdx]));
+	hydra1.repositionNodes();
 
 	// create second hydra
-	var hydra2 = makeHydra(hydraStrs[startIdx + 1]);
-	computeHydraLayout(hydra2);
-	drawHydraImmediately(hydra2);
-	var group2 = groupHydra(hydra2);
+	let hydra2 = new SvgHydra(canvas, makeHydraSkeleton(hydraStrs[startIdx + 1]));
+	hydra2.repositionNodes();
 
 	// align vertically and space horizontally
-	group2.dmove(spacing, hydra1.svgHead.y() - hydra2.svgHead.y());
+	hydra2.svg_group.dmove(spacing, hydra1.root().head.y() - hydra2.root().head.y());
 
 	if (!doThree) {
 		return [hydra1, hydra2];
 	}
 
 	// create third hydra
-	var hydra3 = makeHydra(hydraStrs[startIdx + 2]);
-	computeHydraLayout(hydra3);
-	drawHydraImmediately(hydra3);
-	var group3 = groupHydra(hydra3);
+	let hydra3 = new SvgHydra(canvas, makeHydraSkeleton(hydraStrs[startIdx + 2]));
+	hydra3.repositionNodes();
 
 	// align vertically and space horizontally
-	group3.dmove(2 * spacing, hydra1.svgHead.y() - hydra3.svgHead.y());
+	hydra3.svg_group.dmove(2 * spacing, hydra1.root().head.y() - hydra3.root().head.y());
 
 	return [hydra1, hydra2, hydra3];
 }
@@ -182,16 +144,16 @@ var hydras = setupAttackingExample(0);
 var hydraA = hydras[0];
 var hydraB = hydras[1];
 
-// add the X
-addX(hydraA.children[0].children[1]);
+// add the x over the head
+drawRedX(hydraA.index(0, 1)!);
 
 // now do some coloring
-colorNode(hydraB.children[0]);
-colorNode(hydraB.children[1]);
-colorNode(hydraB.children[2]);
-colorNode(hydraB.children[0].children[0]);
-colorNode(hydraB.children[1].children[0]);
-colorNode(hydraB.children[2].children[0]);
+colorNode(hydraB.index(0)!);
+colorNode(hydraB.index(1)!);
+colorNode(hydraB.index(2)!);
+colorNode(hydraB.index(0, 0)!);
+colorNode(hydraB.index(1, 0)!);
+colorNode(hydraB.index(2, 0)!);
 
 // save to disk
 asset_utils.shrinkCanvas(canvas);
@@ -205,11 +167,10 @@ var hydras = setupAttackingExample(1);
 var hydraA = hydras[0];
 var hydraB = hydras[1];
 
-addX(hydraA.children[1].children[0]);
-
-colorNode(hydraB.children[1]);
-colorNode(hydraB.children[2]);
-colorNode(hydraB.children[3]);
+drawRedX(hydraA.index(1, 0)!);
+colorNode(hydraB.index(1)!);
+colorNode(hydraB.index(2)!);
+colorNode(hydraB.index(3)!);
 
 asset_utils.shrinkCanvas(canvas);
 asset_utils.saveImgToFile(canvas, "../content/images/hydra/example-2.svg");
@@ -222,9 +183,9 @@ var hydras = setupAttackingExample(2);
 var hydraA = hydras[0];
 var hydraB = hydras[1];
 
-addX(hydraA.children[1]);
-addX(hydraA.children[2]);
-addX(hydraA.children[3]);
+drawRedX(hydraA.index(1)!);
+drawRedX(hydraA.index(2)!);
+drawRedX(hydraA.index(3)!);
 
 // no coloring this time
 
@@ -240,14 +201,14 @@ var hydraA = hydras[0];
 var hydraB = hydras[1];
 var hydraC = hydras[2];
 
-addX(hydraA.children[1].children[0]);
+drawRedX(hydraA.index(1,0)!);
 
-colorNode(hydraB.children[1]);
-colorNode(hydraB.children[2]);
-colorNode(hydraB.children[3]);
-addX(hydraB.children[1]);
-addX(hydraB.children[2]);
-addX(hydraB.children[3]);
+colorNode(hydraB.index(1)!);
+colorNode(hydraB.index(2)!);
+colorNode(hydraB.index(3)!);
+drawRedX(hydraB.index(1)!);
+drawRedX(hydraB.index(2)!);
+drawRedX(hydraB.index(3)!);
 
 // no coloring on C
 
@@ -263,19 +224,19 @@ var hydraA = hydras[0];
 var hydraB = hydras[1];
 var hydraC = hydras[2];
 
-addX(hydraA.children[0].children[0]);
+drawRedX(hydraA.index(0,0)!);
 
-colorNode(hydraB.children[0]);
-colorNode(hydraB.children[1]);
-colorNode(hydraB.children[2]);
-addX(hydraB.children[0]);
-addX(hydraB.children[1]);
-addX(hydraB.children[2]);
+colorNode(hydraB.index(0)!);
+colorNode(hydraB.index(1)!);
+colorNode(hydraB.index(2)!);
+drawRedX(hydraB.index(0)!);
+drawRedX(hydraB.index(1)!);
+drawRedX(hydraB.index(2)!);
 
 // no coloring on C
 
 // TODO draw dead face
-var groupC = hydraC.svgHead.parent();
+var groupC = hydraC.root().head.parent();
 var stroke: svgjs.StrokeData = { color: "#ffffff", width: 0.025 };
 var lefteye = groupC.path("M -1,-1 L 1,1 M 1,-1 L -1,1")
 	.size(0.1).stroke(stroke).center(-0.1, -0.06);
@@ -303,14 +264,12 @@ for (var i = 0; i < 8; i++) {
 	var cellY = (i < 4) ? 0 : 8;
 
 	// Make the hydra
-	var h = makeHydra(hydraStrs[i]);
-	computeHydraLayout(h);
-	drawHydraImmediately(h);
+	var h = new SvgHydra(canvas, makeHydraSkeleton(hydraStrs[i]));
+	h.repositionNodes();
 
 	// Group the hydra so you can move it.
-	var grp = groupHydra(h);
-	grp.dy(-h.svgHead.y())  // put the root at y=0
-	grp.dmove(cellX, cellY);  // put into the proper cell
+	h.svg_group.dy(-h.root().head.y())  // put the root at y=0
+	h.svg_group.dmove(cellX, cellY);  // put into the proper cell
 
 	var value = asset_utils.makeMathSvg(canvas, values[i], 1);
 	// put the center of the bottom at the origin

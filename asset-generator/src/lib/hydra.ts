@@ -33,6 +33,19 @@ export class HydraSkeleton {
 		return new HydraSkeleton(this.children.map(child => child.deepcopy()));
 	}
 
+	index(...idxs: number[]): HydraSkeleton | null {
+		if (idxs.length === 0) {
+			return this;
+		}
+
+		let i = idxs[0];
+		if (i < this.children.length) {
+			return this.children[i].index(...idxs.slice(1));
+		} else {
+			return null;
+		}
+	}
+
 	appendChild(): HydraSkeleton {
 		let child = new HydraSkeleton([]);
 		child.parent = this;
@@ -184,14 +197,14 @@ class HydraLayout {
 
 }
 
-class SvgHeadData {
+export class SvgHeadData {
 	head: svgjs.Circle
 	neck: svgjs.Line | null
 
-	constructor(drawing: svgjs.Container, neck: boolean) {
-		this.head = drawing.circle(NODE_DIAM);
+	constructor(group: svgjs.G, neck: boolean) {
+		this.head = group.circle(NODE_DIAM);
 		if (neck) {
-			this.neck = drawing.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
+			this.neck = group.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
 			this.neck.back();  // put it behind head
 		} else {
 			this.neck = null;
@@ -203,20 +216,23 @@ export class SvgHydra {
 
 	skeleton: HydraSkeleton;
 	svg_data_map: Map<HydraSkeleton, SvgHeadData>;
+	svg_group: svgjs.G;
 
 	constructor(drawing: svgjs.Container, skeleton: HydraSkeleton) {
+		let svg_group = drawing.group();
 		let svg_data_map = new Map();
 
 		// TODO: just create a forEach function on the HydraSkeleton itself.
 		// Also a zip()
 		function makeSvgData(h: HydraSkeleton, root: boolean): void {
-			svg_data_map.set(h, new SvgHeadData(drawing, !root));
+			svg_data_map.set(h, new SvgHeadData(svg_group, !root));
 			h.children.forEach(child => makeSvgData(child, false));
 		}
 		makeSvgData(skeleton, true);
 
 		this.skeleton = skeleton;
 		this.svg_data_map = svg_data_map;
+		this.svg_group = svg_group;
 	}
 
 	repositionNodes(): void {
@@ -242,6 +258,19 @@ export class SvgHydra {
 			}
 		}
 		apply(this.skeleton, layout, null);
+	}
+
+	index(...idxs: number[]): SvgHeadData | null {
+		let x = this.skeleton.index(...idxs);
+		if (x === null) {
+			return null;
+		}
+
+		return this.svg_data_map.get(x)!;
+	}
+
+	root(): SvgHeadData {
+		return this.svg_data_map.get(this.skeleton)!;
 	}
 }
 
