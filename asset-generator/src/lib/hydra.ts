@@ -219,20 +219,18 @@ export class SvgHydra {
 	svg_group: svgjs.G;
 
 	constructor(drawing: svgjs.Container, skeleton: HydraSkeleton) {
-		let svg_group = drawing.group();
-		let svg_data_map = new Map();
+		this.skeleton = skeleton;
+		this.svg_group = drawing.group();
+		this.svg_data_map = new Map();
 
+		this.createSvgHead(skeleton, true);
+	}
+
+	createSvgHead(h: HydraSkeleton, root: boolean = false): void {
 		// TODO: just create a forEach function on the HydraSkeleton itself.
 		// Also a zip()
-		function makeSvgData(h: HydraSkeleton, root: boolean): void {
-			svg_data_map.set(h, new SvgHeadData(svg_group, !root));
-			h.children.forEach(child => makeSvgData(child, false));
-		}
-		makeSvgData(skeleton, true);
-
-		this.skeleton = skeleton;
-		this.svg_data_map = svg_data_map;
-		this.svg_group = svg_group;
+		this.svg_data_map.set(h, new SvgHeadData(this.svg_group, !root));
+		h.children.forEach(child => this.createSvgHead(child, false));
 	}
 
 	repositionNodes(): void {
@@ -276,282 +274,17 @@ export class SvgHydra {
 
 
 // ==================================
-// OLD CODE BELOW THIS LINE
+// I SHOULD MOVE THE CODE BELOW THIS LINE
 // ==================================
 
-
-
-
-
-export class HydraNode {
-	drawing: svgjs.Container
-	svgHead: svgjs.Circle
-	svgNeck: svgjs.Line | null
-
-	parent: HydraNode | null
-	children: HydraNode[]
-
-	targetX: number | null
-	targetY: number | null
-	offsetX: number | null
-
-	constructor(drawing: svgjs.Container, parent: HydraNode | null = null) {
-		// SVG canvas and elements to draw on it
-		this.drawing = drawing;
-		this.svgHead = drawing.circle(NODE_DIAM);
-		this.svgNeck = null;
-
-		// Tree structure
-		this.parent = parent;
-		this.children = [];
-
-		// Positioning information
-		this.targetX = null;
-		this.targetY = null;
-		this.offsetX = null;
-
-		// Stuff to do for non-root nodes
-		if (parent !== null) {
-			parent.children.push(this);
-			this.svgNeck = drawing.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
-			this.svgNeck.back();  // put it behind head
-		}
-	}
-
-	isRoot(): boolean {
-		return (this.parent === null);
-	}
-
-	isLeaf(): boolean {
-		return (this.children.length === 0);
-	}
-
-	appendChild(): HydraNode {
-		return new HydraNode(this.drawing, this);
-	}
-
-	getLeftSiblings(): HydraNode[] {
-		if (this.isRoot()) {
-			return [];
-		}
-		var idx = this.parent!.children.indexOf(this);
-		return this.parent!.children.slice(0, idx);
-	}
-
-	clone() {
-		if (this.isRoot()) {
-			throw "Can't clone root!"
-		}
-
-		// Make a copy of this and its children. Also set SVG position.
-		function copySubtrees(src: HydraNode, dst: HydraNode) {
-			dst.targetX = src.targetX;
-			dst.targetY = src.targetY;
-			dst.offsetX = src.offsetX;
-			src.children.forEach(
-				child => copySubtrees(child, dst.appendChild())
-			);
-		}
-
-		// Note that this attaches the copy to the parent, but at the end,
-		// not next to the original
-		var copy = this.parent!.appendChild();
-		copySubtrees(this, copy);
-
-		// Put the copy next to the original
-		var idx = this.parent!.children.indexOf(this);
-		this.parent!.children.splice(idx, 0, copy);
-		this.parent!.children.pop();
-
-		return copy;
-	}
-
-	die(): void {
-		if (!this.isLeaf()) {
-			throw "Only leaves can be killed!";
-		}
-		if (this.isRoot()) {
-			throw "Can't die as root!";
-		}
-		var idx = this.parent!.children.indexOf(this);
-		this.parent!.children.splice(idx, 1);
-		this.svgHead.remove();
-		this.svgNeck!.remove();
-	}
+function getHydraWidth(hydra: SvgHydra): number {
+	let layout = HydraLayout.fromHydra(hydra.skeleton);
+	let minX = Math.min(...layout.leftContour());
+	let maxX = Math.max(...layout.rightContour());
+	return maxX - minX;
 }
 
-export function computeHydraLayout(hydra: HydraNode): void {
-	var minX = Infinity;  // function scope :)
-
-	// We traverse the tree three times.
-	firstPass(hydra);
-	secondPass(hydra);
-	thirdPass(hydra);
-
-	// First, we do a post-order traversal to compute initial guesses for the
-	// X positions for the nodes.
-	function firstPass(node: HydraNode) {
-		// Recursively apply to children
-		node.children.forEach(child => firstPass(child));
-
-		// We'll set Y on the second pass, since it's best set as a pre-order
-		// traversal.
-
-		// Set X position relative to the parent node. If you're the left-most
-		// child, start at zero, otherwise, +1 from previous sibling.
-		var siblings = node.getLeftSiblings();
-		if (siblings.length !== 0) {
-			var prevSibling = siblings[siblings.length - 1];
-			node.targetX = prevSibling.targetX! + NODE_SPACING;
-		} else {
-			node.targetX = 0;
-		}
-
-		// If we're a parent node, center our children under ourselves
-		if (!node.isLeaf()) {
-			var firstChild = node.children[0];
-			var lastChild = node.children[node.children.length - 1];
-			var center = (firstChild.targetX! + lastChild.targetX!) / 2;
-			node.offsetX = node.targetX - center;
-		}
-
-		// Check for conflicts with earlier subtrees. Find the right contours of
-		// our siblings, and the left contour of ourselves. Confusingly enough,
-		// the right contours are physically to the left of the left contour.
-		// We iterate in reverse so we consider the closest siblings first.
-		var leftContour = findContour(node, Math.min);
-		for (var idx = siblings.length - 1; idx >= 0; idx--) {
-			// Grab the sibling and its contour
-			var sibling = siblings[idx];
-			var rightContour = findContour(sibling, Math.max);
-
-			// Find the minimum gap (maybe negative) between the contours
-			var gap = NODE_SPACING;
-			var contourLength = Math.min(rightContour.length, leftContour.length);
-			for (var i = 0; i < contourLength; i++) {
-				gap = Math.min(gap, leftContour[i] - rightContour[i]);
-			}
-
-			// If the gap is big enough, we're done with this sibling
-			if (gap >= NODE_SPACING) {
-				continue;
-			}
-
-			// Otherwise, we'll have to move ourselves a total of
-			// (NODE_SPACING - gap) away. But we distribute it across all
-			// the siblings between us.
-			var numGaps = siblings.length - idx;
-			var totalShift = (NODE_SPACING - gap);
-
-			// Move our siblings
-			for (var i = 1; i < numGaps; i++) {
-				siblings[idx + i].targetX! += totalShift * i / numGaps;
-				siblings[idx + i].offsetX! += totalShift * i / numGaps;
-			}
-
-			// Move ourselves, and also update our contour
-			node.targetX += totalShift;
-			node.offsetX! += totalShift;
-			leftContour = leftContour.map(x => x + totalShift);
-		}
-	}
-
-	// Second, we do a pre-order traversal to correct our guesses, and to set
-	// Y positions. We also take this opportunity to find the leftmost node.
-	function secondPass(node: HydraNode, totalOffset: number = 0) {
-
-		// Set Y position
-		if (!node.isRoot()) {
-			node.targetY = node.parent!.targetY! + LEVEL_SPACING;
-		} else {
-			node.targetY = 0;
-		}
-
-		// Apply the offset
-		node.targetX! += totalOffset;
-		minX = Math.min(minX, node.targetX!);
-
-		// Tack on our offset, and recursively apply to children
-		totalOffset += node.offsetX!;
-		node.children.forEach(child => secondPass(child, totalOffset));
-	}
-
-	// Lastly, we do another post-order traversal to shift everything back into
-	// the positive quadrant of the plane
-	function thirdPass(node: HydraNode) {
-		node.targetX! -= minX;
-		node.children.forEach(child => thirdPass(child));
-	}
-
-	function findContour(node: HydraNode, cmp: (a: number, b: number) => number): number[] {
-		// This variable has a scope outside the helper function :)
-		var contour: number[] = [];
-
-		// Evaluates a node and its children, affecting the `contour` variable
-		function helper(node: HydraNode, cmp: (a: number, b: number) => number, totalOffset: number, depth: number) {
-			// Update the contour with ourselves
-			var realX = node.targetX! + totalOffset;
-			if (depth < contour.length) {
-				contour[depth] = cmp(contour[depth], realX);
-			} else {
-				contour.push(realX);
-			}
-
-			// Update the contour with our children
-			totalOffset += node.offsetX!;
-			node.children.forEach(
-				child => helper(child, cmp, totalOffset, depth + 1)
-			);
-		}
-
-		// Run helper on the node
-		helper(node, cmp, 0, 0);
-		return contour;
-	}
-}
-
-function getHydraWidth(hydra: HydraNode): number {
-	// Leftmost node is zero, so we just get the largest x, which isn't
-	// necessarily the rightmost child
-	var xValues = hydra.children.map(child => getHydraWidth(child));
-	return xValues.reduce((a, b) => Math.max(a, b), hydra.targetX!);
-}
-
-/* Animation */
-
-function moveHydraHead(node: HydraNode, head: svgjs.Circle) {
-	// Can be applied to the SVG node or its animation
-	return head.center(node.targetY!, node.targetX!);
-}
-
-function moveHydraNeck(node: HydraNode, neck: svgjs.Line) {
-	// Can be applied to the SVG node or its animation
-	return neck.plot(
-		node.targetY!, node.targetX!, node.parent!.targetY!, node.parent!.targetX!
-	);
-}
-
-function animateHydra(node: HydraNode, duration: number, ease: string, head_fn: (h: HydraNode, head: svgjs.Animation) => svgjs.Animation, neck_fn: (h: HydraNode, neck: svgjs.Animation) => svgjs.Animation) {
-	// Apply animations recursively to a hydra
-	node.children.forEach(
-		child => animateHydra(child, duration, ease, head_fn, neck_fn)
-	);
-
-	if (!node.isRoot()) {
-		neck_fn(node, node.svgNeck!.animate(duration, ease, 0));
-	}
-	return head_fn(node, node.svgHead.animate(duration, ease, 0));
-}
-
-export function drawHydraImmediately(node: HydraNode) {
-	node.children.forEach(child => drawHydraImmediately(child));
-	moveHydraHead(node, node.svgHead);
-	if (!node.isRoot()) {
-		moveHydraNeck(node, node.svgNeck!);
-	}
-}
-
-export function resizeViewbox(drawing: svgjs.Container, hydra: HydraNode) {
+export function resizeViewbox(drawing: svgjs.Container, hydra: SvgHydra) {
 	var treeWidth = getHydraWidth(hydra);
 	var boxWidth = 3 * LEVEL_SPACING;
 	var boxHeight = treeWidth * NODE_SPACING;
@@ -561,30 +294,20 @@ export function resizeViewbox(drawing: svgjs.Container, hydra: HydraNode) {
 		-(V_PADDING + NODE_DIAM / 2),
 		boxWidth + 2 * H_PADDING + NODE_DIAM,
 		boxHeight + 2 * V_PADDING + NODE_DIAM
-	)
+	);
 }
 
-/* Listeners */
-
-export function setListeners(node: HydraNode, hydra: HydraNode, clickCallback: () => void) {
-	// TODO this is kinda gross; the way we wait is to define a second (third,
-	// fourth, ...) callback, and call that after an afterAll(). Can I put
-	// together something better?
-	var drawing = hydra.drawing;
-
-	// Apply recursively to children
-	node.children.forEach(child => setListeners(child, hydra, clickCallback));
-	// Assign the click handler
-	node.svgHead.click(cut);
+export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: HydraSkeleton, clickCallback: () => void) {
 
 	// Data passed between callbacks
-	var svgGroup: svgjs.G;
-	var wasClicked = false;
+	let wasClicked = false;
+	let svgHead = hydra.svg_data_map.get(head)!;
+	let opacityGroup: svgjs.G;
 
 	// We've got a sequence of animation callbacks
 	function cut() {
 		// Return immediately if we should ignore the click
-		if (node.isRoot() || !node.isLeaf() || wasClicked) { return; }
+		if (head.parent === null || head.children.length !== 0) { return; }
 
 		// Increment counter
 		wasClicked = true;
@@ -592,58 +315,87 @@ export function setListeners(node: HydraNode, hydra: HydraNode, clickCallback: (
 
 		// Opacity has to be controlled as a group or else the overlap causes
 		// problems. But make sure to kill the group later.
-		svgGroup = drawing.group().add(node.svgNeck!).add(node.svgHead);
+		opacityGroup = drawing.group().add(svgHead.neck!).add(svgHead.head);
 		// @ts-ignore
-		svgGroup.animate(DIE_DURATION, ">", 0).opacity(0).afterAll(cut2);
+		opacityGroup.animate(DIE_DURATION, ">", 0).opacity(0).afterAll(cut2);
 	}
 
 	function cut2() {
-		svgGroup.remove();
-		node.die();
+		let parent = head.parent!;
+
+		opacityGroup.remove();
+		head.die();
+		hydra.svg_data_map.delete(head);
 
 		// Our parent should clone itself, unless it's root
-		if (!node.parent!.isRoot()) {
-			var copy1 = node.parent!.clone();
-			var copy2 = node.parent!.clone();
-
-			setListeners(copy1, hydra, clickCallback);  // important lol
-			setListeners(copy2, hydra, clickCallback);
-
-			// Didn't compute layout, so copy will be on top of parent
-			drawHydraImmediately(hydra);
-
-			makeBlue(node.parent!);
-			makeBlue(copy1);
-			// @ts-ignore
-			makeBlue(copy2).afterAll(cut3);
-		} else {
+		if (parent.parent === null) {
 			cut3(); // call immediately
 		}
+
+		// Generate new skeleta, and add them to the svghydra
+		// TODO: these should not be separate operations
+		var newUncles = parent.generate_siblings(2);
+		newUncles.forEach(uncle => hydra.createSvgHead(uncle));
+
+		// Similarly, attach the listeners to each head
+		newUncles.forEach(
+			uncle => setListeners(drawing, hydra, uncle, clickCallback)
+		);
+
+		// Then, we want to place the copy on top of the parent
+		// TODO: again, improved by zip
+		function setPosition(h: HydraSkeleton, h2: HydraSkeleton) {
+			let original = hydra.svg_data_map.get(h)!;
+			let copy = hydra.svg_data_map.get(h2)!;
+			copy.head.move(original.head.x(), original.head.y());
+			copy.neck!.plot(original.neck!.array());
+			h.children.forEach((child, idx) => setPosition(child, h2.children[idx]));
+		}
+		newUncles.forEach(uncle => setPosition(parent, uncle));
+
+		// Lastly, make everyone involved blue.
+		newUncles.forEach(uncle => makeBlue(uncle));
+		// @ts-ignore
+		makeBlue(parent).afterAll(cut3);
 	}
 
 	function cut3() {
 		// Layout the tree again, and move everything to its final position
-		computeHydraLayout(hydra);
+		let layout = HydraLayout.fromHydra(hydra.skeleton);
+		let minX = Math.min(...layout.leftContour());
+
+		function moveToFinalPosition(h: HydraSkeleton, layout: HydraLayout, prev_layout: HydraLayout | null) {
+			let svgHead = hydra.svg_data_map.get(h)!;
+			let headAnim = svgHead.head.animate(MOVE_DURATION, "<", 0);
+			// @ts-ignore
+			headAnim.center(layout.y * LEVEL_SPACING, layout.x * NODE_SPACING - minX).fill("#000");
+			if (prev_layout !== null) {
+				let neckAnim = svgHead.neck?.animate(MOVE_DURATION, "<", 0);
+				// @ts-ignore
+				neckAnim.plot(
+					layout.y * LEVEL_SPACING,
+					layout.x * NODE_SPACING - minX,
+					prev_layout.y * LEVEL_SPACING,
+					prev_layout.x * NODE_SPACING - minX
+				).stroke("#000");
+			}
+			for (let i = 0; i < h.children.length; i++) {
+				moveToFinalPosition(h.children[i], layout.children[i], layout);
+			}
+		}
+		moveToFinalPosition(hydra.skeleton, layout, null);
+
 		resizeViewbox(
 			// @ts-ignore
 			drawing.animate(MOVE_DURATION, "<", 0),
 			hydra
 		);
 
-		return animateHydra(
-			hydra,
-			MOVE_DURATION,
-			"<",
-			// @ts-ignore
-			(node, head) => moveHydraHead(node, head.fill("#000")),
-			// @ts-ignore
-			(node, neck) => moveHydraNeck(node, neck.stroke("#000")),
-			// @ts-ignore
-		).afterAll(cut4);
+		cut4();
 	}
 
 	function cut4() {
-		if (hydra.isLeaf()) {
+		if (hydra.skeleton.children.length === 0) {
 			// @ts-ignore
 			alert(
 				"Wow... I can't believe you actually did it!\n" +
@@ -654,15 +406,21 @@ export function setListeners(node: HydraNode, hydra: HydraNode, clickCallback: (
 	}
 
 	// helper function
-	function makeBlue(node: HydraNode) {
-		return animateHydra(
-			node,
-			CLONE_DURATION,
-			"<",
+	function makeBlue(h: HydraSkeleton) {
+		// Recurse
+		h.children.forEach(child => makeBlue(child));
+
+		let svgHead = hydra.svg_data_map.get(h)!;
+		if (svgHead.neck !== null) {
 			// @ts-ignore
-			(node, head) => head.fill(CLONE_COLOR),
-			// @ts-ignore
-			(node, neck) => neck.stroke(CLONE_COLOR),
-		);
+			svgHead.neck.animate(CLONE_DURATION, "<", 0).stroke(CLONE_COLOR);
+		}
+		// @ts-ignore
+		return svgHead.head.animate(CLONE_DURATION, "<", 0).fill(CLONE_COLOR);
 	}
+
+	// Finally, now that everything's defined, assign the click handler
+	// to self, and recurse to children.
+	svgHead.head.click(cut);
+	head.children.forEach(child => setListeners(drawing, hydra, child, clickCallback));
 }

@@ -1,6 +1,6 @@
 "use_strict";
 
-import { HydraNode, computeHydraLayout, drawHydraImmediately, resizeViewbox, setListeners } from "../lib/hydra";
+import { resizeViewbox, setListeners, HydraSkeleton, SvgHydra } from "../lib/hydra";
 
 var resetButton = document.getElementById("reset-button");
 var clickCounter = document.getElementById("click-counter");
@@ -21,19 +21,19 @@ function resetHydra() {
 	updateCounter();
 
 	// Create the original hydra
-	var hydra = new HydraNode(drawing);
+	var hydra = new HydraSkeleton([]);
 	var child = hydra.appendChild();
-	var gchild = child.appendChild();
-	var ggchild1 = gchild.appendChild();
-	var ggchild2 = gchild.appendChild();
-
+	var gchild = child;//child.appendChild();
+	gchild.appendChild();
+	gchild.appendChild();
+	
 	// Then draw it
-	computeHydraLayout(hydra);
-	drawHydraImmediately(hydra);
-	resizeViewbox(drawing, hydra);
+	var svg_hydra = new SvgHydra(drawing, hydra);
+	svg_hydra.repositionNodes();
+	resizeViewbox(drawing, svg_hydra);
 
 	// Lastly, hook up the listeners
-	setListeners(hydra, hydra, updateCounter);
+	setListeners(drawing, svg_hydra, svg_hydra.skeleton, updateCounter);
 }
 
 resetHydra(); // init hydra
