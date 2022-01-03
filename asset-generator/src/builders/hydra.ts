@@ -17,10 +17,10 @@ var canvas = asset_utils.getCanvas();
 function makeHydraSkeleton(str: string): HydraSkeleton {
 	// (()())
 	var root = new HydraSkeleton([]);
-	var ptr = root;
+	var ptr = root.tree;
 	for (var i = 0; i < str.length; i++) {
 		if (str[i] === "(") {
-			ptr = ptr.appendChild();
+			ptr = ptr.appendChild(null);
 		} else if (str[i] === ")") {
 			ptr = ptr.parent!;
 		}

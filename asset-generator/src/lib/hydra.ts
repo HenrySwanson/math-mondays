@@ -17,101 +17,46 @@ var CLONE_DURATION = 200;
 
 export var CLONE_COLOR = "#422aa8";
 
+import { Tree } from "./tree";
+
 /* Hydra Structure */
 
 export class HydraSkeleton {
-	parent: HydraSkeleton | null
-	children: HydraSkeleton[]
+	tree: Tree<null>
 
 	constructor(children: HydraSkeleton[]) {
-		this.parent = null;
-		this.children = children;
-		children.forEach(child => child.parent = this);
-	}
-
-	deepcopy(): HydraSkeleton {
-		return new HydraSkeleton(this.children.map(child => child.deepcopy()));
-	}
-
-	index(...idxs: number[]): HydraSkeleton | null {
-		if (idxs.length === 0) {
-			return this;
-		}
-
-		let i = idxs[0];
-		if (i < this.children.length) {
-			return this.children[i].index(...idxs.slice(1));
-		} else {
-			return null;
-		}
-	}
-
-	appendChild(): HydraSkeleton {
-		let child = new HydraSkeleton([]);
-		child.parent = this;
-		this.children.push(child);
-		return child;
-	}
-
-	die(): void {
-		// Leaves shouldn't die according to the rules of the game, but it's
-		// not insensible for them to do so.
-		// The root however can never die.
-		if (this.parent === null) {
-			throw "Can't kill root!"
-		}
-
-		let idx = this.parent.children.indexOf(this);
-		this.parent.children.splice(idx, 1);
-	}
-
-	generate_siblings(n: number): HydraSkeleton[] {
-		if (this.parent === null) {
-			throw "Can't clone root!"
-		}
-
-		// Generate some copies of this hydra, and attach them
-		// to the parent.
-		let copies: HydraSkeleton[] = [];
-		for (let i = 0; i < n; i++) {
-			let copy = this.deepcopy();
-			copy.parent = this.parent;
-			copies.push(copy);
-		}
-
-		// Insert the copies, and wire them up to the parents
-		var idx = this.parent.children.indexOf(this);
-		this.parent.children.splice(idx + 1, 0, ...copies);
-
-		return copies;
+		this.tree = new Tree(null, children.map(child => child.tree));
 	}
 }
 
-// The algorithm here is cribbed from: https://llimllib.github.io/pymag-trees/
-class HydraLayout {
-	x: number
-	y: number
-	children: HydraLayout[]
+interface Point { x: number; y: number; }
 
-	private constructor(x: number, y: number, children: HydraLayout[]) {
-		this.x = x;
-		this.y = y;
-		this.children = children;
+// The algorithm here is cribbed from: https://llimllib.github.io/pymag-trees/
+class TreeLayout {
+	tree: Tree<Point>
+
+	private constructor(x: number, y: number, children: TreeLayout[]) {
+		this.tree = new Tree({ x: x, y: y }, children.map(child => child.tree))
 	}
 
-	static fromHydra(hydra: HydraSkeleton): HydraLayout {
-		// If we have no children this is easy
-		if (hydra.children.length == 0) {
-			return new HydraLayout(0, 0, []);
+	static fromTree<T>(tree: Tree<T>): TreeLayout {
+		// If we have no children, we have an easy base case
+		if (tree.children.length === 0) {
+			return new TreeLayout(0, 0, []);
 		}
 
-		// Otherwise, we recursively build this from the original hydra's children
-		// Create layouts for each child, and shift them so that they are 1 unit
-		// lower, and spaced out minimally horizontally.
-		let childLayouts = hydra.children.map(t => HydraLayout.fromHydra(t));
-		childLayouts.forEach((child, idx) => child.shift(idx, 1));
+		// Recursively build the layouts for our children, shifted down
+		// by one, and spaced out minimally horizontally.
+		let childLayouts = tree.children.map(
+			(child, idx) => {
+				let layout = TreeLayout.fromTree(child);
+				layout.shift(idx, 1);
+				return layout;
+			}
+		);
 
-		// Now, for each child, check its conflicts with the siblings on its left.
+		// Now, starting with the leftmost child, check for conflicts with
+		// its leftward siblings.
 		for (let i = 0; i < childLayouts.length; i++) {
 			for (let j = i - 1; j >= 0; j--) {
 				let leftContour = childLayouts[i].leftContour();
@@ -143,32 +88,27 @@ class HydraLayout {
 		}
 
 		// Lastly, we center our children under ourselves
-		let minX = childLayouts[0].x;
-		let maxX = childLayouts[childLayouts.length - 1].x;
+		let minX = childLayouts[0].tree.payload.x;
+		let maxX = childLayouts[childLayouts.length - 1].tree.payload.x;
 		let center = (minX + maxX) / 2;
 		childLayouts.forEach(child => child.shift(-center, 0));
 
-		return new HydraLayout(0, 0, childLayouts);
+		return new TreeLayout(0, 0, childLayouts);
 	}
 
 	shift(dx: number, dy: number) {
-		this.x += dx;
-		this.y += dy;
-		this.children.forEach(child => child.shift(dx, dy));
+		this.tree.forEachPreorder(t => { t.x += dx; t.y += dy; });
 	}
 
 	// The left contour is an array where the ith element is the x-position of the leftmost
 	// node on the ith level. Similarly, the right contour is the x-position of the rightmost
 	// node on that level.
 	_contour(kind: "left" | "right"): number[] {
+		// Captured by the function below and modified.
 		var contour: number[] = [];
 
-		// Folds this subtree into the `contour` variable.
-		function helper(subtree: HydraLayout, depth: number) {
-			// Start with the parent, then recurse to our children. Starting
-			// with the parent means that `contour` remains a contiguous
-			// array.
-			let newX = subtree.x;
+		this.tree.forEachPreorder((node, depth) => {
+			let newX = node.x;
 			if (depth < contour.length) {
 				// Compare ourselves to the existing contour, and update if necessary
 				let oldX = contour[depth];
@@ -178,12 +118,8 @@ class HydraLayout {
 			} else {
 				contour.push(newX);
 			}
+		});
 
-			subtree.children.forEach(child => helper(child, depth + 1));
-		}
-
-		// Run helper on all of ourselves
-		helper(this, 0);
 		return contour;
 	}
 
@@ -215,7 +151,8 @@ export class SvgHeadData {
 export class SvgHydra {
 
 	skeleton: HydraSkeleton;
-	svg_data_map: Map<HydraSkeleton, SvgHeadData>;
+	// TODO: this should be a tree in its own right, I think
+	svg_data_map: Map<Tree<null>, SvgHeadData>;
 	svg_group: svgjs.G;
 
 	constructor(drawing: svgjs.Container, skeleton: HydraSkeleton) {
@@ -223,43 +160,41 @@ export class SvgHydra {
 		this.svg_group = drawing.group();
 		this.svg_data_map = new Map();
 
-		this.createSvgHead(skeleton, true);
+		this.createSvgHeads(skeleton.tree, true);
 	}
 
-	createSvgHead(h: HydraSkeleton, root: boolean = false): void {
-		// TODO: just create a forEach function on the HydraSkeleton itself.
-		// Also a zip()
-		this.svg_data_map.set(h, new SvgHeadData(this.svg_group, !root));
-		h.children.forEach(child => this.createSvgHead(child, false));
+	createSvgHeads(tree: Tree<null>, root: boolean = false): void {
+		let that = this;
+		tree.forEachPreorderX(
+			node => that.svg_data_map.set(node, new SvgHeadData(this.svg_group, node.parent !== null))
+		);
 	}
 
 	repositionNodes(): void {
-		let layout = HydraLayout.fromHydra(this.skeleton);
-		var minX = Math.min(...layout.leftContour());
+		let layout = TreeLayout.fromTree(this.skeleton.tree);
+		let minX = Math.min(...layout.leftContour());
 
-		var that = this;
-		function apply(hydra: HydraSkeleton, layout: HydraLayout, prev_layout: HydraLayout | null) {
-			// TODO clean up this linear transform business
-			let svg_data = that.svg_data_map.get(hydra)!;
-			svg_data.head.center(layout.y * LEVEL_SPACING, layout.x * NODE_SPACING - minX);
-			if (prev_layout !== null) {
-				svg_data.neck?.plot(
-					layout.y * LEVEL_SPACING,
-					layout.x * NODE_SPACING - minX,
-					prev_layout.y * LEVEL_SPACING,
-					prev_layout.x * NODE_SPACING - minX
+		let that = this;
+		this.skeleton.tree.zipX(layout.tree).forEachPreorderX(node => {
+			let parent = node.parent;
+			let [head, layout] = node.payload;
+			let svgData = that.svg_data_map.get(head)!;
+			let position = layout.payload;
+			svgData.head.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING - minX);
+			if (parent !== null) {
+				let parentPosition = parent.payload[1].payload;
+				svgData.neck?.plot(
+					position.y * LEVEL_SPACING,
+					position.x * NODE_SPACING - minX,
+					parentPosition.y * LEVEL_SPACING,
+					parentPosition.x * NODE_SPACING - minX,
 				);
 			}
-
-			for (let i = 0; i < hydra.children.length; i++) {
-				apply(hydra.children[i], layout.children[i], layout);
-			}
-		}
-		apply(this.skeleton, layout, null);
+		});
 	}
 
 	index(...idxs: number[]): SvgHeadData | null {
-		let x = this.skeleton.index(...idxs);
+		let x = this.skeleton.tree.index(...idxs);
 		if (x === null) {
 			return null;
 		}
@@ -268,7 +203,7 @@ export class SvgHydra {
 	}
 
 	root(): SvgHeadData {
-		return this.svg_data_map.get(this.skeleton)!;
+		return this.svg_data_map.get(this.skeleton.tree)!;
 	}
 }
 
@@ -278,7 +213,7 @@ export class SvgHydra {
 // ==================================
 
 function getHydraWidth(hydra: SvgHydra): number {
-	let layout = HydraLayout.fromHydra(hydra.skeleton);
+	let layout = TreeLayout.fromTree(hydra.skeleton.tree);
 	let minX = Math.min(...layout.leftContour());
 	let maxX = Math.max(...layout.rightContour());
 	return maxX - minX;
@@ -297,7 +232,7 @@ export function resizeViewbox(drawing: svgjs.Container, hydra: SvgHydra) {
 	);
 }
 
-export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: HydraSkeleton, clickCallback: () => void) {
+export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tree<null>, clickCallback: () => void) {
 
 	// Data passed between callbacks
 	let wasClicked = false;
@@ -323,67 +258,68 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Hy
 	function cut2() {
 		let parent = head.parent!;
 
+		// Delete the head that is killed
 		opacityGroup.remove();
-		head.die();
+		head.remove();
 		hydra.svg_data_map.delete(head);
 
 		// Our parent should clone itself, unless it's root
-		if (parent.parent === null) {
+		let grandparent = parent.parent;
+		if (grandparent === null) {
 			cut3(); // call immediately
+			return;
 		}
 
-		// Generate new skeleta, and add them to the svghydra
-		// TODO: these should not be separate operations
-		var newUncles = parent.generate_siblings(2);
-		newUncles.forEach(uncle => hydra.createSvgHead(uncle));
-
-		// Similarly, attach the listeners to each head
-		newUncles.forEach(
-			uncle => setListeners(drawing, hydra, uncle, clickCallback)
-		);
-
-		// Then, we want to place the copy on top of the parent
-		// TODO: again, improved by zip
-		function setPosition(h: HydraSkeleton, h2: HydraSkeleton) {
-			let original = hydra.svg_data_map.get(h)!;
-			let copy = hydra.svg_data_map.get(h2)!;
-			copy.head.move(original.head.x(), original.head.y());
-			copy.neck!.plot(original.neck!.array());
-			h.children.forEach((child, idx) => setPosition(child, h2.children[idx]));
+		// Generate some copies of the parent
+		var parentIdx = grandparent.children.indexOf(parent);
+		let copies = [];
+		for(let i = 0; i < 2; i++) {
+			let copy = parent.makeCopy();
+			grandparent.insertSubtree(parentIdx + 1, copy);
+			// Create the SVG data for the new subhydras
+			hydra.createSvgHeads(copy);
+			// Attach listeners to the new SVG elements
+			setListeners(drawing, hydra, copy, clickCallback);
+			// Lastly, position the copy on top of the parent
+			parent.zipX(copy).forEachPreorder(([node1, node2]) => {
+				let data1 = hydra.svg_data_map.get(node1)!;
+				let data2 = hydra.svg_data_map.get(node2)!;
+				data2.head.move(data1.head.x(), data1.head.y());
+				data2.neck?.plot(data1.neck!.array());
+			});
+			copies.push(copy);
 		}
-		newUncles.forEach(uncle => setPosition(parent, uncle));
 
 		// Lastly, make everyone involved blue.
-		newUncles.forEach(uncle => makeBlue(uncle));
+		copies.forEach(copy => makeBlue(copy));
 		// @ts-ignore
 		makeBlue(parent).afterAll(cut3);
 	}
 
 	function cut3() {
 		// Layout the tree again, and move everything to its final position
-		let layout = HydraLayout.fromHydra(hydra.skeleton);
+		let layout = TreeLayout.fromTree(hydra.skeleton.tree);
 		let minX = Math.min(...layout.leftContour());
 
-		function moveToFinalPosition(h: HydraSkeleton, layout: HydraLayout, prev_layout: HydraLayout | null) {
-			let svgHead = hydra.svg_data_map.get(h)!;
+		hydra.skeleton.tree.zipX(layout.tree).forEachPreorderX(node => {
+			let head = node.payload[0];
+			let position = node.payload[1].payload;
+			let svgHead = hydra.svg_data_map.get(head)!;
 			let headAnim = svgHead.head.animate(MOVE_DURATION, "<", 0);
 			// @ts-ignore
-			headAnim.center(layout.y * LEVEL_SPACING, layout.x * NODE_SPACING - minX).fill("#000");
-			if (prev_layout !== null) {
+			headAnim.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING - minX).fill("#000");
+			if (node.parent !== null) {
+				let prevPosition = node.parent.payload[1].payload;
 				let neckAnim = svgHead.neck?.animate(MOVE_DURATION, "<", 0);
 				// @ts-ignore
 				neckAnim.plot(
-					layout.y * LEVEL_SPACING,
-					layout.x * NODE_SPACING - minX,
-					prev_layout.y * LEVEL_SPACING,
-					prev_layout.x * NODE_SPACING - minX
+					position.y * LEVEL_SPACING,
+					position.x * NODE_SPACING - minX,
+					prevPosition.y * LEVEL_SPACING,
+					prevPosition.x * NODE_SPACING - minX
 				).stroke("#000");
 			}
-			for (let i = 0; i < h.children.length; i++) {
-				moveToFinalPosition(h.children[i], layout.children[i], layout);
-			}
-		}
-		moveToFinalPosition(hydra.skeleton, layout, null);
+		});
 
 		resizeViewbox(
 			// @ts-ignore
@@ -395,7 +331,7 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Hy
 	}
 
 	function cut4() {
-		if (hydra.skeleton.children.length === 0) {
+		if (hydra.skeleton.tree.children.length === 0) {
 			// @ts-ignore
 			alert(
 				"Wow... I can't believe you actually did it!\n" +
@@ -406,7 +342,7 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Hy
 	}
 
 	// helper function
-	function makeBlue(h: HydraSkeleton) {
+	function makeBlue(h: Tree<null>) {
 		// Recurse
 		h.children.forEach(child => makeBlue(child));
 

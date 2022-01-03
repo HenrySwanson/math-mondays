@@ -22,8 +22,8 @@ function resetHydra() {
 
 	// Create the original hydra
 	var hydra = new HydraSkeleton([]);
-	var child = hydra.appendChild();
-	var gchild = child;//child.appendChild();
+	var child = hydra.tree.appendChild();
+	var gchild = child.appendChild();
 	gchild.appendChild();
 	gchild.appendChild();
 	
@@ -33,7 +33,7 @@ function resetHydra() {
 	resizeViewbox(drawing, svg_hydra);
 
 	// Lastly, hook up the listeners
-	setListeners(drawing, svg_hydra, svg_hydra.skeleton, updateCounter);
+	setListeners(drawing, svg_hydra, svg_hydra.skeleton.tree, updateCounter);
 }
 
 resetHydra(); // init hydra
