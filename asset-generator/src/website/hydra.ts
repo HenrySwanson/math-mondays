@@ -2,8 +2,10 @@
 
 import { resizeViewbox, setListeners, HydraSkeleton, SvgHydra } from "../lib/hydra";
 
-var resetButton = document.getElementById("reset-button");
-var clickCounter = document.getElementById("click-counter");
+var resetButton = document.getElementById("reset-button")!;
+var clickCounter = document.getElementById("click-counter")!;
+
+// @ts-ignore
 var drawing = SVG("hydra-interactive");  // really an svg.js element
 
 // Keeps track of number of clicks
@@ -22,10 +24,10 @@ function resetHydra() {
 
 	// Create the original hydra
 	var hydra = new HydraSkeleton([]);
-	var child = hydra.tree.appendChild();
-	var gchild = child.appendChild();
-	gchild.appendChild();
-	gchild.appendChild();
+	var child = hydra.tree.appendChild(null);
+	var gchild = child.appendChild(null);
+	gchild.appendChild(null);
+	gchild.appendChild(null);
 	
 	// Then draw it
 	var svg_hydra = new SvgHydra(drawing, hydra);

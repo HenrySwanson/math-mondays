@@ -106,7 +106,7 @@ function drawRedX(node: SvgHeadData) {
 		)
 	);
 	cross.stroke({ color: "#bf0000", width: 0.1 });
-	cross.putIn(node.head.parent());  // use same coordinates as head
+	cross.putIn(node.head.parent() as svgjs.Parent);  // use same coordinates as head
 }
 
 function setupAttackingExample(startIdx: number, doThree: boolean = false): SvgHydra[] {
@@ -236,7 +236,7 @@ drawRedX(hydraB.index(2)!);
 // no coloring on C
 
 // TODO draw dead face
-var groupC = hydraC.root().head.parent();
+var groupC = hydraC.root().head.parent() as svgjs.G;
 var stroke: svgjs.StrokeData = { color: "#ffffff", width: 0.025 };
 var lefteye = groupC.path("M -1,-1 L 1,1 M 1,-1 L -1,1")
 	.size(0.1).stroke(stroke).center(-0.1, -0.06);
