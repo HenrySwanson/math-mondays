@@ -150,39 +150,30 @@ export class SvgHeadData {
 
 export class SvgHydra {
 
-	skeleton: HydraSkeleton;
-	// TODO: this should be a tree in its own right, I think
-	svg_data_map: Map<Tree<null>, SvgHeadData>;
-	svg_group: svgjs.G;
+	svgTree: Tree<SvgHeadData>;
+	svgGroup: svgjs.G;
 
 	constructor(drawing: svgjs.Container, skeleton: HydraSkeleton) {
-		this.skeleton = skeleton;
-		this.svg_group = drawing.group();
-		this.svg_data_map = new Map();
-
-		this.createSvgHeads(skeleton.tree, true);
+		this.svgGroup = drawing.group();
+		this.svgTree = this.createSvgHeads(skeleton.tree, true);
 	}
 
-	createSvgHeads(tree: Tree<null>, root: boolean = false): void {
-		let that = this;
-		tree.forEachPreorderX(
-			node => that.svg_data_map.set(node, new SvgHeadData(this.svg_group, node.parent !== null))
+	createSvgHeads(tree: Tree<null>, root: boolean = false): Tree<SvgHeadData> {
+		return tree.mapX(
+			node => new SvgHeadData(this.svgGroup, node.parent !== null)
 		);
 	}
 
 	repositionNodes(): void {
-		let layout = TreeLayout.fromTree(this.skeleton.tree);
+		let layout = TreeLayout.fromTree(this.svgTree);
 		let minX = Math.min(...layout.leftContour());
 
-		let that = this;
-		this.skeleton.tree.zipX(layout.tree).forEachPreorderX(node => {
+		this.svgTree.zip(layout.tree).forEachPreorderX(node => {
 			let parent = node.parent;
-			let [head, layout] = node.payload;
-			let svgData = that.svg_data_map.get(head)!;
-			let position = layout.payload;
+			let [svgData, position] = node.payload;
 			svgData.head.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING - minX);
 			if (parent !== null) {
-				let parentPosition = parent.payload[1].payload;
+				let parentPosition = parent.payload[1];
 				svgData.neck?.plot(
 					position.y * LEVEL_SPACING,
 					position.x * NODE_SPACING - minX,
@@ -194,16 +185,11 @@ export class SvgHydra {
 	}
 
 	index(...idxs: number[]): SvgHeadData | null {
-		let x = this.skeleton.tree.index(...idxs);
-		if (x === null) {
-			return null;
-		}
-
-		return this.svg_data_map.get(x)!;
+		return this.svgTree.index(...idxs)?.payload ?? null;
 	}
 
 	root(): SvgHeadData {
-		return this.svg_data_map.get(this.skeleton.tree)!;
+		return this.svgTree.payload;
 	}
 }
 
@@ -213,7 +199,7 @@ export class SvgHydra {
 // ==================================
 
 function getHydraWidth(hydra: SvgHydra): number {
-	let layout = TreeLayout.fromTree(hydra.skeleton.tree);
+	let layout = TreeLayout.fromTree(hydra.svgTree);
 	let minX = Math.min(...layout.leftContour());
 	let maxX = Math.max(...layout.rightContour());
 	return maxX - minX;
@@ -232,17 +218,17 @@ export function resizeViewbox(drawing: svgjs.Container, hydra: SvgHydra) {
 	);
 }
 
-export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tree<null>, clickCallback: () => void) {
+export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tree<SvgHeadData>, clickCallback: () => void) {
 
 	// Data passed between callbacks
 	let wasClicked = false;
-	let svgHead = hydra.svg_data_map.get(head)!;
 	let opacityGroup: svgjs.G;
+	let svgHead = node.payload;
 
 	// We've got a sequence of animation callbacks
 	function cut() {
 		// Return immediately if we should ignore the click
-		if (head.parent === null || head.children.length !== 0) { return; }
+		if (node.parent === null || node.children.length !== 0) { return; }
 
 		// Increment counter
 		wasClicked = true;
@@ -256,12 +242,11 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tr
 	}
 
 	function cut2() {
-		let parent = head.parent!;
+		let parent = node.parent!;
 
 		// Delete the head that is killed
 		opacityGroup.remove();
-		head.remove();
-		hydra.svg_data_map.delete(head);
+		node.remove();
 
 		// Our parent should clone itself, unless it's root
 		let grandparent = parent.parent;
@@ -270,20 +255,22 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tr
 			return;
 		}
 
-		// Generate some copies of the parent
+		// Generate the new uncles and cousins
 		var parentIdx = grandparent.children.indexOf(parent);
 		let copies = [];
-		for(let i = 0; i < 2; i++) {
-			let copy = parent.makeCopy();
+		for (let i = 0; i < 2; i++) {
+			// Make a copy of the parent (nulling out the payloads),
+			// and use it to create new svg data.
+			// TODO: since that tree doesn't have a parent yet, I have to
+			// manually create the line. That seems dumb.
+			let copy = hydra.createSvgHeads(parent.map(_ => null), false);
+			copy.payload.neck = hydra.svgGroup.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
+
 			grandparent.insertSubtree(parentIdx + 1, copy);
-			// Create the SVG data for the new subhydras
-			hydra.createSvgHeads(copy);
 			// Attach listeners to the new SVG elements
 			setListeners(drawing, hydra, copy, clickCallback);
 			// Lastly, position the copy on top of the parent
-			parent.zipX(copy).forEachPreorder(([node1, node2]) => {
-				let data1 = hydra.svg_data_map.get(node1)!;
-				let data2 = hydra.svg_data_map.get(node2)!;
+			parent.zip(copy).forEachPreorder(([data1, data2]) => {
 				data2.head.move(data1.head.x(), data1.head.y());
 				data2.neck?.plot(data1.neck!.array());
 			});
@@ -298,18 +285,17 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tr
 
 	function cut3() {
 		// Layout the tree again, and move everything to its final position
-		let layout = TreeLayout.fromTree(hydra.skeleton.tree);
+		let layout = TreeLayout.fromTree(hydra.svgTree);
 		let minX = Math.min(...layout.leftContour());
 
-		hydra.skeleton.tree.zipX(layout.tree).forEachPreorderX(node => {
-			let head = node.payload[0];
-			let position = node.payload[1].payload;
-			let svgHead = hydra.svg_data_map.get(head)!;
+		hydra.svgTree.zip(layout.tree).forEachPreorderX(node => {
+			let svgHead = node.payload[0];
+			let position = node.payload[1];
 			let headAnim = svgHead.head.animate(MOVE_DURATION, "<", 0);
 			// @ts-ignore
 			headAnim.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING - minX).fill("#000");
 			if (node.parent !== null) {
-				let prevPosition = node.parent.payload[1].payload;
+				let prevPosition = node.parent.payload[1];
 				let neckAnim = svgHead.neck?.animate(MOVE_DURATION, "<", 0);
 				// @ts-ignore
 				neckAnim.plot(
@@ -331,8 +317,7 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tr
 	}
 
 	function cut4() {
-		if (hydra.skeleton.tree.children.length === 0) {
-			// @ts-ignore
+		if (hydra.svgTree.children.length === 0) {
 			alert(
 				"Wow... I can't believe you actually did it!\n" +
 				"Sorry I didn't write anything cool for you yet. " +
@@ -342,11 +327,13 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tr
 	}
 
 	// helper function
-	function makeBlue(h: Tree<null>) {
+	// this needs to do the recursion manually for now, so that we return the final animation
+	// and use it for afterAll callbacks
+	function makeBlue(h: Tree<SvgHeadData>) {
 		// Recurse
 		h.children.forEach(child => makeBlue(child));
 
-		let svgHead = hydra.svg_data_map.get(h)!;
+		let svgHead = h.payload;
 		if (svgHead.neck !== null) {
 			// @ts-ignore
 			svgHead.neck.animate(CLONE_DURATION, "<", 0).stroke(CLONE_COLOR);
@@ -358,5 +345,5 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, head: Tr
 	// Finally, now that everything's defined, assign the click handler
 	// to self, and recurse to children.
 	svgHead.head.click(cut);
-	head.children.forEach(child => setListeners(drawing, hydra, child, clickCallback));
+	node.children.forEach(child => setListeners(drawing, hydra, child, clickCallback));
 }

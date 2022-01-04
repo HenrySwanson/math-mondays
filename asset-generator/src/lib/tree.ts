@@ -97,4 +97,11 @@ export class Tree<T> {
             this.children.map(child => child.map(fn))
         );
     }
+
+    mapX<U>(fn: (t: Tree<T>) => U): Tree<U> {
+        return new Tree(
+            fn(this),
+            this.children.map(child => child.mapX(fn))
+        );
+    }
 }

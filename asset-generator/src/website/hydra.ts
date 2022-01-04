@@ -35,7 +35,7 @@ function resetHydra() {
 	resizeViewbox(drawing, svg_hydra);
 
 	// Lastly, hook up the listeners
-	setListeners(drawing, svg_hydra, svg_hydra.skeleton.tree, updateCounter);
+	setListeners(drawing, svg_hydra, svg_hydra.svgTree, updateCounter);
 }
 
 resetHydra(); // init hydra

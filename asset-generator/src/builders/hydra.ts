@@ -123,7 +123,7 @@ function setupAttackingExample(startIdx: number, doThree: boolean = false): SvgH
 	hydra2.repositionNodes();
 
 	// align vertically and space horizontally
-	hydra2.svg_group.dmove(spacing, hydra1.root().head.y() - hydra2.root().head.y());
+	hydra2.svgGroup.dmove(spacing, hydra1.root().head.y() - hydra2.root().head.y());
 
 	if (!doThree) {
 		return [hydra1, hydra2];
@@ -134,7 +134,7 @@ function setupAttackingExample(startIdx: number, doThree: boolean = false): SvgH
 	hydra3.repositionNodes();
 
 	// align vertically and space horizontally
-	hydra3.svg_group.dmove(2 * spacing, hydra1.root().head.y() - hydra3.root().head.y());
+	hydra3.svgGroup.dmove(2 * spacing, hydra1.root().head.y() - hydra3.root().head.y());
 
 	return [hydra1, hydra2, hydra3];
 }
@@ -268,8 +268,8 @@ for (var i = 0; i < 8; i++) {
 	h.repositionNodes();
 
 	// Group the hydra so you can move it.
-	h.svg_group.dy(-h.root().head.y())  // put the root at y=0
-	h.svg_group.dmove(cellX, cellY);  // put into the proper cell
+	h.svgGroup.dy(-h.root().head.y())  // put the root at y=0
+	h.svgGroup.dmove(cellX, cellY);  // put into the proper cell
 
 	var value = asset_utils.makeMathSvg(canvas, values[i], 1);
 	// put the center of the bottom at the origin
