@@ -1,6 +1,6 @@
 "use_strict";
 
-import { resizeViewbox, setListeners, HydraSkeleton, SvgHydra } from "../lib/hydra";
+import { resizeViewbox, setListeners, HydraSkeleton, SvgHydra, TreeLayout } from "../lib/hydra";
 
 var resetButton = document.getElementById("reset-button")!;
 var clickCounter = document.getElementById("click-counter")!;
@@ -30,12 +30,12 @@ function resetHydra() {
 	gchild.appendChild(null);
 	
 	// Then draw it
-	var svg_hydra = new SvgHydra(drawing, hydra);
-	svg_hydra.repositionNodes();
-	resizeViewbox(drawing, svg_hydra);
+	var svgHydra = new SvgHydra(drawing, hydra);
+	svgHydra.repositionNodes();
+	resizeViewbox(drawing, TreeLayout.fromTree(svgHydra.svgTree));
 
 	// Lastly, hook up the listeners
-	setListeners(drawing, svg_hydra, svg_hydra.svgTree, updateCounter);
+	setListeners(drawing, svgHydra, svgHydra.svgTree, updateCounter);
 }
 
 resetHydra(); // init hydra

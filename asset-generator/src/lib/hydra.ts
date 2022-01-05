@@ -32,7 +32,7 @@ export class HydraSkeleton {
 interface Point { x: number; y: number; }
 
 // The algorithm here is cribbed from: https://llimllib.github.io/pymag-trees/
-class TreeLayout {
+export class TreeLayout {
 	tree: Tree<Point>
 
 	private constructor(x: number, y: number, children: TreeLayout[]) {
@@ -131,6 +131,17 @@ class TreeLayout {
 		return this._contour("right");
 	}
 
+	getMinX(): number {
+		return Math.min(...this.leftContour());
+	}
+
+	getMaxX(): number {
+		return Math.max(...this.rightContour());
+	}
+
+	getWidth(): number {
+		return this.getMaxX() - this.getMinX();
+	}
 }
 
 export class SvgHeadData {
@@ -155,10 +166,10 @@ export class SvgHydra {
 
 	constructor(drawing: svgjs.Container, skeleton: HydraSkeleton) {
 		this.svgGroup = drawing.group();
-		this.svgTree = this.createSvgHeads(skeleton.tree, true);
+		this.svgTree = this.createSvgHeads(skeleton.tree);
 	}
 
-	createSvgHeads(tree: Tree<null>, root: boolean = false): Tree<SvgHeadData> {
+	createSvgHeads(tree: Tree<null>): Tree<SvgHeadData> {
 		return tree.mapX(
 			node => new SvgHeadData(this.svgGroup, node.parent !== null)
 		);
@@ -166,19 +177,19 @@ export class SvgHydra {
 
 	repositionNodes(): void {
 		let layout = TreeLayout.fromTree(this.svgTree);
-		let minX = Math.min(...layout.leftContour());
+		layout.shift(-layout.getMinX(), 0);
 
 		this.svgTree.zip(layout.tree).forEachPreorderX(node => {
 			let parent = node.parent;
 			let [svgData, position] = node.payload;
-			svgData.head.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING - minX);
+			svgData.head.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING);
 			if (parent !== null) {
 				let parentPosition = parent.payload[1];
 				svgData.neck?.plot(
 					position.y * LEVEL_SPACING,
-					position.x * NODE_SPACING - minX,
+					position.x * NODE_SPACING,
 					parentPosition.y * LEVEL_SPACING,
-					parentPosition.x * NODE_SPACING - minX,
+					parentPosition.x * NODE_SPACING,
 				);
 			}
 		});
@@ -198,17 +209,10 @@ export class SvgHydra {
 // I SHOULD MOVE THE CODE BELOW THIS LINE
 // ==================================
 
-function getHydraWidth(hydra: SvgHydra): number {
-	let layout = TreeLayout.fromTree(hydra.svgTree);
-	let minX = Math.min(...layout.leftContour());
-	let maxX = Math.max(...layout.rightContour());
-	return maxX - minX;
-}
 
-export function resizeViewbox(drawing: svgjs.Container, hydra: SvgHydra) {
-	var treeWidth = getHydraWidth(hydra);
+export function resizeViewbox(drawing: svgjs.Container, layout: TreeLayout) {
 	var boxWidth = 3 * LEVEL_SPACING;
-	var boxHeight = treeWidth * NODE_SPACING;
+	var boxHeight = layout.getWidth() * NODE_SPACING;
 
 	drawing.viewbox(
 		-(H_PADDING + NODE_DIAM / 2),
@@ -263,7 +267,7 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tr
 			// and use it to create new svg data.
 			// TODO: since that tree doesn't have a parent yet, I have to
 			// manually create the line. That seems dumb.
-			let copy = hydra.createSvgHeads(parent.map(_ => null), false);
+			let copy = hydra.createSvgHeads(parent.map(_ => null));
 			copy.payload.neck = hydra.svgGroup.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
 
 			grandparent.insertSubtree(parentIdx + 1, copy);
@@ -286,23 +290,23 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tr
 	function cut3() {
 		// Layout the tree again, and move everything to its final position
 		let layout = TreeLayout.fromTree(hydra.svgTree);
-		let minX = Math.min(...layout.leftContour());
+		layout.shift(-layout.getMinX(), 0);
 
 		hydra.svgTree.zip(layout.tree).forEachPreorderX(node => {
 			let svgHead = node.payload[0];
 			let position = node.payload[1];
 			let headAnim = svgHead.head.animate(MOVE_DURATION, "<", 0);
 			// @ts-ignore
-			headAnim.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING - minX).fill("#000");
+			headAnim.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING).fill("#000");
 			if (node.parent !== null) {
 				let prevPosition = node.parent.payload[1];
 				let neckAnim = svgHead.neck?.animate(MOVE_DURATION, "<", 0);
 				// @ts-ignore
 				neckAnim.plot(
 					position.y * LEVEL_SPACING,
-					position.x * NODE_SPACING - minX,
+					position.x * NODE_SPACING,
 					prevPosition.y * LEVEL_SPACING,
-					prevPosition.x * NODE_SPACING - minX
+					prevPosition.x * NODE_SPACING
 				).stroke("#000");
 			}
 		});
@@ -310,7 +314,7 @@ export function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tr
 		resizeViewbox(
 			// @ts-ignore
 			drawing.animate(MOVE_DURATION, "<", 0),
-			hydra
+			layout,
 		);
 
 		cut4();
