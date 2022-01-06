@@ -5,6 +5,8 @@
         "allowJs": true,
         "checkJs": false,
         "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
         "moduleResolution": "node",
         "types": [
             "node",
