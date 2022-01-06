@@ -105,6 +105,7 @@ function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tree<SvgH
 			// manually create the line. That seems dumb.
 			let copy = hydra.createSvgHeads(parent.map(_ => null));
 			copy.payload.neck = hydra.svgGroup.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
+			copy.payload.neck.back();
 
 			grandparent.insertSubtree(parentIdx + 1, copy);
 			// Attach listeners to the new SVG elements
