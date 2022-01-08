@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "tsc && jest && webpack --mode production && cp web-bundles/hydra.js ../content/js/hydra_main.js"
+    "generate": "tsc && webpack --mode production && cp web-bundles/hydra.js ../content/js/hydra_main.js",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
