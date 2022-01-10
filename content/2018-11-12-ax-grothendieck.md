@@ -13,7 +13,7 @@ $\newcommand{\CC}{\Bbb C}
 </span>
 
 The Ax-Grothendieck theorem is the statement:
-<div class="theorem-box">
+<div class="theorem-box" markdown="1">
 <div class="theorem-title">Ax-Grothendieck Theorem</div>
 Let $f: \CC^n \to \CC^n$ be a polynomial map; that is, each coordinate $f_i: \CC^n \to \CC$ is a polynomial in the $n$ input variables.
 Then, if $f$ is injective, it is surjective.
@@ -134,7 +134,7 @@ At this point, there is no more spooky magic, and the rest of the article is abo
 ---
 
 First, we'll state a popular theorem in model theory:
-<div class="theorem-box">
+<div class="theorem-box" markdown="1">
 <div class="theorem-title">Löwenheim–Skolem Theorem</div>
 Let $\cT$ be a countable theory. If it has an infinite model, then for any infinite cardinal $\kappa$, it has a model of size $\kappa$.
 </div>
@@ -142,7 +142,7 @@ Let $\cT$ be a countable theory. If it has an infinite model, then for any infin
 Essentially, first-order logic is too limited to distinguish between different sizes of infinity; if there's a model of one infinite size, there's a model of all infinite sizes. The proof of this theorem is somewhat involved, and we won't cover it here, but see [here](http://modeltheory.wikia.com/wiki/L%C3%B6wenheim-Skolem_Theorem) for a proof.
 
 Using this, we can prove the Łoś–Vaught test:
-<div class="theorem-box">
+<div class="theorem-box" markdown="1">
 <div class="theorem-title">Łoś–Vaught Test</div>
 Let $\cT$ be a theory and $\kappa$ be some infinite cardinal. We say that $\cT$ is $\kappa$-categorical if there is exactly one model of $\cT$ of size $\kappa$, up to isomorphism.
 <br><br>
