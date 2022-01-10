@@ -110,7 +110,7 @@ function drawRedX(node: SvgHeadData) {
 }
 
 function setupAttackingExample(startIdx: number, doThree: boolean = false): SvgHydra[] {
-	canvas.clear();
+	canvas = asset_utils.getCanvas();
 
 	var spacing = doThree ? 6 : 8;
 
@@ -252,7 +252,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/hydra/example-5.svg");
 // Diagram: Ordinal sequence for killing the hydra
 //------------------------------------------------
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 var values = [
 	"\\omega^2", "3 \\omega", "2 \\omega + 3", "2 \\omega",

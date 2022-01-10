@@ -172,7 +172,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/tangrams.svg");
 // Diagram: Square <-> Triangle Tangrams
 // -------------------------------------
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 function makeTrianglePoints() {
 	var sqrt3 = Math.sqrt(3);
@@ -230,7 +230,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/square-to-triangle.svg
 // Diagram: Square <-> Pentagon Tangrams
 // -------------------------------------
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 
 //                    _ A _
@@ -318,7 +318,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/square-to-pentagon.svg
 // Diagram: Star <-> Triangle Tangrams
 // -------------------------------------
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 
 //                A                      
@@ -388,7 +388,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/star-to-triangle.svg")
 // Diagrams: WBG construction
 // --------------------------
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 // -- first, triangulation
 
@@ -418,7 +418,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-1.svg");
 
 // -- next, triangle -> rectangle
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 var [A, B, C] = [pts[1], pts[2], pts[4]];
 var D = get_midpoint(A, B);
 var E = get_midpoint(A, C);
@@ -442,7 +442,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-2.svg");
 
 // -- next, rectangle -> half-rectangle
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 var leftGroup = canvas.group();
 var rightGroup = canvas.group().dmove(10, -1.5 / 2);
@@ -459,7 +459,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-3.svg");
 // -- lastly, rectangle -> rectangle with width 1 (but we'll make it 2 here
 // because units are made up)
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 var leftGroup = canvas.group();
 var rightGroup = canvas.group().dx(6);
@@ -512,7 +512,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-4.svg");
 // Diagrams: Edge cutting
 // ----------------------
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 var pts: Point[] = [[2, 1], [10, 0], [5, 3], [-3, 4], [15, 5], [11, 8]];
 
@@ -560,7 +560,7 @@ asset_utils.saveImgToFile(canvas, "../content/images/dehn/edge-cut-transverse.sv
 
 // -- edge-on cut --
 
-canvas.clear();
+canvas = asset_utils.getCanvas();
 
 var pts = pts.slice(0, 6);
 

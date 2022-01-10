@@ -64,8 +64,10 @@ var createCanvas = once_only(function (): svgjs.Container {
 });
 
 export function getCanvas(): svgjs.Container {
+	// Clear the canvas, and then reset the element counter
 	var canvas = createCanvas();
 	canvas.clear();
+	SVG.did = 1005;  // parser is 1003, parser path is 1004
 	return canvas;
 }
 
