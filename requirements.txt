@@ -6,3 +6,4 @@ beautifulsoup4==4.10.0
 cssmin==0.2.0
 libsass==0.21.0
 ghp-import==2.0.2
+markdown==3.3.6
