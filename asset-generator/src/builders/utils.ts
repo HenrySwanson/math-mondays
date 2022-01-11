@@ -63,14 +63,6 @@ var createCanvas = once_only(function (): svgjs.Container {
 	return SVG(svgdom_window.document.documentElement);
 });
 
-export function getCanvas(): svgjs.Container {
-	// Clear the canvas, and then reset the element counter
-	var canvas = createCanvas();
-	canvas.clear();
-	SVG.did = 1005;  // parser is 1003, parser path is 1004
-	return canvas;
-}
-
 //--------------------------------
 // SVG helper methods
 //--------------------------------
@@ -124,7 +116,7 @@ export function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: nu
 	var widthEx = +mathSvg.width().slice(0, -2);
 	// @ts-ignore
 	var heightEx = +mathSvg.height().slice(0, -2);
-	
+
 	// Now we change the units to px (this should not change the visual size).
 	mathSvg.size(widthEx * exToPx, heightEx * exToPx);
 
@@ -143,7 +135,7 @@ export function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: nu
 	// is, by default, 1 em tall, so that's what we put in our denominator.
 	var scaleFactor = fontSizePx / metrics.em * metrics.scale;
 	scaleFromOrigin(mathSvg, scaleFactor);
-	
+
 	// Lastly, clear the style element so it can't interfere with us
 	mathSvg.attr("style", "");
 
@@ -192,7 +184,7 @@ export function adjustCanvas(canvas: svgjs.Container, left: number, right: numbe
 	);
 }
 
-export function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackground: boolean = false) {
+function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackground: boolean = false) {
 	if (highlightBackground) {
 		var bbox = canvas.viewbox();
 		canvas.rect(bbox.width, bbox.height).move(bbox.x, bbox.y).back().fill("#ffff00");
@@ -205,4 +197,33 @@ export function saveImgToFile(canvas: svgjs.Container, filename: string, highlig
 	parser.poly.instance.attr("points", "");
 
 	fs.writeFileSync(filename, canvas.svg());
+}
+
+type AssetFn = (canvas: svgjs.Container) => void;
+
+export class Builder {
+	assets: [AssetFn, string][];
+
+	constructor() {
+		this.assets = [];
+	}
+
+	register(filename: string, fn: AssetFn) {
+		this.assets.push([fn, filename]);
+	}
+
+	generateAll() {
+		for (let [fn, filename] of this.assets) {
+			// TODO fold the clear canvas logic into here?
+			// Get the global canvas instance
+			let canvas = createCanvas();
+
+			fn(canvas);
+			saveImgToFile(canvas, filename);
+
+			// Clear the canvas for the next function
+			canvas.clear();
+			SVG.did = 1005;  // parser is 1003, parser path is 1004
+		}
+	}
 }

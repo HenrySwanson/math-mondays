@@ -2,9 +2,6 @@
 
 import asset_utils = require("./utils");
 
-// Create the canvas to work on
-var canvas = asset_utils.getCanvas();
-
 // Name some colors
 const RED = "#c91435";
 const GREEN = "#1e963e";
@@ -82,7 +79,7 @@ function interpolate(p: Point, q: Point, t: number): Point {
 // Diagram: Tangrams
 // ---------------------------
 
-function makePiece(pts: Point[], string: string, color: string, stroke_width: number): svgjs.Polygon {
+function makePiece(canvas: svgjs.Container, pts: Point[], string: string, color: string, stroke_width: number): svgjs.Polygon {
 	// helper function for making tangram drawings easier
 	var myPts = [];
 	for (var i = 0; i < string.length; i++) {
@@ -123,6 +120,8 @@ function verticalAlign(groups: svgjs.G[]): void {
 	groups.forEach(g => g.dy(center - g.rbox().cy));
 }
 
+export let builder = new asset_utils.Builder();
+
 // create the tangrams. they lie in this 4x4 block
 // +---------------+
 // |\ A          B/|
@@ -141,98 +140,92 @@ function verticalAlign(groups: svgjs.G[]): void {
 // | /   5   /  6  |
 // |/D     G/     C|
 // +---------------+
-var pts: Point[] = [[0, 0], [4, 0], [4, 4], [0, 4], [2, 2], [4, 2], [2, 4], [3, 1], [3, 3], [1, 3]];
-var pieceDefs: PieceDef[] = [["ABE", RED], ["ADE", GREEN], ["BFH", PURPLE],
-["EHFI", YELLOW], ["EIJ", BROWN], ["DGIJ", DK_BLUE], ["CFG", LT_BLUE]];
-var leftGroup = canvas.group();
-makePieces(leftGroup, pts, 0.06, pieceDefs);
+builder.register("../content/images/dehn/tangrams.svg", function (canvas) {
+	var pts: Point[] = [[0, 0], [4, 0], [4, 4], [0, 4], [2, 2], [4, 2], [2, 4], [3, 1], [3, 3], [1, 3]];
+	var pieceDefs: PieceDef[] = [["ABE", RED], ["ADE", GREEN], ["BFH", PURPLE],
+	["EHFI", YELLOW], ["EIJ", BROWN], ["DGIJ", DK_BLUE], ["CFG", LT_BLUE]];
+	var leftGroup = canvas.group();
+	makePieces(leftGroup, pts, 0.06, pieceDefs);
 
-var rightGroup = canvas.group().dx(10);
-var tangrams = makePieces(rightGroup, pts, 0.06, pieceDefs);
+	var rightGroup = canvas.group().dx(10);
+	var tangrams = makePieces(rightGroup, pts, 0.06, pieceDefs);
 
-// Reshuffle pieces and save again
-var sqrt2 = Math.sqrt(2);
-tangrams[0].dmove(0, 4).rotate(-45, 4, 4);
-tangrams[1].move(2, 2);
-tangrams[2].move(1, 0);
-tangrams[3].move(0, 1);
-tangrams[4].dmove(-1, -3).rotate(90, 0, 0);
-tangrams[5].dmove(4, 2 * sqrt2).rotate(-30, 4, 4 + 2 * sqrt2);
-tangrams[6].dmove(0, -2).rotate(135, 2, 2);
+	// Reshuffle pieces and save again
+	var sqrt2 = Math.sqrt(2);
+	tangrams[0].dmove(0, 4).rotate(-45, 4, 4);
+	tangrams[1].move(2, 2);
+	tangrams[2].move(1, 0);
+	tangrams[3].move(0, 1);
+	tangrams[4].dmove(-1, -3).rotate(90, 0, 0);
+	tangrams[5].dmove(4, 2 * sqrt2).rotate(-30, 4, 4 + 2 * sqrt2);
+	tangrams[6].dmove(0, -2).rotate(135, 2, 2);
 
-verticalAlign([leftGroup, rightGroup]);
+	verticalAlign([leftGroup, rightGroup]);
 
-// Shrink and save
-asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/tangrams.svg");
+	// Shrink and save
+	asset_utils.shrinkCanvas(canvas, 0.1);
+	// TODO add house?
+});
 
-// TODO add house?
 
 // -------------------------------------
 // Diagram: Square <-> Triangle Tangrams
 // -------------------------------------
+builder.register("../content/images/dehn/square-to-triangle.svg", function (canvas) {
+	function makeTrianglePoints() {
+		var sqrt3 = Math.sqrt(3);
 
-canvas = asset_utils.getCanvas();
+		// corners of the triangle are A B C, with C as the apex.
+		var A: Point = [0, 0];
+		var B: Point = [1, 0];
+		var C: Point = [0.5, sqrt3 / 2];
 
-function makeTrianglePoints() {
-	var sqrt3 = Math.sqrt(3);
+		// D and E bisect AC and BC, respectively.
+		var D = get_midpoint(A, C);
+		var E = get_midpoint(B, C);
 
-	// corners of the triangle are A B C, with C as the apex.
-	var A: Point = [0, 0];
-	var B: Point = [1, 0];
-	var C: Point = [0.5, sqrt3 / 2];
+		// F and G are the points on AB
+		var F: Point = [0.2455, 0];
+		var G: Point = [0.7455, 0];
 
-	// D and E bisect AC and BC, respectively.
-	var D = get_midpoint(A, C);
-	var E = get_midpoint(B, C);
+		// H and I are the interior points
+		var midline = make_line(E, F);
+		var H = drop_onto(D, midline);
+		var I = drop_onto(G, midline);
 
-	// F and G are the points on AB
-	var F: Point = [0.2455, 0];
-	var G: Point = [0.7455, 0];
+		return [A, B, C, D, E, F, G, H, I];
+	}
+	// flip y-coords so it's right side up
+	var pts = makeTrianglePoints().map(pt => [pt[0], -pt[1]] as Point);
 
-	// H and I are the interior points
-	var midline = make_line(E, F);
-	var H = drop_onto(D, midline);
-	var I = drop_onto(G, midline);
+	var pieceDefs: PieceDef[] = [["DCEH", RED], ["ADHF", GREEN], ["BEIG", DK_BLUE], ["FGI", YELLOW]];
+	var strokeWidth = 0.015;
 
-	return [A, B, C, D, E, F, G, H, I];
-}
-// flip y-coords so it's right side up
-var pts = makeTrianglePoints().map(pt => [pt[0], -pt[1]] as Point);
+	var leftGroup = canvas.group();
+	makePieces(leftGroup, pts, 0.015, pieceDefs);
 
-var pieceDefs: PieceDef[] = [["DCEH", RED], ["ADHF", GREEN], ["BEIG", DK_BLUE], ["FGI", YELLOW]];
-var strokeWidth = 0.015;
+	var rightGroup = canvas.group().dx(1.5);
+	var pieces = makePieces(rightGroup, pts, 0.015, pieceDefs);
 
-var leftGroup = canvas.group();
-makePieces(leftGroup, pts, 0.015, pieceDefs);
+	// we leave piece 0 in place
 
-var rightGroup = canvas.group().dx(1.5);
-var pieces = makePieces(rightGroup, pts, 0.015, pieceDefs);
+	// rotate the 'wings' up
+	pieces[1].rotate(180, pts[3][0], pts[3][1]);
+	pieces[2].rotate(180, pts[4][0], pts[4][1]);
 
-// we leave piece 0 in place
+	// move the tip so F sits on top of (F rotated around D)
+	var F_: Point = [2 * pts[3][0] - pts[5][0], 2 * pts[3][1] - pts[5][1]];
+	moveAlong(pieces[3], pts[5], F_);
 
-// rotate the 'wings' up
-pieces[1].rotate(180, pts[3][0], pts[3][1]);
-pieces[2].rotate(180, pts[4][0], pts[4][1]);
+	verticalAlign([leftGroup, rightGroup]);
 
-// move the tip so F sits on top of (F rotated around D)
-var F_: Point = [2 * pts[3][0] - pts[5][0], 2 * pts[3][1] - pts[5][1]];
-moveAlong(pieces[3], pts[5], F_);
-
-verticalAlign([leftGroup, rightGroup]);
-
-// Shrink and save
-asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/square-to-triangle.svg");
-
+	// Shrink and save
+	asset_utils.shrinkCanvas(canvas, 0.1);
+});
 
 // -------------------------------------
 // Diagram: Square <-> Pentagon Tangrams
 // -------------------------------------
-
-canvas = asset_utils.getCanvas();
-
-
 //                    _ A _
 //                _-   /     - _              
 //            _-      /           -           
@@ -249,78 +242,75 @@ canvas = asset_utils.getCanvas();
 //          \                       /         
 //           D---------------------C
 // 
-function makePentagonPoints() {
-	// corners of the pentagon are ABCDE
-	var [A, B, C, D, E] = [0, 1, 2, 3, 4].map(x => polar(1, Math.PI / 2 - x * Math.PI * 2 / 5));
+builder.register("../content/images/dehn/square-to-pentagon.svg", function (canvas) {
+	function makePentagonPoints(): Point[] {
+		// corners of the pentagon are ABCDE
+		var [A, B, C, D, E] = [0, 1, 2, 3, 4].map(x => polar(1, Math.PI / 2 - x * Math.PI * 2 / 5));
 
-	// point F is on some intersections
-	var AD = make_line(A, D);
-	var BE = make_line(B, E);
-	var F = intersect_lines(AD, BE);
+		// point F is on some intersections
+		var AD = make_line(A, D);
+		var BE = make_line(B, E);
+		var F = intersect_lines(AD, BE);
 
-	// GH is parallel to BE, and they're separated by (height / 2)
-	var height = A[1] - C[1];
-	var horizontal: Line = [0, 1, B[1] - height / 2];
-	var G = intersect_lines(horizontal, make_line(B, C));
-	var H = intersect_lines(horizontal, make_line(D, E));
+		// GH is parallel to BE, and they're separated by (height / 2)
+		var height = A[1] - C[1];
+		var horizontal: Line = [0, 1, B[1] - height / 2];
+		var G = intersect_lines(horizontal, make_line(B, C));
+		var H = intersect_lines(horizontal, make_line(D, E));
 
-	// HI is parallel to BD
-	var HI = parallel_to(H, make_line(B, D));
-	var I = intersect_lines(HI, BE);
+		// HI is parallel to BD
+		var HI = parallel_to(H, make_line(B, D));
+		var I = intersect_lines(HI, BE);
 
-	// J is G dropped perpendicularly onto HI
-	var J = drop_onto(G, HI);
+		// J is G dropped perpendicularly onto HI
+		var J = drop_onto(G, HI);
 
-	// KI is a parallel transport of HG
-	var K: Point = [I[0] + H[0] - G[0], I[1]];
+		// KI is a parallel transport of HG
+		var K: Point = [I[0] + H[0] - G[0], I[1]];
 
-	// L is K dropped perpendicularly onto HI
-	var L = drop_onto(K, HI);
+		// L is K dropped perpendicularly onto HI
+		var L = drop_onto(K, HI);
 
-	return [A, B, C, D, E, F, G, H, I, J, K, L];
-}
-// flip y-coords so it's right side up
-var pts = makePentagonPoints().map(pt => [pt[0], -pt[1]] as Point);
-var pieceDefs: PieceDef[] = [["AEF", GREEN], ["ABF", YELLOW], ["EKLH", LT_BLUE],
-["ILK", RED], ["BIJG", PURPLE], ["GCDHJ", BROWN]];
+		return [A, B, C, D, E, F, G, H, I, J, K, L];
+	}
+	// flip y-coords so it's right side up
+	var pts = makePentagonPoints().map(pt => [pt[0], -pt[1]] as Point);
+	var pieceDefs: PieceDef[] = [["AEF", GREEN], ["ABF", YELLOW], ["EKLH", LT_BLUE],
+	["ILK", RED], ["BIJG", PURPLE], ["GCDHJ", BROWN]];
 
-var leftGroup = canvas.group();
-makePieces(leftGroup, pts, 0.03, pieceDefs);
+	var leftGroup = canvas.group();
+	makePieces(leftGroup, pts, 0.03, pieceDefs);
 
-var rightGroup = canvas.group().dx(3.5);
-var pieces = makePieces(rightGroup, pts, 0.03, pieceDefs);
+	var rightGroup = canvas.group().dx(3.5);
+	var pieces = makePieces(rightGroup, pts, 0.03, pieceDefs);
 
-// we keep 5 in place
+	// we keep 5 in place
 
-// to position 0, move A to C
-moveAlong(pieces[0], pts[0], pts[2]);
+	// to position 0, move A to C
+	moveAlong(pieces[0], pts[0], pts[2]);
 
-// to position 1, move A to D, then rotate around D
-moveAlong(pieces[1], pts[0], pts[3]);
-pieces[1].rotate(-36, pts[3][0], pts[3][1]);
+	// to position 1, move A to D, then rotate around D
+	moveAlong(pieces[1], pts[0], pts[3]);
+	pieces[1].rotate(-36, pts[3][0], pts[3][1]);
 
-// for 2 and 4 just rotate around H and G, respectively
-pieces[2].rotate(180, pts[7][0], pts[7][1]);
-pieces[4].rotate(180, pts[6][0], pts[6][1]);
+	// for 2 and 4 just rotate around H and G, respectively
+	pieces[2].rotate(180, pts[7][0], pts[7][1]);
+	pieces[4].rotate(180, pts[6][0], pts[6][1]);
 
-// for 3, we need to compute where K ended up. it was rotated 180 around H,
-// so K' = 2H - K
-var K_: Point = [2 * pts[7][0] - pts[10][0], 2 * pts[7][1] - pts[10][1]];
-moveAlong(pieces[3], pts[10], K_);
+	// for 3, we need to compute where K ended up. it was rotated 180 around H,
+	// so K' = 2H - K
+	var K_: Point = [2 * pts[7][0] - pts[10][0], 2 * pts[7][1] - pts[10][1]];
+	moveAlong(pieces[3], pts[10], K_);
 
-verticalAlign([leftGroup, rightGroup]);
+	verticalAlign([leftGroup, rightGroup]);
 
-// Shrink and save
-asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/square-to-pentagon.svg");
+	// Shrink and save
+	asset_utils.shrinkCanvas(canvas, 0.1);
+});
 
 // -------------------------------------
 // Diagram: Star <-> Triangle Tangrams
 // -------------------------------------
-
-canvas = asset_utils.getCanvas();
-
-
 //                A                      
 //               / \                        
 //             M/ 3 \                       
@@ -343,261 +333,251 @@ canvas = asset_utils.getCanvas();
 //               \ /                         
 //                G                         
 //                                           
-function makeStarPoints() {
-	var sqrt3 = Math.sqrt(3);
-	var range6 = [0, 1, 2, 3, 4, 5];
+builder.register("../content/images/dehn/star-to-triangle.svg", function (canvas) {
+	function makeStarPoints(): Point[] {
+		var sqrt3 = Math.sqrt(3);
+		var range6 = [0, 1, 2, 3, 4, 5];
 
-	var innerPoints = range6.map(x => polar(sqrt3 / 3, x * Math.PI / 3));
-	var outerPoints = range6.map(x => polar(1, (x + 0.5) * Math.PI / 3));
+		var innerPoints = range6.map(x => polar(sqrt3 / 3, x * Math.PI / 3));
+		var outerPoints = range6.map(x => polar(1, (x + 0.5) * Math.PI / 3));
 
-	var [D, B, L, J, H, F] = innerPoints;
-	var [C, A, K, I, G, E] = outerPoints;
+		var [D, B, L, J, H, F] = innerPoints;
+		var [C, A, K, I, G, E] = outerPoints;
 
-	var M = get_midpoint(A, L);
-	var N = get_midpoint(G, H);
+		var M = get_midpoint(A, L);
+		var N = get_midpoint(G, H);
 
-	return [A, B, C, D, E, F, G, H, I, J, K, L, M, N];
-}
-// flip y-coords so it's right side up
-pts = makeStarPoints().map(pt => [pt[0], -pt[1]]);
-var pieceDefs: PieceDef[] = [["BCDEFJ", GREEN], ["BJKLM", RED], ["FNHIJ", LT_BLUE],
-["ABM", PURPLE], ["FNG", YELLOW]];
+		return [A, B, C, D, E, F, G, H, I, J, K, L, M, N];
+	}
+	// flip y-coords so it's right side up
+	let pts = makeStarPoints().map(pt => [pt[0], -pt[1]] as Point);
+	var pieceDefs: PieceDef[] = [["BCDEFJ", GREEN], ["BJKLM", RED], ["FNHIJ", LT_BLUE],
+	["ABM", PURPLE], ["FNG", YELLOW]];
 
-var leftGroup = canvas.group();
-makePieces(leftGroup, pts, 0.03, pieceDefs);
+	var leftGroup = canvas.group();
+	makePieces(leftGroup, pts, 0.03, pieceDefs);
 
-var rightGroup = canvas.group().dx(3);
-var pieces = makePieces(rightGroup, pts, 0.03, pieceDefs);
+	var rightGroup = canvas.group().dx(3);
+	var pieces = makePieces(rightGroup, pts, 0.03, pieceDefs);
 
-// we keep piece 0 in place
+	// we keep piece 0 in place
 
-moveAlong(pieces[1], pts[10], pts[3]);
-pieces[1].rotate(-60, pts[3][0], pts[3][1]);
-moveAlong(pieces[2], pts[8], pts[3]);
-pieces[2].rotate(60, pts[3][0], pts[3][1]);
+	moveAlong(pieces[1], pts[10], pts[3]);
+	pieces[1].rotate(-60, pts[3][0], pts[3][1]);
+	moveAlong(pieces[2], pts[8], pts[3]);
+	pieces[2].rotate(60, pts[3][0], pts[3][1]);
 
-pieces[3].rotate(120, pts[1][0], pts[1][1]);
-pieces[4].rotate(-120, pts[5][0], pts[5][1]);
+	pieces[3].rotate(120, pts[1][0], pts[1][1]);
+	pieces[4].rotate(-120, pts[5][0], pts[5][1]);
 
-// Shrink and save
-asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/star-to-triangle.svg");
+	// Shrink and save
+	asset_utils.shrinkCanvas(canvas, 0.1);
+});
 
 
 // --------------------------
 // Diagrams: WBG construction
 // --------------------------
-
-canvas = asset_utils.getCanvas();
-
-// -- first, triangulation
-
-var pts: Point[] = [
+const solidStroke = { width: 0.08 };
+const dashedStroke = { width: 0.05, dasharray: "0.2" };
+const wbg_pts: Point[] = [
 	[0, 0], [5, 1], [8, 4], [3, 6], [1, 4], [2, 2]
 ];
 
-var solidStroke = { width: 0.08 };
-var dashedStroke = { width: 0.05, dasharray: "0.2" };
-var leftGroup = canvas.group();
-leftGroup.polygon(pts).fill(YELLOW).stroke(solidStroke);
-leftGroup.line([pts[1], pts[5]]).stroke(dashedStroke);
-leftGroup.line([pts[1], pts[4]]).stroke(dashedStroke);
-leftGroup.line([pts[2], pts[4]]).stroke(dashedStroke);
+builder.register("../content/images/dehn/wbg-1.svg", function (canvas) {
+	// -- first, triangulation
 
-var rightGroup = canvas.group().dx(10);
-function makeTriangle(group: svgjs.G, pts: Point[], idxs: number[]) {
-	return group.polygon(idxs.map(n => pts[n])).fill(YELLOW).stroke(solidStroke);
-}
-makeTriangle(rightGroup, pts, [0, 1, 5]).dmove(-0.3, -0.5);
-makeTriangle(rightGroup, pts, [1, 4, 5]).dmove(-0.2, -0.1);
-makeTriangle(rightGroup, pts, [1, 2, 4]).dmove(0.2, 0);
-makeTriangle(rightGroup, pts, [2, 3, 4]).dmove(0.2, 0.4);
+	var leftGroup = canvas.group();
+	leftGroup.polygon(wbg_pts).fill(YELLOW).stroke(solidStroke);
+	leftGroup.line([wbg_pts[1], wbg_pts[5]]).stroke(dashedStroke);
+	leftGroup.line([wbg_pts[1], wbg_pts[4]]).stroke(dashedStroke);
+	leftGroup.line([wbg_pts[2], wbg_pts[4]]).stroke(dashedStroke);
 
-asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-1.svg");
+	var rightGroup = canvas.group().dx(10);
+	function makeTriangle(group: svgjs.G, pts: Point[], idxs: number[]) {
+		return group.polygon(idxs.map(n => pts[n])).fill(YELLOW).stroke(solidStroke);
+	}
+	makeTriangle(rightGroup, wbg_pts, [0, 1, 5]).dmove(-0.3, -0.5);
+	makeTriangle(rightGroup, wbg_pts, [1, 4, 5]).dmove(-0.2, -0.1);
+	makeTriangle(rightGroup, wbg_pts, [1, 2, 4]).dmove(0.2, 0);
+	makeTriangle(rightGroup, wbg_pts, [2, 3, 4]).dmove(0.2, 0.4);
+
+	asset_utils.shrinkCanvas(canvas, 0.1);
+});
 
 // -- next, triangle -> rectangle
+builder.register("../content/images/dehn/wbg-2.svg", function (canvas) {
+	var [A, B, C] = [wbg_pts[1], wbg_pts[2], wbg_pts[4]];
+	var D = get_midpoint(A, B);
+	var E = get_midpoint(A, C);
+	var midline = make_line(D, E);
+	var F = drop_onto(A, midline);
 
-canvas = asset_utils.getCanvas();
-var [A, B, C] = [pts[1], pts[2], pts[4]];
-var D = get_midpoint(A, B);
-var E = get_midpoint(A, C);
-var midline = make_line(D, E);
-var F = drop_onto(A, midline);
+	var leftGroup = canvas.group();
+	leftGroup.polygon([A, B, C]).fill(YELLOW).stroke(solidStroke);
+	leftGroup.line([D, E]).stroke(dashedStroke);
+	leftGroup.line([A, F]).stroke(dashedStroke);
 
-var leftGroup = canvas.group();
-leftGroup.polygon([A, B, C]).fill(YELLOW).stroke(solidStroke);
-leftGroup.line([D, E]).stroke(dashedStroke);
-leftGroup.line([A, F]).stroke(dashedStroke);
+	var G = drop_onto(C, midline);
+	var H = drop_onto(B, midline);
+	var rightGroup = canvas.group().dx(10);
+	rightGroup.polygon([H, B, C, G]).fill(YELLOW).stroke(solidStroke);
+	rightGroup.line([B, D]).stroke(dashedStroke);
+	rightGroup.line([C, E]).stroke(dashedStroke);
 
-var G = drop_onto(C, midline);
-var H = drop_onto(B, midline);
-var rightGroup = canvas.group().dx(10);
-rightGroup.polygon([H, B, C, G]).fill(YELLOW).stroke(solidStroke);
-rightGroup.line([B, D]).stroke(dashedStroke);
-rightGroup.line([C, E]).stroke(dashedStroke);
-
-asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-2.svg");
+	asset_utils.shrinkCanvas(canvas, 0.1);
+});
 
 // -- next, rectangle -> half-rectangle
+builder.register("../content/images/dehn/wbg-3.svg", function (canvas) {
+	var leftGroup = canvas.group();
+	var rightGroup = canvas.group().dmove(10, -1.5 / 2);
 
-canvas = asset_utils.getCanvas();
+	leftGroup.rect(7, 1.5).fill(YELLOW).stroke(solidStroke);
+	leftGroup.line(3.5, 0, 3.5, 1.5).stroke(dashedStroke);
 
-var leftGroup = canvas.group();
-var rightGroup = canvas.group().dmove(10, -1.5 / 2);
+	rightGroup.rect(3.5, 3).fill(YELLOW).stroke(solidStroke);
+	rightGroup.line(0, 1.5, 3.5, 1.5).stroke(dashedStroke);
 
-leftGroup.rect(7, 1.5).fill(YELLOW).stroke(solidStroke);
-leftGroup.line(3.5, 0, 3.5, 1.5).stroke(dashedStroke);
-
-rightGroup.rect(3.5, 3).fill(YELLOW).stroke(solidStroke);
-rightGroup.line(0, 1.5, 3.5, 1.5).stroke(dashedStroke);
-
-asset_utils.shrinkCanvas(canvas, 0.1);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-3.svg");
+	asset_utils.shrinkCanvas(canvas, 0.1);
+});
 
 // -- lastly, rectangle -> rectangle with width 1 (but we'll make it 2 here
 // because units are made up)
+builder.register("../content/images/dehn/wbg-4.svg", function (canvas) {
+	var leftGroup = canvas.group();
+	var rightGroup = canvas.group().dx(6);
 
-canvas = asset_utils.getCanvas();
+	var w = 3.5;
+	var h = 3;
+	var t = 2; // target height
+	var slideY = h - t;
+	var slideX = slideY * w / t;
+	leftGroup.rect(w, h).fill(YELLOW).stroke(solidStroke);
+	leftGroup.line(0, slideY, w, h).stroke(dashedStroke);
+	leftGroup.line(w, t, w - slideX, t).stroke(dashedStroke);
 
-var leftGroup = canvas.group();
-var rightGroup = canvas.group().dx(6);
+	rightGroup.rect(w + slideX, t).fill(YELLOW).stroke(solidStroke);
+	rightGroup.line(0, 0, w, h - slideY).stroke(dashedStroke);
+	rightGroup.line(slideX, 0, slideX, slideY).stroke(dashedStroke);
+	rightGroup.dy(slideY / 2);
 
-var w = 3.5;
-var h = 3;
-var t = 2; // target height
-var slideY = h - t;
-var slideX = slideY * w / t;
-leftGroup.rect(w, h).fill(YELLOW).stroke(solidStroke);
-leftGroup.line(0, slideY, w, h).stroke(dashedStroke);
-leftGroup.line(w, t, w - slideX, t).stroke(dashedStroke);
+	// shrink now, remember, this breaks around tex objects
+	asset_utils.shrinkCanvas(canvas, 0.1);
 
-rightGroup.rect(w + slideX, t).fill(YELLOW).stroke(solidStroke);
-rightGroup.line(0, 0, w, h - slideY).stroke(dashedStroke);
-rightGroup.line(slideX, 0, slideX, slideY).stroke(dashedStroke);
-rightGroup.dy(slideY / 2);
+	// make math labels
+	var u = asset_utils.makeMathSvg(canvas, "u", 0.7);
+	var one = asset_utils.makeMathSvg(canvas, "1", 0.7);
+	var ell = asset_utils.makeMathSvg(canvas, "\\ell", 0.7);
+	var uell = asset_utils.makeMathSvg(canvas, "u \\ell", 0.7);
 
-// shrink now, remember, this breaks around tex objects
-asset_utils.shrinkCanvas(canvas, 0.1);
+	// place initial copies
+	u.move(-0.6, 0.3);
+	one.move(-0.6, 1.8);
+	ell.move(1.7, -0.7);
+	uell.move(2.4, 1.3);
 
-// make math labels
-var u = asset_utils.makeMathSvg(canvas, "u", 0.7);
-var one = asset_utils.makeMathSvg(canvas, "1", 0.7);
-var ell = asset_utils.makeMathSvg(canvas, "\\ell", 0.7);
-var uell = asset_utils.makeMathSvg(canvas, "u \\ell", 0.7);
+	// go around 'stamping' text
+	u.clone().move(3.7, 2.3);
+	one.clone().move(3.7, 0.6);
 
-// place initial copies
-u.move(-0.6, 0.3);
-one.move(-0.6, 1.8);
-ell.move(1.7, -0.7);
-uell.move(2.4, 1.3);
+	// move everything to the other group
+	u = u.clone().addTo(rightGroup).move(2, 0.3);
+	one = one.clone().addTo(rightGroup).move(-0.7, 0.6);
+	ell = ell.clone().addTo(rightGroup).move(3.3, -0.7);
+	uell = uell.clone().addTo(rightGroup).move(0.6, -0.7);
 
-// go around 'stamping' text
-u.clone().move(3.7, 2.3);
-one.clone().move(3.7, 0.6);
-
-// move everything to the other group
-u = u.clone().addTo(rightGroup).move(2, 0.3);
-one = one.clone().addTo(rightGroup).move(-0.7, 0.6);
-ell = ell.clone().addTo(rightGroup).move(3.3, -0.7);
-uell = uell.clone().addTo(rightGroup).move(0.6, -0.7);
-
-var viewbox = canvas.viewbox();
-canvas.viewbox(viewbox.x - 1, viewbox.y - 1, viewbox.width + 2, viewbox.height + 1);
-
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/wbg-4.svg");
+	var viewbox = canvas.viewbox();
+	canvas.viewbox(viewbox.x - 1, viewbox.y - 1, viewbox.width + 2, viewbox.height + 1);
+});
 
 // ----------------------
 // Diagrams: Edge cutting
 // ----------------------
+const cutStroke = { color: RED, width: 0.1, dasharray: "0.2" };
+const thickStroke = { width: 0.3 };
+const edge_cut_pts: Point[] = [[2, 1], [10, 0], [5, 3], [-3, 4], [15, 5], [11, 8]];
+builder.register("../content/images/dehn/edge-cut-transverse.svg", function (canvas) {
 
-canvas = asset_utils.getCanvas();
+	var pts = edge_cut_pts;
 
-var pts: Point[] = [[2, 1], [10, 0], [5, 3], [-3, 4], [15, 5], [11, 8]];
+	// add points on lines
+	pts.push(interpolate(pts[0], pts[1], 0.1));
+	pts.push(interpolate(pts[1], pts[2], 0.5));
+	pts.push(interpolate(pts[4], pts[5], 0.7));
 
-// add points on lines
-pts.push(interpolate(pts[0], pts[1], 0.1));
-pts.push(interpolate(pts[1], pts[2], 0.5));
-pts.push(interpolate(pts[4], pts[5], 0.7));
+	var leftGroup = canvas.group();
+	makePieces(
+		leftGroup, pts, 0.1,
+		[["ABCD", LT_BLUE], ["BCFE", DK_BLUE], ["CDF", MED_BLUE]]
+	);
+	leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
+	leftGroup.polyline([pts[6], pts[7], pts[8]]).fill("none").stroke(cutStroke);
 
-var cutStroke = { color: RED, width: 0.1, dasharray: "0.2" };
-var thickStroke = { width: 0.3 };
+	var rightGroup1 = canvas.group().dmove(25, 0);
+	makePieces(
+		rightGroup1, pts, 0.1,
+		[["GBH", LT_BLUE], ["BHIE", DK_BLUE], ["GHI", PURPLE]]
+	);
+	rightGroup1.line([pts[1], pts[7]]).stroke(thickStroke);
 
-var leftGroup = canvas.group();
-makePieces(
-	leftGroup, pts, 0.1,
-	[["ABCD", LT_BLUE], ["BCFE", DK_BLUE], ["CDF", MED_BLUE]]
-);
-leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
-leftGroup.polyline([pts[6], pts[7], pts[8]]).fill("none").stroke(cutStroke);
+	var rightGroup2 = canvas.group().dmove(23, 1);
+	makePieces(
+		rightGroup2, pts, 0.1,
+		[["AGHCD", LT_BLUE], ["HCFI", DK_BLUE], ["CDF", MED_BLUE]]
+	);
+	rightGroup2.line([pts[7], pts[2]]).stroke(thickStroke);
 
-var rightGroup1 = canvas.group().dmove(25, 0);
-makePieces(
-	rightGroup1, pts, 0.1,
-	[["GBH", LT_BLUE], ["BHIE", DK_BLUE], ["GHI", PURPLE]]
-);
-rightGroup1.line([pts[1], pts[7]]).stroke(thickStroke);
+	// before math
+	asset_utils.shrinkCanvas(canvas, 0.1);
 
-var rightGroup2 = canvas.group().dmove(23, 1);
-makePieces(
-	rightGroup2, pts, 0.1,
-	[["AGHCD", LT_BLUE], ["HCFI", DK_BLUE], ["CDF", MED_BLUE]]
-);
-rightGroup2.line([pts[7], pts[2]]).stroke(thickStroke);
+	var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 + \\ell_2", 2);
+	mathLength.move(13, -2);
 
-// before math
-asset_utils.shrinkCanvas(canvas, 0.1);
+	var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 = \\theta_2", 2);
+	mathAngle.move(13, 8);
 
-var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 + \\ell_2", 2);
-mathLength.move(13, -2);
-
-var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 = \\theta_2", 2);
-mathAngle.move(13, 8);
-
-asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/edge-cut-transverse.svg");
+	asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
+});
 
 // -- edge-on cut --
+builder.register("../content/images/dehn/edge-cut-lengthwise.svg", function (canvas) {
+	let pts = edge_cut_pts.slice(0, 6);
 
-canvas = asset_utils.getCanvas();
+	// add points on lines
+	pts.push(interpolate(pts[3], pts[5], 2 / 3));
+	pts.push([12, 3]); // off in the distance a bit
 
-var pts = pts.slice(0, 6);
+	var leftGroup = canvas.group();
+	makePieces(
+		leftGroup, pts, 0.1,
+		[["ABCD", LT_BLUE], ["BCFE", DK_BLUE], ["CDF", MED_BLUE]]
+	);
+	leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
+	leftGroup.polyline([pts[1], pts[2], pts[6]]).fill("none").stroke(cutStroke);
 
-// add points on lines
-pts.push(interpolate(pts[3], pts[5], 2 / 3));
-pts.push([12, 3]); // off in the distance a bit
+	var rightGroup1 = canvas.group().dmove(23, 0);
+	makePieces(
+		rightGroup1, pts, 0.1,
+		[["ABCD", LT_BLUE], ["CDG", MED_BLUE], ["BCGH", PURPLE]]
+	);
+	rightGroup1.line([pts[1], pts[2]]).stroke(thickStroke);
 
-var leftGroup = canvas.group();
-makePieces(
-	leftGroup, pts, 0.1,
-	[["ABCD", LT_BLUE], ["BCFE", DK_BLUE], ["CDF", MED_BLUE]]
-);
-leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
-leftGroup.polyline([pts[1], pts[2], pts[6]]).fill("none").stroke(cutStroke);
+	var rightGroup2 = canvas.group().dmove(25, 1);
+	makePieces(
+		rightGroup2, pts, 0.1,
+		[["BCFE", DK_BLUE], ["CFG", MED_BLUE]]
+	);
+	rightGroup2.line([pts[1], pts[2]]).stroke(thickStroke);
 
-var rightGroup1 = canvas.group().dmove(23, 0);
-makePieces(
-	rightGroup1, pts, 0.1,
-	[["ABCD", LT_BLUE], ["CDG", MED_BLUE], ["BCGH", PURPLE]]
-);
-rightGroup1.line([pts[1], pts[2]]).stroke(thickStroke);
+	// before math
+	asset_utils.shrinkCanvas(canvas, 0.1);
 
-var rightGroup2 = canvas.group().dmove(25, 1);
-makePieces(
-	rightGroup2, pts, 0.1,
-	[["BCFE", DK_BLUE], ["CFG", MED_BLUE]]
-);
-rightGroup2.line([pts[1], pts[2]]).stroke(thickStroke);
+	var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 = \\ell_2", 2);
+	mathLength.move(13, -2);
 
-// before math
-asset_utils.shrinkCanvas(canvas, 0.1);
+	var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 + \\theta_2", 2);
+	mathAngle.move(13, 8);
 
-var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 = \\ell_2", 2);
-mathLength.move(13, -2);
-
-var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 + \\theta_2", 2);
-mathAngle.move(13, 8);
-
-asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
-asset_utils.saveImgToFile(canvas, "../content/images/dehn/edge-cut-lengthwise.svg");
+	asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
+});
