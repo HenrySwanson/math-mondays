@@ -62,7 +62,7 @@ Unlike area and volume, the Dehn invariant isn't as simple as a real number, and
 * cut it at a point
 * split it along its entire length
 
-By looking at what these operations do to edges, we can cobble together a quantity that stays invariant. The properties of an edge that we care about are its length and its dihedral angle.<sup id="ref1">[[1]](#fn1)</sup>.
+By looking at what these operations do to edges, we can cobble together a quantity that stays invariant. The properties of an edge that we care about are its length and its dihedral angle.[ref]The dihedral angle of an edge is the angle between the two faces adjacent to it. You can think of it as a measure of the 'sharpness' of an edge; a 90° edge is like the edge of a countertop, but a 15° edge will cut like a knife.[/ref]
 
 In the first situation, the edge stays unchanged. That one's easy.
 
@@ -98,14 +98,12 @@ $$ 12 (1 \otimes \frac{\pi}{2}) = 3 (1 \otimes 2 \pi) = (3 \otimes 2 \pi) = 0 $$
 A tetrahedron has 6 edges, each with dihedral angle $\arccos(1/3)$. The volume of a tetrahedron with side length $a$ is $a^3 / 6 \sqrt 2$, so the side length of our tetrahedron needs to be $a = (72)^{1/6}$, making the Dehn invariant equal to:
 $$ 6 (a \otimes \arccos(1/3)) = 6 a \otimes \arccos(1/3) $$
 
-With some knowledge of modules, one can show that this is non-zero<sup id="ref2">[[2]](#fn2)</sup>, but the crux of the idea is that $\arccos(1/3)$ is not a rational multiple of $\pi$, so we can never get the right hand side of this tensor to collapse to zero. This shows that no matter how many pieces you cut it into, a cube can never be reassembled into a tetrahedron.
+With some knowledge of modules, one can show that this is non-zero,
+[ref]First, note that for any rational $p/q$, we have $\ell \otimes \frac{p}{q} \pi = \frac{\ell}{2q} \otimes 2 p \pi = 0$. This means that $\RR \otimes_\ZZ \RR/2\pi \cong \RR \otimes_\ZZ \RR/(2\pi\QQ)$. Since both of those modules are divisible, this is equal to $\RR \otimes_\QQ \RR/(2 \pi \QQ)$, which, being a tensor product of $\QQ$-vector spaces, is a $\QQ$-vector space itself. In particular, if $\ell \ne 0$ and $\theta \notin 2 \pi \QQ$, then $\ell \otimes \theta$ is a non-zero vector.[/ref]
+but the crux of the idea is that $\arccos(1/3)$ is not a rational multiple of $\pi$, so we can never get the right hand side of this tensor to collapse to zero. This shows that no matter how many pieces you cut it into, a cube can never be reassembled into a tetrahedron.
 
 One interesting consequence of this: in geometry class, you probably saw some cut-and-paste constructions for proving the area of a parallelogram, or a triangle. This result shows there can never be such a proof for pyramids -- calculus is unavoidable!
 
 ---
 
-A final note: we've shown that there are at least two obstructions for two scissors-congruence in 3D: volume and Dehn invariant. Are they the only ones? The answer is yes! In other words, if two polyhedra do have the same volume and Dehn invariant, then they are indeed scissors-congruent. The proof of that is much harder, and a good presentation can be found [here](http://www.math.brown.edu/~res/MathNotes/jessen.pdf).
-
-1. <a id="fn1" href="#ref1">&uarr;</a> The dihedral angle of an edge is the angle between the two faces adjacent to it. You can think of it as a measure of the 'sharpness' of an edge; a 90° edge is like the edge of a countertop, but a 15° edge will cut like a knife.
-
-2. <a id="fn2" href="#ref2">&uarr;</a> First, note that for any rational $p/q$, we have $\ell \otimes \frac{p}{q} \pi = \frac{\ell}{2q} \otimes 2 p \pi = 0$. This means that $\RR \otimes_\ZZ \RR/2\pi \cong \RR \otimes_\ZZ \RR/(2\pi\QQ)$. Since both of those modules are divisible, this is equal to $\RR \otimes_\QQ \RR/(2 \pi \QQ)$, which, being a tensor product of $\QQ$-vector spaces, is a $\QQ$-vector space itself. In particular, if $\ell \ne 0$ and $\theta \notin 2 \pi \QQ$, then $\ell \otimes \theta$ is a non-zero vector.
+A final note: we've shown that there are at least two obstructions for two scissors-congruence in 3D: volume and Dehn invariant. Are they the only ones? The answer is yes! In other words, if two polyhedra do have the same volume and Dehn invariant, then they are indeed scissors-congruent. The proof of that is much harder, and a good presentation can be found [here](http://www.math.brown.edu/~res/MathNotes/jessen.pdf). 

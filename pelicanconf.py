@@ -27,6 +27,7 @@ AUTHOR_FEED_RSS = None
 PLUGINS = [
     "plugins.summary",
     "render_math",
+    "simple_footnotes",
     "sitemap",
     "webassets",
 ]

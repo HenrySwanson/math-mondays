@@ -2,6 +2,7 @@ pelican[markdown]==4.7.1
 pelican-render-math==1.0.3
 pelican-webassets==2.0.0
 pelican-sitemap==1.0.2
+pelican-simple-footnotes==1.0.2
 beautifulsoup4==4.10.0
 cssmin==0.2.0
 libsass==0.21.0
