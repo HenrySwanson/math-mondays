@@ -196,7 +196,57 @@ function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackg
 	parser.path.instance.attr("d", "");
 	parser.poly.instance.attr("points", "");
 
-	fs.writeFileSync(filename, canvas.svg());
+	fs.writeFileSync(filename, sanitizeSvg(canvas.svg()));
+}
+
+function sanitizeSvg(svg: string): string {
+	// We do some quick parsing in order to pretty-print things and swap out the IDs
+
+	function splitIntoTags(svg: string) {
+		let tags = [];
+
+		let i = 0;
+		while (true) {
+			let j = svg.indexOf(">", i);
+			if (j === -1) {
+				break;
+			}
+			tags.push(svg.slice(i, j + 1));
+			i = j + 1;
+		}
+		return tags;
+	}
+
+	// TODO use Tree<T> here?
+	function formatTags(tags: string[]): string {
+		let output = "";
+		let indentLevel = 0;
+		let prevWasOpen = false;
+		for (let tag of tags) {
+			let isEndTag = tag.startsWith("</");
+			let sameLine = isEndTag && prevWasOpen;
+
+			if (isEndTag) {
+				indentLevel--;
+			}
+
+			if (sameLine) {
+				output += tag;
+			} else {
+				output += "\r\n" + " ".repeat(indentLevel) + tag;
+			}
+
+			if (!isEndTag) {
+				indentLevel++;
+			}
+
+			prevWasOpen = !isEndTag;
+		}
+		return output;
+	}
+
+	let tags = splitIntoTags(svg);
+	return formatTags(tags);
 }
 
 type AssetFn = (canvas: svgjs.Container) => void;
