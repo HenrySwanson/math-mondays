@@ -1,7 +1,7 @@
 "use strict";
 
 import fs = require('fs');
-import { createCanvas } from "./utils";
+import { getSVGCanvas } from "./init";
 
 type DrawFn = (canvas: svgjs.Container) => void;
 
@@ -21,7 +21,7 @@ export class Builder {
     generateAll() {
         for (let [drawFunction, filename] of this.assets) {
             // Get the global canvas instance
-            let canvas = createCanvas();
+            let canvas = getSVGCanvas();
 
             // Draw on the canvas
             drawFunction(canvas);

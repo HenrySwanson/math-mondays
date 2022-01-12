@@ -1,70 +1,8 @@
 "use strict;"
 
-// @ts-ignore
-import svgdom = require('svgdom');
+import { MathJax, SVG } from './init';
 import TextToSVG = require('text-to-svg');
 import type { svgjs } from "svg.js";
-
-//--------------------------------
-// Nonsense for setting up modules
-//--------------------------------
-
-function once_only<T>(fn: () => T) {
-	var called = false;
-	var result: T;
-	return function (): T {
-		if (!called) {
-			called = true;
-			result = fn();
-		}
-		return result;
-	}
-}
-
-// Initialize MathJax
-declare var MathJax: any;
-(function (): any {
-	const PACKAGES = 'base, autoload, require, ams, newcommand';
-	// @ts-ignore
-	global.MathJax = {
-		tex: { packages: PACKAGES.split(/\s*,\s*/) },
-		svg: { fontCache: 'local' },
-		startup: { typeset: false }
-	};
-
-	require('mathjax/es5/startup.js');
-	require('mathjax/es5/core.js');
-	require('mathjax/es5/adaptors/liteDOM.js');
-	require('mathjax/es5/input/tex-base.js');
-	require('mathjax/es5/input/tex/extensions/all-packages.js');
-	require('mathjax/es5/output/svg.js');
-	require('mathjax/es5/output/svg/fonts/tex.js');
-
-	MathJax.loader.preLoad(
-		'core',
-		'adaptors/liteDOM',
-		'input/tex-base',
-		'[tex]/all-packages',
-		'output/svg',
-		'output/svg/fonts/tex'
-	);
-
-	MathJax.config.startup.ready();
-})();
-
-// private global for svgdom's window
-var svgdom_window = svgdom.createSVGWindow();
-
-// Set up a fake DOM with a single SVG element at the root
-var SVG: svgjs.Library = require('svg.js')(svgdom_window);
-
-export var createCanvas = once_only(function (): svgjs.Container {
-	return SVG(svgdom_window.document.documentElement);
-});
-
-//--------------------------------
-// SVG helper methods
-//--------------------------------
 
 export function loadFont(fontPath: string): TextToSVG {
 	return TextToSVG.loadSync(fontPath);
