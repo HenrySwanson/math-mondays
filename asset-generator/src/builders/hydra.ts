@@ -2,6 +2,7 @@
 
 // Import our utils library and initialize mathjax+svg
 import asset_utils = require("./utils");
+import { Builder } from "./builder";
 
 // Import other libraries
 import util = require('util');
@@ -25,7 +26,7 @@ function makeHydraSkeleton(str: string): HydraSkeleton {
 }
 
 // Start creating some diagrams!
-export let builder = new asset_utils.Builder("../content/images/hydra");
+export let builder = new Builder("../content/images/hydra");
 
 // ---------------------------
 // Diagram: Anatomy of a Hydra

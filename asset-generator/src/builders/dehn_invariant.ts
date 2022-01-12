@@ -1,6 +1,7 @@
 "use strict";
 
 import asset_utils = require("./utils");
+import { Builder } from "./builder";
 
 // Name some colors
 const RED = "#c91435";
@@ -120,7 +121,7 @@ function verticalAlign(groups: svgjs.G[]): void {
 	groups.forEach(g => g.dy(center - g.rbox().cy));
 }
 
-export let builder = new asset_utils.Builder("../content/images/dehn");
+export let builder = new Builder("../content/images/dehn");
 
 // create the tangrams. they lie in this 4x4 block
 // +---------------+

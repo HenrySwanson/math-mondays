@@ -1,6 +1,5 @@
 "use strict;"
 
-import fs = require('fs');
 // @ts-ignore
 import svgdom = require('svgdom');
 import TextToSVG = require('text-to-svg');
@@ -59,7 +58,7 @@ var svgdom_window = svgdom.createSVGWindow();
 // Set up a fake DOM with a single SVG element at the root
 var SVG: svgjs.Library = require('svg.js')(svgdom_window);
 
-var createCanvas = once_only(function (): svgjs.Container {
+export var createCanvas = once_only(function (): svgjs.Container {
 	return SVG(svgdom_window.document.documentElement);
 });
 
@@ -182,163 +181,4 @@ export function adjustCanvas(canvas: svgjs.Container, left: number, right: numbe
 		viewbox.x - left, viewbox.y - top,
 		viewbox.width + left + right, viewbox.height + top + bottom
 	);
-}
-
-function saveImgToFile(canvas: svgjs.Container, filename: string, highlightBackground: boolean = false) {
-	if (highlightBackground) {
-		var bbox = canvas.viewbox();
-		canvas.rect(bbox.width, bbox.height).move(bbox.x, bbox.y).back().fill("#ffff00");
-	}
-
-	fs.writeFileSync(filename, sanitizeSvg(canvas.svg()));
-}
-
-function sanitizeSvg(svg: string): string {
-	// We do some quick parsing in order to pretty-print things and swap out the IDs
-
-	function splitIntoTags(svg: string) {
-		let tags = [];
-
-		let i = 0;
-		while (true) {
-			let j = svg.indexOf(">", i);
-			if (j === -1) {
-				break;
-			}
-			tags.push(svg.slice(i, j + 1));
-			i = j + 1;
-		}
-		return tags;
-	}
-
-	// TODO use Tree<T> here?
-	function formatTags(tags: string[]): string {
-		let output = "";
-		let indentLevel = 0;
-		let prevWasOpen = false;
-		for (let tag of tags) {
-			let isEndTag = tag.startsWith("</");
-			let sameLine = isEndTag && prevWasOpen;
-
-			if (isEndTag) {
-				indentLevel--;
-			}
-
-			if (sameLine) {
-				output += tag;
-			} else {
-				output += "\r\n" + " ".repeat(indentLevel) + tag;
-			}
-
-			if (!isEndTag) {
-				indentLevel++;
-			}
-
-			prevWasOpen = !isEndTag;
-		}
-		return output;
-	}
-
-	function extractIds(tags: string[]): string[] {
-		let idRegex = /id="([^\"]*)"/;
-		let ids: string[] = [];
-
-		for (let tag of tags) {
-			let match = idRegex.exec(tag);
-			if (match !== null) {
-				ids.push(match[1]);
-			}
-		}
-
-		return ids;
-	}
-
-	function generateNewIds(oldIds: string[]): Map<string, string> {
-		let svgjsRegex = /Svgjs(\w+?)\d+/
-		let idMap = new Map<string, string>();
-		let counters = new Map<string, number>();
-
-		for (let oldId of oldIds) {
-			// Skip any ids we've seen before
-			if (idMap.has(oldId)) {
-				continue;
-			}
-
-			// Find the right prefix for this id
-			let type = null;
-
-			let x = svgjsRegex.exec(oldId);
-			if (x !== null) {
-				type = x[1].toLowerCase();
-			} else if (oldId.startsWith("MJX-")) {
-				type = "mathjax";
-			}
-
-			if (type !== null) {
-				// Get and increment counter
-				if (!counters.has(type)) {
-					counters.set(type, 1);
-				}
-				let counter = counters.get(type)!;
-				counters.set(type, counter + 1);
-
-				let newId = type + "-" + counter;
-				idMap.set(oldId, newId);
-			} else {
-				// TODO maybe just don't even include this
-				idMap.set(oldId, oldId);  // no change
-			}
-		}
-
-		return idMap;
-	}
-
-	function replaceIds(tag: string, idMap: Map<string, string>): string {
-		for (let [oldId, newId] of Array.from(idMap.entries())) {
-			tag = tag.replace(oldId, newId);
-		}
-		return tag;
-	}
-
-	let tags = splitIntoTags(svg);
-
-	// Remove parser section
-	let parserStartIdx = tags.findIndex(tag => tag.startsWith("<svg") && tag.includes("focusable=\"false\""));
-	let parserEndIdx = parserStartIdx + tags.slice(parserStartIdx).findIndex(tag => tag.startsWith("</svg"));
-	tags.splice(parserStartIdx, parserEndIdx - parserStartIdx + 1);
-
-	let idMap = generateNewIds(extractIds(tags));
-
-	// Now actually do the replacement
-	tags = tags.map(tag => replaceIds(tag, idMap));
-	return formatTags(tags);
-}
-
-type AssetFn = (canvas: svgjs.Container) => void;
-
-export class Builder {
-	assets: [AssetFn, string][];
-	rootPath: string;
-
-	constructor(rootPath: string) {
-		this.assets = [];
-		this.rootPath = rootPath;
-	}
-
-	register(filename: string, fn: AssetFn) {
-		this.assets.push([fn, filename]);
-	}
-
-	generateAll() {
-		for (let [fn, filename] of this.assets) {
-			// Get the global canvas instance
-			let canvas = createCanvas();
-
-			fn(canvas);
-			saveImgToFile(canvas, this.rootPath + "/" + filename);
-
-			// Clear the canvas for the next function
-			canvas.clear();
-		}
-	}
 }
