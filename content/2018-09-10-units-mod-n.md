@@ -96,6 +96,7 @@ Now we can do our binomial business:
 $$ g^{p^{k-1} (p-1)} = \sum_{i = 0}^p \binom{p}{i} (a p^{k-1})^i $$
 
 How many factors of $p$ are in each term?
+
  - $i = 0, 1$: don't care.
  - $i \ge 2, i \ne p$: $1$ from the binomial, and at least $2(k-1)$ from the power, for a total of at least $2k-1$. Since $k \ge 2$, we have $2k-1 \ge k+1$, and these terms vanish mod $p^{k+1}$.
  - $i = p$: we lose the factor from the binomial, so we have exactly $p(k-1)$ factors of $p$. Since $p$ is odd, $p \ge 3$, and for $k \ge 2$, $3k-3 \ge k+1$, and this term also vanishes.
@@ -140,6 +141,7 @@ So we are left with $n = 1$, $2$, $4$, $p^k$, $2p^k$, and $4p^k$. The first thre
 ---
 
 To summarize:
+
  - $U_n$ is cyclic exactly when $n = 1$, $2$, $4$, $p^k$ or $2p^k$
  - $U_{p^k} \cong \ZZn{p^{k-1} (p-1)}$ for odd $p$
  - $U_{2^k} \cong \ZZn{2} \times \ZZn{2^{k-2}}$ for $k \ge 3$

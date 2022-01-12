@@ -116,7 +116,7 @@ G(x) &= \frac{1}{2} x + \frac{1}{2} \sum_{n=2}^\infty \sum_{k=0}^n a_k a_{n-k} x
 \end{align*}
 $$
 
-Since either $a_k$ or $a_{n-k}$ will be $0$ for $n < 2$, we can lower the bound on our sum to $k = 0$ without changeing anything. After that, set $\ell = n - k$:
+Since either $a_k$ or $a_{n-k}$ will be $0$ for $n < 2$, we can lower the bound on our sum to $k = 0$ without changing anything. After that, set $\ell = n - k$:
 $$
 \begin{align*}
 2 G(x) &= x + \sum_{n=0}^\infty \sum_{k=0}^n a_k a_{n-k} x^n \\
