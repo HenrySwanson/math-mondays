@@ -121,7 +121,7 @@ function verticalAlign(groups: svgjs.G[]): void {
 	groups.forEach(g => g.dy(center - g.rbox().cy));
 }
 
-export let builder = new Builder("../content/images/dehn");
+export let builder = new Builder("dehn");
 
 // create the tangrams. they lie in this 4x4 block
 // +---------------+

@@ -1,6 +1,8 @@
 "use strict";
 
 import fs = require('fs');
+import path = require('path');
+import { FILE_CONFIG } from "./config";
 import { getSVGCanvas } from "./init";
 
 type DrawFn = (canvas: svgjs.Container) => void;
@@ -27,7 +29,8 @@ export class Builder {
             drawFunction(canvas);
 
             // Save the canvas to a file
-            fs.writeFileSync(this.rootPath + "/" + filename, sanitizeSvg(canvas.svg()));
+            let fullPath = path.join(FILE_CONFIG.IMAGES, this.rootPath, filename);
+            fs.writeFileSync(fullPath, sanitizeSvg(canvas.svg()));
 
             // Clear the canvas for the next function
             canvas.clear();

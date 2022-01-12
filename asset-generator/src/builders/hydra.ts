@@ -8,7 +8,7 @@ import { Builder } from "./builder";
 import util = require('util');
 import { CLONE_COLOR, HydraSkeleton, SvgHydra, SvgHeadData } from "../lib/hydra";
 
-const ALTE_DIN = asset_utils.loadFont("../theme/static/fonts/alte-din-1451-mittelschrift/din1451alt.ttf");
+const ALTE_DIN = asset_utils.loadFont("alte-din-1451-mittelschrift/din1451alt.ttf");
 
 // makes hydra creation much easier
 function makeHydraSkeleton(str: string): HydraSkeleton {
@@ -26,7 +26,7 @@ function makeHydraSkeleton(str: string): HydraSkeleton {
 }
 
 // Start creating some diagrams!
-export let builder = new Builder("../content/images/hydra");
+export let builder = new Builder("hydra");
 
 // ---------------------------
 // Diagram: Anatomy of a Hydra

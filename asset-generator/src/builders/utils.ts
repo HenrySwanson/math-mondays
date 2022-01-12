@@ -1,11 +1,13 @@
 "use strict;"
 
 import { MathJax, SVG } from './init';
+import { FILE_CONFIG } from "./config";
+import path = require('path');
 import TextToSVG = require('text-to-svg');
 import type { svgjs } from "svg.js";
 
 export function loadFont(fontPath: string): TextToSVG {
-	return TextToSVG.loadSync(fontPath);
+	return TextToSVG.loadSync(path.join(FILE_CONFIG.FONTS, fontPath));
 }
 
 function scaleFromOrigin(svgObj: svgjs.Shape, scaleFactor: number): void {
