@@ -25,12 +25,12 @@ function makeHydraSkeleton(str: string): HydraSkeleton {
 }
 
 // Start creating some diagrams!
-export let builder = new asset_utils.Builder();
+export let builder = new asset_utils.Builder("../content/images/hydra");
 
 // ---------------------------
 // Diagram: Anatomy of a Hydra
 // ---------------------------
-builder.register("../content/images/hydra/anatomy.svg", function (canvas) {
+builder.register("anatomy.svg", function (canvas) {
 	// make the hydra
 	var hydra = makeHydraSkeleton("( () () () ) () (())");
 	var svg_hydra = new SvgHydra(canvas, hydra);
@@ -137,7 +137,7 @@ function setupAttackingExample(canvas: svgjs.Container, startIdx: number, doThre
 }
 
 // setup example
-builder.register("../content/images/hydra/example-1.svg", function (canvas) {
+builder.register("example-1.svg", function (canvas) {
 	var hydras = setupAttackingExample(canvas, 0);
 	var hydraA = hydras[0];
 	var hydraB = hydras[1];
@@ -160,7 +160,7 @@ builder.register("../content/images/hydra/example-1.svg", function (canvas) {
 // ------------------------------
 // Diagram: Attacking a Hydra: #2
 // ------------------------------
-builder.register("../content/images/hydra/example-2.svg", function (canvas) {
+builder.register("example-2.svg", function (canvas) {
 	var hydras = setupAttackingExample(canvas, 1);
 	var hydraA = hydras[0];
 	var hydraB = hydras[1];
@@ -176,7 +176,7 @@ builder.register("../content/images/hydra/example-2.svg", function (canvas) {
 // ------------------------------
 // Diagram: Attacking a Hydra: #3
 // ------------------------------
-builder.register("../content/images/hydra/example-3.svg", function (canvas) {
+builder.register("example-3.svg", function (canvas) {
 	var hydras = setupAttackingExample(canvas, 2);
 	var hydraA = hydras[0];
 	var hydraB = hydras[1];
@@ -193,7 +193,7 @@ builder.register("../content/images/hydra/example-3.svg", function (canvas) {
 // ------------------------------
 // Diagram: Attacking a Hydra: #4
 // ------------------------------
-builder.register("../content/images/hydra/example-4.svg", function (canvas) {
+builder.register("example-4.svg", function (canvas) {
 	var hydras = setupAttackingExample(canvas, 3, true);
 	var hydraA = hydras[0];
 	var hydraB = hydras[1];
@@ -216,7 +216,7 @@ builder.register("../content/images/hydra/example-4.svg", function (canvas) {
 // ------------------------------
 // Diagram: Attacking a Hydra: #5
 // ------------------------------
-builder.register("../content/images/hydra/example-5.svg", function (canvas) {
+builder.register("example-5.svg", function (canvas) {
 	var hydras = setupAttackingExample(canvas, 5, true);
 	var hydraA = hydras[0];
 	var hydraB = hydras[1];
@@ -249,7 +249,7 @@ builder.register("../content/images/hydra/example-5.svg", function (canvas) {
 //------------------------------------------------
 // Diagram: Ordinal sequence for killing the hydra
 //------------------------------------------------
-builder.register("../content/images/hydra/ordinals.svg", function (canvas) {
+builder.register("ordinals.svg", function (canvas) {
 	var values = [
 		"\\omega^2", "3 \\omega", "2 \\omega + 3", "2 \\omega",
 		"\\omega + 3", "\\omega", "3", "0",

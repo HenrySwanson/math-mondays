@@ -120,7 +120,7 @@ function verticalAlign(groups: svgjs.G[]): void {
 	groups.forEach(g => g.dy(center - g.rbox().cy));
 }
 
-export let builder = new asset_utils.Builder();
+export let builder = new asset_utils.Builder("../content/images/dehn");
 
 // create the tangrams. they lie in this 4x4 block
 // +---------------+
@@ -140,7 +140,7 @@ export let builder = new asset_utils.Builder();
 // | /   5   /  6  |
 // |/D     G/     C|
 // +---------------+
-builder.register("../content/images/dehn/tangrams.svg", function (canvas) {
+builder.register("tangrams.svg", function (canvas) {
 	var pts: Point[] = [[0, 0], [4, 0], [4, 4], [0, 4], [2, 2], [4, 2], [2, 4], [3, 1], [3, 3], [1, 3]];
 	var pieceDefs: PieceDef[] = [["ABE", RED], ["ADE", GREEN], ["BFH", PURPLE],
 	["EHFI", YELLOW], ["EIJ", BROWN], ["DGIJ", DK_BLUE], ["CFG", LT_BLUE]];
@@ -171,7 +171,7 @@ builder.register("../content/images/dehn/tangrams.svg", function (canvas) {
 // -------------------------------------
 // Diagram: Square <-> Triangle Tangrams
 // -------------------------------------
-builder.register("../content/images/dehn/square-to-triangle.svg", function (canvas) {
+builder.register("square-to-triangle.svg", function (canvas) {
 	function makeTrianglePoints() {
 		var sqrt3 = Math.sqrt(3);
 
@@ -242,7 +242,7 @@ builder.register("../content/images/dehn/square-to-triangle.svg", function (canv
 //          \                       /         
 //           D---------------------C
 // 
-builder.register("../content/images/dehn/square-to-pentagon.svg", function (canvas) {
+builder.register("square-to-pentagon.svg", function (canvas) {
 	function makePentagonPoints(): Point[] {
 		// corners of the pentagon are ABCDE
 		var [A, B, C, D, E] = [0, 1, 2, 3, 4].map(x => polar(1, Math.PI / 2 - x * Math.PI * 2 / 5));
@@ -333,7 +333,7 @@ builder.register("../content/images/dehn/square-to-pentagon.svg", function (canv
 //               \ /                         
 //                G                         
 //                                           
-builder.register("../content/images/dehn/star-to-triangle.svg", function (canvas) {
+builder.register("star-to-triangle.svg", function (canvas) {
 	function makeStarPoints(): Point[] {
 		var sqrt3 = Math.sqrt(3);
 		var range6 = [0, 1, 2, 3, 4, 5];
@@ -384,7 +384,7 @@ const wbg_pts: Point[] = [
 	[0, 0], [5, 1], [8, 4], [3, 6], [1, 4], [2, 2]
 ];
 
-builder.register("../content/images/dehn/wbg-1.svg", function (canvas) {
+builder.register("wbg-1.svg", function (canvas) {
 	// -- first, triangulation
 
 	var leftGroup = canvas.group();
@@ -406,7 +406,7 @@ builder.register("../content/images/dehn/wbg-1.svg", function (canvas) {
 });
 
 // -- next, triangle -> rectangle
-builder.register("../content/images/dehn/wbg-2.svg", function (canvas) {
+builder.register("wbg-2.svg", function (canvas) {
 	var [A, B, C] = [wbg_pts[1], wbg_pts[2], wbg_pts[4]];
 	var D = get_midpoint(A, B);
 	var E = get_midpoint(A, C);
@@ -429,7 +429,7 @@ builder.register("../content/images/dehn/wbg-2.svg", function (canvas) {
 });
 
 // -- next, rectangle -> half-rectangle
-builder.register("../content/images/dehn/wbg-3.svg", function (canvas) {
+builder.register("wbg-3.svg", function (canvas) {
 	var leftGroup = canvas.group();
 	var rightGroup = canvas.group().dmove(10, -1.5 / 2);
 
@@ -444,7 +444,7 @@ builder.register("../content/images/dehn/wbg-3.svg", function (canvas) {
 
 // -- lastly, rectangle -> rectangle with width 1 (but we'll make it 2 here
 // because units are made up)
-builder.register("../content/images/dehn/wbg-4.svg", function (canvas) {
+builder.register("wbg-4.svg", function (canvas) {
 	var leftGroup = canvas.group();
 	var rightGroup = canvas.group().dx(6);
 
@@ -497,7 +497,7 @@ builder.register("../content/images/dehn/wbg-4.svg", function (canvas) {
 const cutStroke = { color: RED, width: 0.1, dasharray: "0.2" };
 const thickStroke = { width: 0.3 };
 const edge_cut_pts: Point[] = [[2, 1], [10, 0], [5, 3], [-3, 4], [15, 5], [11, 8]];
-builder.register("../content/images/dehn/edge-cut-transverse.svg", function (canvas) {
+builder.register("edge-cut-transverse.svg", function (canvas) {
 
 	var pts = edge_cut_pts;
 
@@ -541,7 +541,7 @@ builder.register("../content/images/dehn/edge-cut-transverse.svg", function (can
 });
 
 // -- edge-on cut --
-builder.register("../content/images/dehn/edge-cut-lengthwise.svg", function (canvas) {
+builder.register("edge-cut-lengthwise.svg", function (canvas) {
 	let pts = edge_cut_pts.slice(0, 6);
 
 	// add points on lines

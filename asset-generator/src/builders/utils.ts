@@ -318,9 +318,11 @@ type AssetFn = (canvas: svgjs.Container) => void;
 
 export class Builder {
 	assets: [AssetFn, string][];
+	rootPath: string;
 
-	constructor() {
+	constructor(rootPath: string) {
 		this.assets = [];
+		this.rootPath = rootPath;
 	}
 
 	register(filename: string, fn: AssetFn) {
@@ -333,7 +335,7 @@ export class Builder {
 			let canvas = createCanvas();
 
 			fn(canvas);
-			saveImgToFile(canvas, filename);
+			saveImgToFile(canvas, this.rootPath + "/" + filename);
 
 			// Clear the canvas for the next function
 			canvas.clear();
