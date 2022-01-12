@@ -30,6 +30,7 @@ export class Builder {
 
             // Save the canvas to a file
             let fullPath = path.join(FILE_CONFIG.IMAGES, this.rootPath, filename);
+            fs.mkdirSync(path.dirname(fullPath), {recursive: true});
             fs.writeFileSync(fullPath, sanitizeSvg(canvas.svg()));
 
             // Clear the canvas for the next function
