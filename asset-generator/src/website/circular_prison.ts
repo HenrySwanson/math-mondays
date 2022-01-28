@@ -88,24 +88,21 @@ class PrisonerGraphics {
 		let candidate: boolean;
 
 		switch (state.phase) {
-			case "waxing": {
-				let active = state.active || (light ?? false);
-				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
-				number = null;
-				coin = null;
-				candidate = false;
-				break;
-			}
-			case "waning": {
-				let active = state.active && (light ?? true);
-				color = active ? WANING_COLOR : INACTIVE_COLOR;
+			case "upper-bound": {
+				if (state.inner.phase == "waxing") {
+					let active = state.inner.active || (light ?? false);
+					color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
+				} else {
+					let active = state.inner.active || (light ?? true);
+					color = active ? WANING_COLOR : INACTIVE_COLOR;
+				}
 				number = null;
 				coin = null;
 				candidate = false;
 				break;
 			}
 			case "unnumbered-announce": {
-				let active = state.active || (light ?? false);
+				let active = state.announcement.active || (light ?? false);
 				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
 				number = state.context.myNumber ?? null;
 				coin = null;
@@ -120,7 +117,7 @@ class PrisonerGraphics {
 				break;
 			}
 			case "coin-announce": {
-				let active = state.active || (light ?? false);
+				let active = state.announcement.active || (light ?? false);
 				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
 				number = state.context.myNumber ?? null;
 				coin = state.context.myNumber !== null ? state.coinFlip : null;
@@ -128,7 +125,7 @@ class PrisonerGraphics {
 				break;
 			}
 			case "candidate-announce": {
-				let active = state.active || (light ?? false);
+				let active = state.announcement.active || (light ?? false);
 				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
 				number = state.context.myNumber ?? null;
 				coin = null;
@@ -319,22 +316,23 @@ class Experiment {
 	currentState(): string {
 		let state = this.prisoners[0].state;
 		switch (state.phase) {
-			case "waxing": {
-				let limit = state.round;
-				return `Upper Bound Phase: Round ${state.round}, Waxing ${state.day}/${limit}`;
-			}
-			case "waning": {
-				let limit = 2 ** state.round;
-				return `Upper Bound Phase: Round ${state.round}, Waning ${state.day}/${limit}`;
+			case "upper-bound": {
+				if (state.inner.phase == "waxing") {
+					let limit = state.inner.round;
+					return `Upper Bound Phase: Round ${state.inner.round}, Waxing ${state.inner.day}/${limit}`;
+				} else {
+					let limit = 2 ** state.inner.round;
+					return `Upper Bound Phase: Round ${state.inner.round}, Waning ${state.inner.day}/${limit}`;
+				}
 			}
 			case "unnumbered-announce":
-				return `Announcement: Anyone Unnumbered? Step ${state.day}/${state.context.upperBound}`;
+				return `Announcement: Anyone Unnumbered? Step ${state.announcement.day}/${state.context.upperBound}`;
 			case "coin-flip":
 				return `Numbered Prisoners Flip Coin`;
 			case "coin-announce":
-				return `Announcement: Results of ${state.round}'s flip. Step ${state.day}/${state.context.upperBound}`;
+				return `Announcement: Results of ${state.round}'s flip. Step ${state.announcement.day}/${state.context.upperBound}`;
 			case "candidate-announce":
-				return `Announcement: Unnumbered Candidate? Step ${state.day}/${state.context.upperBound}`;
+				return `Announcement: Unnumbered Candidate? Step ${state.announcement.day}/${state.context.upperBound}`;
 			case "final":
 				return `Puzzle Complete`
 			default:
