@@ -1,12 +1,20 @@
 "use strict";
 
-import type { FiniteStateMachine, Subprocedure, SubprocedureResult } from "../../lib/fsm";
+import type { FiniteStateMachine, Subprocedure, SubprocedureResult } from "../fsm";
 
-export interface PrisonerStateInterface<S> extends FiniteStateMachine<boolean, S> {
+export interface IPrisonerState<S> extends FiniteStateMachine<boolean, S> {
 	willFlip(): boolean;
 	description(): string;
 	phase: string;  // TODO: make "final" less special
 }
+
+export interface IPrisonerGraphics<S> {
+	drawState(state: S, light: boolean | null): void;
+	drawSwitch(willFlip: boolean): void;
+	move(x: number, y: number): void;
+}
+
+// Common Subprocedures
 
 export class WaxingPhase implements Subprocedure<boolean, WaxingPhase | WaningPhase, number> {
 	phase: "waxing" = "waxing";

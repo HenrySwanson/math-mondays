@@ -1,25 +1,16 @@
 "use_strict";
 
 import type { svgjs } from "svg.js";
-import type { PrisonerStateInterface } from "./prisoner_strategies/common";
-import { startState, State as PrisonerState } from "./prisoner_strategies/simple";
+import type { IPrisonerState, IPrisonerGraphics } from "../lib/circular_prison/common";
+import { startState, State as SimpleState, Graphics as SimpleGraphics } from "../lib/circular_prison/simple";
 
 // Will be defined by the SVG.js script we pull in elsewhere in the doc
 declare global { var SVG: svgjs.Library; }
 
-
-const ACTIVE_COLOR = "#ffff00";
-const WANING_COLOR = "#ffcc00";
-const INACTIVE_COLOR = "#808080";
-const CANDIDATE_COLOR = "#00ffff";
-const BORDER_COLOR = "#000000";
-
+// TODO: don't duplicate constants like this!
 const PRISONER_RADIUS = 20;
 const PRISONER_SPACING = 80;
 const SCENE_PADDING = 10;
-const COIN_DIAMETER = 10;
-const SWITCH_HEIGHT = 30;
-const SWITCH_WIDTH = 15;
 
 // TODO: now what? I have to figure out how to visually show this!
 // okay, here's the way i see it
@@ -28,13 +19,7 @@ const SWITCH_WIDTH = 15;
 // - then add fancier visuals
 // - start over button
 
-interface IPrisonerGraphics<S> {
-	drawState(state: S, light: boolean | null): void;
-	drawSwitch(willFlip: boolean): void;
-	move(x: number, y: number): void;
-}
-
-class Prisoner<S extends PrisonerStateInterface<S>> {
+class Prisoner<S extends IPrisonerState<S>> {
 	graphics: IPrisonerGraphics<S>
 	state: S
 	name: string
@@ -51,139 +36,6 @@ class Prisoner<S extends PrisonerStateInterface<S>> {
 	}
 }
 
-class PrisonerGraphics {
-	group: svgjs.G;
-	circle: svgjs.Circle;
-	name: svgjs.Text;
-	number: svgjs.Text;
-	coin: svgjs.Circle;
-	candidate: svgjs.Circle;
-	switch: svgjs.Polygon;
-
-	constructor(drawing: svgjs.Doc, name: string) {
-		this.group = drawing.group();
-		this.circle = this.group.circle(2 * PRISONER_RADIUS);
-		this.name = this.group.text(name);
-		this.number = this.group.text("");
-		this.coin = this.group.circle(COIN_DIAMETER).hide();
-		this.candidate = this.group.circle(COIN_DIAMETER).hide();
-		this.switch = this.group.polygon([0, 0, 0, SWITCH_HEIGHT, SWITCH_WIDTH, SWITCH_HEIGHT / 2]);
-
-		// Position the elements
-		let cx = this.circle.cx();
-		let cy = this.circle.cy();
-		this.name.center(cx, cy);
-		this.coin.center(cx + PRISONER_RADIUS, cy + PRISONER_RADIUS);
-		this.candidate.center(cx + PRISONER_RADIUS, cy - PRISONER_RADIUS);
-		this.switch.center(cx + PRISONER_SPACING / 2, cy);
-
-		// Color them
-		this.circle.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
-		this.coin.stroke(BORDER_COLOR);
-		this.candidate.fill(CANDIDATE_COLOR).stroke(BORDER_COLOR);
-		this.switch.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
-
-		// Push the circle to the rearmost
-		this.circle.back();
-	}
-
-	drawState(state: PrisonerState, light: boolean | null) {
-
-		let color: string;
-		let number: number | null;
-		let coin: boolean | null;
-		let candidate: boolean;
-
-		switch (state.phase) {
-			case "upper-bound": {
-				if (state.inner.phase == "waxing") {
-					let active = state.inner.active || (light ?? false);
-					color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
-				} else {
-					let active = state.inner.active || (light ?? true);
-					color = active ? WANING_COLOR : INACTIVE_COLOR;
-				}
-				number = null;
-				coin = null;
-				candidate = false;
-				break;
-			}
-			case "unnumbered-announce": {
-				let active = state.announcement.active || (light ?? false);
-				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
-				number = state.context.myNumber ?? null;
-				coin = null;
-				candidate = false;
-				break;
-			}
-			case "coin-flip": {
-				color = INACTIVE_COLOR;
-				number = state.context.myNumber ?? null;
-				coin = state.context.myNumber !== null ? state.coinFlip : null;
-				candidate = light ?? false;
-				break;
-			}
-			case "coin-announce": {
-				let active = state.announcement.active || (light ?? false);
-				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
-				number = state.context.myNumber ?? null;
-				coin = state.context.myNumber !== null ? state.coinFlip : null;
-				candidate = state.isCandidate;
-				break;
-			}
-			case "candidate-announce": {
-				let active = state.announcement.active || (light ?? false);
-				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
-				number = state.context.myNumber ?? null;
-				coin = null;
-				candidate = state.isCandidate;
-				break;
-			}
-			case "final": {
-				color = INACTIVE_COLOR;
-				number = null;
-				coin = null;
-				candidate = false;
-				break;
-			}
-			default:
-				const _exhaustiveCheck: never = state;
-				return _exhaustiveCheck;
-		}
-
-		this.circle.fill(color);
-
-		if (number !== null) {
-			this.number.show().text(number.toString());
-		} else {
-			this.number.hide();
-		}
-
-		if (coin !== null) {
-			this.coin.show().fill(coin ? ACTIVE_COLOR : INACTIVE_COLOR);
-		} else {
-			this.coin.hide();
-		}
-
-		if (candidate) {
-			this.candidate.show();
-		} else {
-			this.candidate.hide();
-		}
-
-		// Reposition the text
-		this.number.center(this.circle.cx() - PRISONER_RADIUS, this.circle.cy() + PRISONER_RADIUS);
-	}
-
-	drawSwitch(willFlip: boolean) {
-		this.switch.fill(willFlip ? ACTIVE_COLOR : INACTIVE_COLOR);
-	}
-
-	move(x: number, y: number): void {
-		this.group.move(x, y);
-	}
-}
-
 function shuffleArray<T>(array: T[]) {
 	for (let i = array.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
@@ -195,7 +47,7 @@ type ExperimentStateA = {
 	state: "A";
 }
 
-type ExperimentStateB<S extends PrisonerStateInterface<S>> = {
+type ExperimentStateB<S extends IPrisonerState<S>> = {
 	state: "B";
 	lights: Map<Prisoner<S>, boolean>;
 }
@@ -205,9 +57,9 @@ type ExperimentStateC = {
 	answer: number;
 }
 
-type ExperimentState<S extends PrisonerStateInterface<S>> = ExperimentStateA | ExperimentStateB<S> | ExperimentStateC;
+type ExperimentState<S extends IPrisonerState<S>> = ExperimentStateA | ExperimentStateB<S> | ExperimentStateC;
 
-class Experiment<S extends PrisonerStateInterface<S>> {
+class Experiment<S extends IPrisonerState<S>> {
 	prisoners: Prisoner<S>[];
 	state: ExperimentState<S>;
 	numDays: number;
@@ -334,7 +186,7 @@ class Experiment<S extends PrisonerStateInterface<S>> {
 
 // TODO add 'start over' functionality!
 // TODO common knowledge field
-class ExperimentApplet<S extends PrisonerStateInterface<S>> {
+class ExperimentApplet<S extends IPrisonerState<S>> {
 	experiment: Experiment<S>;
 	nextButton: HTMLButtonElement;
 	undoButton: HTMLButtonElement;
@@ -399,9 +251,7 @@ class ExperimentApplet<S extends PrisonerStateInterface<S>> {
 }
 
 // Create experiments and link them to the HTML visuals
-// TODO: you need to implement the other strategy, which means lots of fun and exciting retooling
-// of the graphics class
-let experiment1 = new ExperimentApplet<PrisonerState>(5, "1", startState, ((drawing, name) => new PrisonerGraphics(drawing, name)));
+let experiment1 = new ExperimentApplet<SimpleState>(5, "1", startState, ((drawing, name) => new SimpleGraphics(drawing, name)));
 // let experiment2 = new ExperimentApplet(5, "2");
 
 experiment1.drawEverything();

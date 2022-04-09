@@ -1,6 +1,18 @@
 "use strict";
 
-import { PrisonerStateInterface, Announcement, WaxingPhase, WaningPhase } from "./common";
+import { IPrisonerState, Announcement, WaxingPhase, WaningPhase } from "./common";
+
+const ACTIVE_COLOR = "#ffff00";
+const WANING_COLOR = "#ffcc00";
+const INACTIVE_COLOR = "#808080";
+const CANDIDATE_COLOR = "#00ffff";
+const BORDER_COLOR = "#000000";
+
+const PRISONER_RADIUS = 20;
+const PRISONER_SPACING = 80;
+const COIN_DIAMETER = 10;
+const SWITCH_HEIGHT = 30;
+const SWITCH_WIDTH = 15;
 
 export type State = UpperBoundPhase | AnyoneUnnumberedPhase | FinalState | CandidateSelectionPhase | CandidateReportingPhase | CandidateAnnouncementPhase;
 
@@ -9,7 +21,7 @@ export function startState(captain: boolean): State {
 }
 
 
-class UpperBoundPhase implements PrisonerStateInterface<State> {
+class UpperBoundPhase implements IPrisonerState<State> {
 	phase: "upper-bound" = "upper-bound";
 	inner: WaxingPhase | WaningPhase;
 
@@ -51,7 +63,7 @@ type NumberingPhaseContext = {
 	upperBound: number;
 }
 
-class AnyoneUnnumberedPhase implements PrisonerStateInterface<State> {
+class AnyoneUnnumberedPhase implements IPrisonerState<State> {
 	phase: "unnumbered-announce" = "unnumbered-announce";
 
 	context: NumberingPhaseContext;
@@ -94,7 +106,7 @@ class AnyoneUnnumberedPhase implements PrisonerStateInterface<State> {
 	}
 }
 
-class FinalState implements PrisonerStateInterface<State> {
+class FinalState implements IPrisonerState<State> {
 	phase: "final" = "final";
 
 	answer: number;
@@ -116,7 +128,7 @@ class FinalState implements PrisonerStateInterface<State> {
 	}
 }
 
-class CandidateSelectionPhase implements PrisonerStateInterface<State> {
+class CandidateSelectionPhase implements IPrisonerState<State> {
 	phase: "coin-flip" = "coin-flip";
 
 	context: NumberingPhaseContext;
@@ -140,7 +152,7 @@ class CandidateSelectionPhase implements PrisonerStateInterface<State> {
 	}
 }
 
-class CandidateReportingPhase implements PrisonerStateInterface<State> {
+class CandidateReportingPhase implements IPrisonerState<State> {
 	phase: "coin-announce" = "coin-announce";
 
 	context: NumberingPhaseContext;
@@ -194,7 +206,7 @@ class CandidateReportingPhase implements PrisonerStateInterface<State> {
 	}
 }
 
-class CandidateAnnouncementPhase implements PrisonerStateInterface<State> {
+class CandidateAnnouncementPhase implements IPrisonerState<State> {
 	phase: "candidate-announce" = "candidate-announce";
 
 	context: NumberingPhaseContext;
@@ -241,5 +253,139 @@ class CandidateAnnouncementPhase implements PrisonerStateInterface<State> {
 
 	description(): string {
 		return `Announcement: Unnumbered Candidate? Step ${this.announcement.day}/${this.context.upperBound}`;
+	}
+}
+
+// TODO: maybe we do state.render(graphics)?
+export class Graphics {
+	group: svgjs.G;
+	circle: svgjs.Circle;
+	name: svgjs.Text;
+	number: svgjs.Text;
+	coin: svgjs.Circle;
+	candidate: svgjs.Circle;
+	switch: svgjs.Polygon;
+
+	constructor(drawing: svgjs.Doc, name: string) {
+		this.group = drawing.group();
+		this.circle = this.group.circle(2 * PRISONER_RADIUS);
+		this.name = this.group.text(name);
+		this.number = this.group.text("");
+		this.coin = this.group.circle(COIN_DIAMETER).hide();
+		this.candidate = this.group.circle(COIN_DIAMETER).hide();
+		this.switch = this.group.polygon([0, 0, 0, SWITCH_HEIGHT, SWITCH_WIDTH, SWITCH_HEIGHT / 2]);
+
+		// Position the elements
+		let cx = this.circle.cx();
+		let cy = this.circle.cy();
+		this.name.center(cx, cy);
+		this.coin.center(cx + PRISONER_RADIUS, cy + PRISONER_RADIUS);
+		this.candidate.center(cx + PRISONER_RADIUS, cy - PRISONER_RADIUS);
+		this.switch.center(cx + PRISONER_SPACING / 2, cy);
+
+		// Color them
+		this.circle.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
+		this.coin.stroke(BORDER_COLOR);
+		this.candidate.fill(CANDIDATE_COLOR).stroke(BORDER_COLOR);
+		this.switch.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
+
+		// Push the circle to the rearmost
+		this.circle.back();
+	}
+
+	drawState(state: State, light: boolean | null) {
+
+		let color: string;
+		let number: number | null;
+		let coin: boolean | null;
+		let candidate: boolean;
+
+		switch (state.phase) {
+			case "upper-bound": {
+				if (state.inner.phase == "waxing") {
+					let active = state.inner.active || (light ?? false);
+					color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
+				} else {
+					let active = state.inner.active && (light ?? true);
+					color = active ? WANING_COLOR : INACTIVE_COLOR;
+				}
+				number = null;
+				coin = null;
+				candidate = false;
+				break;
+			}
+			case "unnumbered-announce": {
+				let active = state.announcement.active || (light ?? false);
+				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
+				number = state.context.myNumber ?? null;
+				coin = null;
+				candidate = false;
+				break;
+			}
+			case "coin-flip": {
+				color = INACTIVE_COLOR;
+				number = state.context.myNumber ?? null;
+				coin = state.context.myNumber !== null ? state.coinFlip : null;
+				candidate = light ?? false;
+				break;
+			}
+			case "coin-announce": {
+				let active = state.announcement.active || (light ?? false);
+				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
+				number = state.context.myNumber ?? null;
+				coin = state.context.myNumber !== null ? state.coinFlip : null;
+				candidate = state.isCandidate;
+				break;
+			}
+			case "candidate-announce": {
+				let active = state.announcement.active || (light ?? false);
+				color = active ? ACTIVE_COLOR : INACTIVE_COLOR;
+				number = state.context.myNumber ?? null;
+				coin = null;
+				candidate = state.isCandidate;
+				break;
+			}
+			case "final": {
+				color = INACTIVE_COLOR;
+				number = null;
+				coin = null;
+				candidate = false;
+				break;
+			}
+			default:
+				const _exhaustiveCheck: never = state;
+				return _exhaustiveCheck;
+		}
+
+		this.circle.fill(color);
+
+		if (number !== null) {
+			this.number.show().text(number.toString());
+		} else {
+			this.number.hide();
+		}
+
+		if (coin !== null) {
+			this.coin.show().fill(coin ? ACTIVE_COLOR : INACTIVE_COLOR);
+		} else {
+			this.coin.hide();
+		}
+
+		if (candidate) {
+			this.candidate.show();
+		} else {
+			this.candidate.hide();
+		}
+
+		// Reposition the text
+		this.number.center(this.circle.cx() - PRISONER_RADIUS, this.circle.cy() + PRISONER_RADIUS);
+	}
+
+	drawSwitch(willFlip: boolean) {
+		this.switch.fill(willFlip ? ACTIVE_COLOR : INACTIVE_COLOR);
+	}
+
+	move(x: number, y: number): void {
+		this.group.move(x, y);
 	}
 }
