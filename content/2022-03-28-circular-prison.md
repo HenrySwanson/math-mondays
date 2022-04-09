@@ -164,7 +164,8 @@ The left hand side must be zero, by definition, but because $Z' \setminus Z$ is 
 
 I would add another simulation here, but I'm having trouble getting my prisoner code to be generic over arbitrary state machines. I'll keep working on it.
 
-<!--
+TODO: get this working.
+
 <div>
 <span id="day-counter-2"></span>
   <div style="float: right;">
@@ -180,7 +181,7 @@ I would add another simulation here, but I'm having trouble getting my prisoner 
 <span id="common-knowledge-2" style="float:right;"></span>
 </div>
 
-<div id="prison-interactive-2" style="border-style: solid;border-width: 3px;border-radius: 5px;background-color: #fff"></div> -->
+<div id="prison-interactive-2" style="border-style: solid;border-width: 3px;border-radius: 5px;background-color: #fff"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.js"></script>
 <script src="/js/circular_prison.js"></script>

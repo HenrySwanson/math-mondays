@@ -3,6 +3,7 @@
 import type { svgjs } from "svg.js";
 import type { IPrisonerState, IPrisonerGraphics } from "../lib/circular_prison/common";
 import { startState, State as SimpleState, Graphics as SimpleGraphics } from "../lib/circular_prison/simple";
+import { startState as startStateFancy, State as FancyState, Graphics as FancyGraphics } from "../lib/circular_prison/fancy";
 
 // Will be defined by the SVG.js script we pull in elsewhere in the doc
 declare global { var SVG: svgjs.Library; }
@@ -251,8 +252,8 @@ class ExperimentApplet<S extends IPrisonerState<S>> {
 }
 
 // Create experiments and link them to the HTML visuals
-let experiment1 = new ExperimentApplet<SimpleState>(5, "1", startState, ((drawing, name) => new SimpleGraphics(drawing, name)));
-// let experiment2 = new ExperimentApplet(5, "2");
+let experiment1 = new ExperimentApplet<SimpleState>(5, "1", startState, (drawing, name) => new SimpleGraphics(drawing, name));
+let experiment2 = new ExperimentApplet(5, "2", startStateFancy, (drawing, name) => new FancyGraphics(drawing, name));
 
 experiment1.drawEverything();
-// experiment2.drawEverything();
+experiment2.drawEverything();

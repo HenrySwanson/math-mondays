@@ -9,4 +9,8 @@ module.exports = {
     path: path.join(__dirname, 'web-bundles'),
     filename: '[name].js',
   },
+  optimization: {
+    // Uncomment to un-minify the output JS
+    minimize: false
+	},
 };
