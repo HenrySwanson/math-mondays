@@ -4,6 +4,8 @@ import type { FiniteStateMachine, Subprocedure, SubprocedureResult } from "../..
 
 export interface PrisonerStateInterface<S> extends FiniteStateMachine<boolean, S> {
 	willFlip(): boolean;
+	description(): string;
+	phase: string;  // TODO: make "final" less special
 }
 
 export class WaxingPhase implements Subprocedure<boolean, WaxingPhase | WaningPhase, number> {

@@ -33,6 +33,16 @@ class UpperBoundPhase implements PrisonerStateInterface<State> {
 	willFlip(): boolean {
 		return this.inner.active;
 	}
+
+	description(): string {
+		if (this.inner.phase == "waxing") {
+			let limit = this.inner.round;
+			return `Upper Bound Phase: Round ${this.inner.round}, Waxing ${this.inner.day}/${limit}`;
+		} else {
+			let limit = 2 ** this.inner.round;
+			return `Upper Bound Phase: Round ${this.inner.round}, Waning ${this.inner.day}/${limit}`;
+		}
+	}
 }
 
 type NumberingPhaseContext = {
@@ -78,6 +88,10 @@ class AnyoneUnnumberedPhase implements PrisonerStateInterface<State> {
 	willFlip(): boolean {
 		return this.announcement.active;
 	}
+
+	description(): string {
+		return `Announcement: Anyone Unnumbered? Step ${this.announcement.day}/${this.context.upperBound}`;
+	}
 }
 
 class FinalState implements PrisonerStateInterface<State> {
@@ -97,6 +111,9 @@ class FinalState implements PrisonerStateInterface<State> {
 		return false;
 	}
 
+	description(): string {
+		return `Puzzle Complete`;
+	}
 }
 
 class CandidateSelectionPhase implements PrisonerStateInterface<State> {
@@ -116,6 +133,10 @@ class CandidateSelectionPhase implements PrisonerStateInterface<State> {
 
 	willFlip(): boolean {
 		return this.coinFlip;
+	}
+
+	description(): string {
+		return `Numbered Prisoners Flip Coin`;
 	}
 }
 
@@ -167,6 +188,10 @@ class CandidateReportingPhase implements PrisonerStateInterface<State> {
 	willFlip(): boolean {
 		return this.announcement.active;
 	}
+
+	description(): string {
+		return `Announcement: Results of ${this.round}'s flip. Step ${this.announcement.day}/${this.context.upperBound}`;
+	}
 }
 
 class CandidateAnnouncementPhase implements PrisonerStateInterface<State> {
@@ -212,5 +237,9 @@ class CandidateAnnouncementPhase implements PrisonerStateInterface<State> {
 
 	willFlip(): boolean {
 		return this.announcement.active;
+	}
+
+	description(): string {
+		return `Announcement: Unnumbered Candidate? Step ${this.announcement.day}/${this.context.upperBound}`;
 	}
 }

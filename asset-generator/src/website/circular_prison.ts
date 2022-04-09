@@ -1,6 +1,7 @@
 "use_strict";
 
 import type { svgjs } from "svg.js";
+import type { PrisonerStateInterface } from "./prisoner_strategies/common";
 import { startState, State as PrisonerState } from "./prisoner_strategies/simple";
 
 // Will be defined by the SVG.js script we pull in elsewhere in the doc
@@ -27,13 +28,19 @@ const SWITCH_WIDTH = 15;
 // - then add fancier visuals
 // - start over button
 
-class Prisoner {
-	graphics: PrisonerGraphics
-	state: PrisonerState
+interface IPrisonerGraphics<S> {
+	drawState(state: S, light: boolean | null): void;
+	drawSwitch(willFlip: boolean): void;
+	move(x: number, y: number): void;
+}
+
+class Prisoner<S extends PrisonerStateInterface<S>> {
+	graphics: IPrisonerGraphics<S>
+	state: S
 	name: string
 
-	constructor(drawing: svgjs.Doc, state: PrisonerState, name: string) {
-		this.graphics = new PrisonerGraphics(drawing, name);
+	constructor(state: S, graphics: IPrisonerGraphics<S>, name: string) {
+		this.graphics = graphics;
 		this.state = state;
 		this.name = name;
 	}
@@ -171,6 +178,10 @@ class PrisonerGraphics {
 	drawSwitch(willFlip: boolean) {
 		this.switch.fill(willFlip ? ACTIVE_COLOR : INACTIVE_COLOR);
 	}
+
+	move(x: number, y: number): void {
+		this.group.move(x, y);
+	}
 }
 
 function shuffleArray<T>(array: T[]) {
@@ -184,9 +195,9 @@ type ExperimentStateA = {
 	state: "A";
 }
 
-type ExperimentStateB = {
+type ExperimentStateB<S extends PrisonerStateInterface<S>> = {
 	state: "B";
-	lights: Map<Prisoner, boolean>;
+	lights: Map<Prisoner<S>, boolean>;
 }
 
 type ExperimentStateC = {
@@ -194,24 +205,26 @@ type ExperimentStateC = {
 	answer: number;
 }
 
-type ExperimentState = ExperimentStateA | ExperimentStateB | ExperimentStateC;
+type ExperimentState<S extends PrisonerStateInterface<S>> = ExperimentStateA | ExperimentStateB<S> | ExperimentStateC;
 
-class Experiment {
-	prisoners: Prisoner[];
-	state: ExperimentState;
+class Experiment<S extends PrisonerStateInterface<S>> {
+	prisoners: Prisoner<S>[];
+	state: ExperimentState<S>;
 	numDays: number;
-	historyStack: [Prisoner, PrisonerState][][];
+	historyStack: [Prisoner<S>, S][][];
+	startStateFn: (captain: boolean) => S;
 
-	constructor(drawing: svgjs.Doc, numPrisoners: number) {
+	constructor(drawing: svgjs.Doc, numPrisoners: number, startStateFn: (captain: boolean) => S, graphicsFn: (drawing: svgjs.Doc, name: string) => IPrisonerGraphics<S>) {
 		this.prisoners = Array.from(Array(numPrisoners).keys()).map(
 			i => {
 				let captain = i == 0;
 				let name = String.fromCharCode(65 + i);
-				return new Prisoner(drawing, startState(captain), name);
+				return new Prisoner(startStateFn(captain), graphicsFn(drawing, name), name);
 			});
 		this.state = { state: "A" };
 		this.numDays = 1;
 		this.historyStack = [];
+		this.startStateFn = startStateFn;
 
 		drawing.viewbox(
 			0, 0, numPrisoners * PRISONER_SPACING + SCENE_PADDING, 2 * PRISONER_RADIUS + 2 * SCENE_PADDING
@@ -238,7 +251,7 @@ class Experiment {
 			} case "B": {
 				// Nighttime, time to scramble the prisoners and update
 				// their states. But first, save the state.
-				let history: [Prisoner, PrisonerState][] = this.prisoners.map(p => [p, p.state]);
+				let history: [Prisoner<S>, S][] = this.prisoners.map(p => [p, p.state]);
 				this.historyStack.push(history);
 
 				shuffleArray(this.prisoners);
@@ -286,7 +299,7 @@ class Experiment {
 
 	startOver(): void {
 		this.prisoners.sort((a, b) => a.name.localeCompare(b.name));
-		this.prisoners.forEach((p, i) => p.state = startState(i == 0));
+		this.prisoners.forEach((p, i) => p.state = this.startStateFn(i == 0));
 		this.state = { state: "A" };
 		this.numDays = 1;
 		this.historyStack = [];
@@ -295,7 +308,7 @@ class Experiment {
 	draw(): void {
 		// Move prisoner graphics
 		this.prisoners.forEach((p, i) => {
-			p.graphics.group.move(SCENE_PADDING + PRISONER_SPACING * i, SCENE_PADDING);
+			p.graphics.move(SCENE_PADDING + PRISONER_SPACING * i, SCENE_PADDING);
 		});
 
 		switch (this.state.state) {
@@ -315,37 +328,14 @@ class Experiment {
 
 	currentState(): string {
 		let state = this.prisoners[0].state;
-		switch (state.phase) {
-			case "upper-bound": {
-				if (state.inner.phase == "waxing") {
-					let limit = state.inner.round;
-					return `Upper Bound Phase: Round ${state.inner.round}, Waxing ${state.inner.day}/${limit}`;
-				} else {
-					let limit = 2 ** state.inner.round;
-					return `Upper Bound Phase: Round ${state.inner.round}, Waning ${state.inner.day}/${limit}`;
-				}
-			}
-			case "unnumbered-announce":
-				return `Announcement: Anyone Unnumbered? Step ${state.announcement.day}/${state.context.upperBound}`;
-			case "coin-flip":
-				return `Numbered Prisoners Flip Coin`;
-			case "coin-announce":
-				return `Announcement: Results of ${state.round}'s flip. Step ${state.announcement.day}/${state.context.upperBound}`;
-			case "candidate-announce":
-				return `Announcement: Unnumbered Candidate? Step ${state.announcement.day}/${state.context.upperBound}`;
-			case "final":
-				return `Puzzle Complete`
-			default:
-				const _exhaustiveCheck: never = state;
-				return _exhaustiveCheck;
-		}
+		return state.description();
 	}
 }
 
 // TODO add 'start over' functionality!
 // TODO common knowledge field
-class ExperimentApplet {
-	experiment: Experiment;
+class ExperimentApplet<S extends PrisonerStateInterface<S>> {
+	experiment: Experiment<S>;
 	nextButton: HTMLButtonElement;
 	undoButton: HTMLButtonElement;
 	finishPhaseButton: HTMLButtonElement;
@@ -353,8 +343,13 @@ class ExperimentApplet {
 	dayCounter: HTMLSpanElement;
 	stateText: HTMLSpanElement;
 
-	constructor(numPrisoners: number, suffix: string) {
-		this.experiment = new Experiment(SVG("prison-interactive-" + suffix), numPrisoners);
+	constructor(numPrisoners: number, suffix: string, startStateFn: (captain: boolean) => S, graphicsFn: (drawing: svgjs.Doc, name: string) => IPrisonerGraphics<S>) {
+		this.experiment = new Experiment(
+			SVG("prison-interactive-" + suffix),
+			numPrisoners,
+			startStateFn,
+			graphicsFn,
+		);
 		this.nextButton = document.getElementById("next-button-" + suffix) as HTMLButtonElement;
 		this.undoButton = document.getElementById("undo-button-" + suffix) as HTMLButtonElement;
 		this.finishPhaseButton = document.getElementById("finish-phase-button-" + suffix) as HTMLButtonElement;
@@ -406,7 +401,7 @@ class ExperimentApplet {
 // Create experiments and link them to the HTML visuals
 // TODO: you need to implement the other strategy, which means lots of fun and exciting retooling
 // of the graphics class
-let experiment1 = new ExperimentApplet(5, "1");
+let experiment1 = new ExperimentApplet<PrisonerState>(5, "1", startState, ((drawing, name) => new PrisonerGraphics(drawing, name)));
 // let experiment2 = new ExperimentApplet(5, "2");
 
 experiment1.drawEverything();
