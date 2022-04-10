@@ -161,9 +161,11 @@ The left hand side must be zero, by definition, but because $Z' \setminus Z$ is 
 
 ---
 
-I would add another simulation here, but I'm having trouble getting my prisoner code to be generic over arbitrary state machines. I'll keep working on it.
+This approach is simulated below, but with one minor caveat. Once the system of equations has a unique solution, the mathematicians will just blurt it out immediately, instead of waiting for all $2^n - 2$ equations to come in.
 
-TODO: get this working.
+Note: Experimentally, it seems that it's extremely common for the prisoners to all get partitioned into sets of size $1$, but that's not necessarily the case every time. If you were able to rearrange the prisoners as you wished, you could set up such a situation: once you have $4$ partitions, you can ensure that partition $4$ is never split up.
+
+But I haven't yet added the ability to drag-and-drop prisoners around, so you have to approximate this by just hitting "Undo" and "Next" until you get the result you want. Maybe I'll add that once I stop seething at JavaScript.
 
 <div>
 <span id="day-counter-2"></span>

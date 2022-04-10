@@ -69,14 +69,14 @@ class PartitionContext {
 	myPartition: number;
 	enumerationOrder: number[][];
 	enumerationPosition: number;
-	intersectionHistory: boolean[][];
+	intersectionHistory: number[][];
 
 	constructor(upperBound: number,
 		numPartitions: number,
 		myPartition: number,
 		enumerationOrder: number[][],
 		enumerationPosition: number,
-		intersectionHistory: boolean[][]
+		intersectionHistory: number[][]
 	) {
 		this.upperBound = upperBound;
 		this.numPartitions = numPartitions;
@@ -115,7 +115,7 @@ class PartitionContext {
 		return this.currentSubset().includes(this.myPartition);
 	}
 
-	bumpIndex(intersection: boolean[]): PartitionContext | null {
+	bumpIndex(intersection: number[]): PartitionContext | null {
 		if (this.enumerationPosition == this.enumerationOrder.length - 1) {
 			return null;
 		}
@@ -137,7 +137,7 @@ class PartitionContext {
 type PartitionSubcontext = {
 	wasFlashed: boolean;
 	round: number;
-	intersected: boolean[];
+	intersected: number[];
 }
 
 
@@ -170,9 +170,7 @@ class FlashLightsPhase implements IPrisonerState<State> {
 	commonKnowledge(): string[] {
 		let facts = [`N ≤ ${this.context.upperBound}`, `${this.context.numPartitions} partitions`];
 		for (let i = 0; i < this.context.enumerationPosition; i++) {
-			// TODO should i track the set directly, instead of a boolean hitlist?
-			let tagged = this.context.intersectionHistory[i].flatMap((bool, i) => bool ? [i + 1] : []);
-			facts.push(`${this.context.enumerationOrder[i]} tagged ${tagged}`);
+			facts.push(`{${this.context.enumerationOrder[i]}} tagged {${this.context.intersectionHistory[i]}}`);
 		}
 		return facts;
 	}
@@ -221,12 +219,9 @@ class RefinePartitionPhase1 implements IPrisonerState<State> {
 	commonKnowledge(): string[] {
 		let facts = [`N ≤ ${this.context.upperBound}`, `${this.context.numPartitions} partitions`];
 		for (let i = 0; i < this.context.enumerationPosition; i++) {
-			// TODO should i track the set directly, instead of a boolean hitlist?
-			let tagged = this.context.intersectionHistory[i].flatMap((bool, i) => bool ? [i] : []);
-			facts.push(`{${this.context.enumerationOrder[i]}} tagged {${tagged}}`);
+			facts.push(`{${this.context.enumerationOrder[i]}} tagged {${this.context.intersectionHistory[i]}}`);
 		}
-		let tagged = this.subcontext.intersected.flatMap((bool, i) => bool ? [i + 1] : []);
-		facts.push(`{${this.context.currentSubset()}} tagged {${tagged}, ...}`);
+		facts.push(`{${this.context.currentSubset()}} tagged {${this.subcontext.intersected}, ...}`);
 		return facts;
 	}
 }
@@ -260,7 +255,10 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 		}
 
 		// Otherwise, mark whether this group was intersected
-		let newIntersected = this.subcontext.intersected.concat([this.previousAnnouncement]);
+		let newIntersected = this.subcontext.intersected.slice();
+		if (this.previousAnnouncement) {
+			newIntersected.push(this.subcontext.round);
+		}
 
 		// Go to the next j, if possible
 		if (this.subcontext.round != this.context.numPartitions) {
@@ -275,8 +273,17 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 		// Otherwise, we've finished checking for this subset. Go to the next one.
 		let nextContext = this.context.bumpIndex(newIntersected);
 		if (nextContext !== null) {
-			return new FlashLightsPhase(nextContext);
+			// Hold up, what if we can solve this right now?
+			let lhs = nextContext.enumerationOrder.slice(0, nextContext.enumerationPosition);
+			let rhs = nextContext.intersectionHistory;
+			let result = trySolveEquations(nextContext.numPartitions, lhs, rhs);
+			if (result == null) {
+				return new FlashLightsPhase(nextContext);
+			} else {
+				return new FinalState(nextContext.numPartitions, lhs, rhs);
+			}
 		} else {
+			// Remember, gotta tack on the newIntersected. This is kinda clunky... :(
 			return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory.concat([newIntersected]));
 		}
 	}
@@ -292,12 +299,9 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 	commonKnowledge(): string[] {
 		let facts = [`N ≤ ${this.context.upperBound}`, `${this.context.numPartitions} partitions`];
 		for (let i = 0; i < this.context.enumerationPosition; i++) {
-			// TODO should i track the set directly, instead of a boolean hitlist?
-			let tagged = this.context.intersectionHistory[i].flatMap((bool, i) => bool ? [i + 1] : []);
-			facts.push(`{${this.context.enumerationOrder[i]}} tagged {${tagged}}`);
+			facts.push(`{${this.context.enumerationOrder[i]}} tagged {${this.context.intersectionHistory[i]}}`);
 		}
-		let tagged = this.subcontext.intersected.flatMap((bool, i) => bool ? [i + 1] : []);
-		facts.push(`{${this.context.currentSubset()}} tagged {${tagged}, ...}`);
+		facts.push(`{${this.context.currentSubset()}} tagged {${this.subcontext.intersected}, ...}`);
 		return facts;
 	}
 }
@@ -307,9 +311,9 @@ class FinalState implements IPrisonerState<State> {
 
 	numPartitions: number;
 	enumerationOrder: number[][];
-	intersectionHistory: boolean[][];
+	intersectionHistory: number[][];
 
-	constructor(numPartitions: number, enumerationOrder: number[][], intersectionHistory: boolean[][]) {
+	constructor(numPartitions: number, enumerationOrder: number[][], intersectionHistory: number[][]) {
 		this.numPartitions = numPartitions;
 		this.enumerationOrder = enumerationOrder;
 		this.intersectionHistory = intersectionHistory;
@@ -328,7 +332,21 @@ class FinalState implements IPrisonerState<State> {
 	}
 
 	commonKnowledge(): string[] {
-		return ["TODO FILL THIS OUT DUMMY"]
+		let facts = this.enumerationOrder.map((lhs, i) => {
+			let rhs = this.intersectionHistory[i];
+			let lhsStr = lhs.map(i => `x_${i}`).join(" + ");
+			let rhsStr = rhs.map(i => `x_${i}`).join(" + ");
+			return `${lhsStr} = ${rhsStr}`;
+		});
+		facts.push("x_1 = 1");
+		
+		// Now get the unique solution
+		let solution = trySolveEquations(this.numPartitions, this.enumerationOrder, this.intersectionHistory)!;
+		let solnStr = solution.map((x, i) => `x_${i+1} = ${x}`).join(", ");
+		let total = solution.reduce((a, b) => a + b);
+		facts.push(`Unique solution is: ${solnStr}, for a total of ${total} prisoners`);
+
+		return facts;
 	}
 }
 
@@ -440,4 +458,111 @@ export class Graphics {
 	move(x: number, y: number): void {
 		this.group.move(x, y);
 	}
+}
+
+// If there's a unique solution, returns it, otherwise returns null
+function trySolveEquations(numVariables: number, lhss: number[][], rhss: number[][]): number[] | null {
+	// Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
+
+	let numRows = lhss.length + 1;  // +1 because x_1 = 1
+	let numCols = numVariables + 1;
+
+	let rows = lhss.map((lhs, i) => {
+		let rhs = rhss[i];
+		let row: number[] = Array(numCols).fill(0);
+		for (let x of lhs) {
+			row[x - 1] += 1;
+		}
+		for (let x of rhs) {
+			row[x - 1] -= 1;
+		}
+		return row;
+	});
+
+	// This row encodes the fact that x_1 = 1
+	let lastRow = Array(numCols).fill(0);
+	lastRow[0] = lastRow[numCols - 1] = 1;
+	rows.push(lastRow);
+
+	// TODO: shunt this into some stdlib
+	function range(a: number, b: number) {
+		if (b < a) {
+			return [];
+		}
+		return Array(b - a).fill(0).map((_, i) => i + a);
+	}
+
+	function max_by<T>(array: T[], key: (t: T) => number): T {
+		return array.reduce((a, b) => key(a) >= key(b) ? a : b);
+	}
+
+	// Now put the matrix in RREF form
+	let pivotRow = 0;
+	let pivotColumn = 0;
+	while (pivotRow < numRows && pivotColumn < numCols) {
+		// Find the pivot for this column
+		let [valMax, iMax] = max_by(
+			range(pivotRow, numRows).map(i => [rows[i][pivotColumn], i]),
+			tup => Math.abs(tup[0])
+		);
+
+		if (valMax == 0) {
+			// No pivot in this column
+			pivotColumn += 1;
+		} else {
+			// Swap this row into the pivot row
+			let tmp = rows[pivotRow];
+			rows[pivotRow] = rows[iMax];
+			rows[iMax] = tmp;
+
+			// Normalize this row
+			let mul = rows[pivotRow][pivotColumn];
+			for (let j = 0; j < numCols; j++) {
+				rows[pivotRow][j] /= mul;
+			}
+
+			// For all rows other than pivot, clear the column
+			for (let i = 0; i < rows.length; i++) {
+				if (i == pivotRow) {
+					continue;
+				}
+
+				let mul = rows[i][pivotColumn];
+				for (let j = 0; j < numCols; j++) {
+					rows[i][j] -= rows[pivotRow][j] * mul;
+				}
+			}
+			pivotRow += 1;
+			pivotColumn += 1;
+		}
+	}
+
+	// Detect whether we have a solution.
+	if (numRows < numVariables) {
+		return null;
+	}
+	
+	// Check if the upper-left looks like an identity matrix.
+	for (let i = 0; i < numVariables; i++) {
+		for (let j = 0; j < numVariables; j++) {
+			if (i == j && rows[i][j] != 1) {
+				return null;
+			}
+			if (i != j && rows[i][j] != 0) {
+				return null;
+			}
+		}
+	}
+
+	// Sanity check, all other rows should be all zero
+	for (let i = numVariables; i < numRows; i++) {
+		for (let j = 0; j < numCols; j++) {
+			if (rows[i][j] != 0) {
+				throw "RREF failure!" + rows.toString();
+			}
+		}
+	}
+
+	// Great! Now we just copy off the last column
+	return range(0, numVariables).map(i => rows[i][numCols - 1]);
 }

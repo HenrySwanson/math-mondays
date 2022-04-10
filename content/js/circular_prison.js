@@ -75,9 +75,36 @@ exports.Announcement = Announcement;
 /***/ }),
 
 /***/ 77:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 exports.__esModule = true;
 exports.Graphics = exports.startState = void 0;
 var common_1 = __webpack_require__(353);
@@ -192,10 +219,9 @@ var FlashLightsPhase = /** @class */ (function () {
     FlashLightsPhase.prototype.commonKnowledge = function () {
         var facts = ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numPartitions, " partitions")];
         for (var i = 0; i < this.context.enumerationPosition; i++) {
-            // TODO should i track the set directly, instead of a boolean hitlist?
-            var tagged = this.context.intersectionHistory[i].flatMap(function (bool, i) { return bool ? [i + 1] : []; });
-            facts.push("".concat(this.context.enumerationOrder[i], " tagged ").concat(tagged));
+            facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(this.context.intersectionHistory[i], "}"));
         }
+        // TODO actually solve the equations
         return facts;
     };
     return FlashLightsPhase;
@@ -232,11 +258,9 @@ var RefinePartitionPhase1 = /** @class */ (function () {
         var facts = ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numPartitions, " partitions")];
         for (var i = 0; i < this.context.enumerationPosition; i++) {
             // TODO should i track the set directly, instead of a boolean hitlist?
-            var tagged_1 = this.context.intersectionHistory[i].flatMap(function (bool, i) { return bool ? [i] : []; });
-            facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(tagged_1, "}"));
+            facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(this.context.intersectionHistory[i], "}"));
         }
-        var tagged = this.subcontext.intersected.flatMap(function (bool, i) { return bool ? [i + 1] : []; });
-        facts.push("{".concat(this.context.currentSubset(), "} tagged {").concat(tagged, ", ...}"));
+        facts.push("{".concat(this.context.currentSubset(), "} tagged {").concat(this.subcontext.intersected, ", ...}"));
         return facts;
     };
     return RefinePartitionPhase1;
@@ -261,7 +285,10 @@ var RefinePartitionPhase2 = /** @class */ (function () {
             return new FlashLightsPhase(splitContext);
         }
         // Otherwise, mark whether this group was intersected
-        var newIntersected = this.subcontext.intersected.concat([this.previousAnnouncement]);
+        var newIntersected = this.subcontext.intersected.slice();
+        if (this.previousAnnouncement) {
+            newIntersected.push(this.subcontext.round);
+        }
         // Go to the next j, if possible
         if (this.subcontext.round != this.context.numPartitions) {
             var newSubcontext = {
@@ -274,9 +301,19 @@ var RefinePartitionPhase2 = /** @class */ (function () {
         // Otherwise, we've finished checking for this subset. Go to the next one.
         var nextContext = this.context.bumpIndex(newIntersected);
         if (nextContext !== null) {
-            return new FlashLightsPhase(nextContext);
+            // Hold up, what if we can solve this right now?
+            var lhs = nextContext.enumerationOrder.slice(0, nextContext.enumerationPosition);
+            var rhs = nextContext.intersectionHistory;
+            var result = trySolveEquations(nextContext.numPartitions, lhs, rhs);
+            if (result == null) {
+                return new FlashLightsPhase(nextContext);
+            }
+            else {
+                return new FinalState(nextContext.numPartitions, lhs, rhs);
+            }
         }
         else {
+            // Remember, gotta tack on the newIntersected. This is kinda clunky... :(
             return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory.concat([newIntersected]));
         }
     };
@@ -289,12 +326,9 @@ var RefinePartitionPhase2 = /** @class */ (function () {
     RefinePartitionPhase2.prototype.commonKnowledge = function () {
         var facts = ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numPartitions, " partitions")];
         for (var i = 0; i < this.context.enumerationPosition; i++) {
-            // TODO should i track the set directly, instead of a boolean hitlist?
-            var tagged_2 = this.context.intersectionHistory[i].flatMap(function (bool, i) { return bool ? [i + 1] : []; });
-            facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(tagged_2, "}"));
+            facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(this.context.intersectionHistory[i], "}"));
         }
-        var tagged = this.subcontext.intersected.flatMap(function (bool, i) { return bool ? [i] : []; });
-        facts.push("{".concat(this.context.currentSubset(), "} tagged {").concat(tagged, ", ...}"));
+        facts.push("{".concat(this.context.currentSubset(), "} tagged {").concat(this.subcontext.intersected, ", ...}"));
         return facts;
     };
     return RefinePartitionPhase2;
@@ -316,7 +350,20 @@ var FinalState = /** @class */ (function () {
         return "Puzzle Complete";
     };
     FinalState.prototype.commonKnowledge = function () {
-        return ["TODO FILL THIS OUT DUMMY"];
+        var _this = this;
+        var facts = this.enumerationOrder.map(function (lhs, i) {
+            var rhs = _this.intersectionHistory[i];
+            var lhsStr = lhs.map(function (i) { return "x_".concat(i); }).join(" + ");
+            var rhsStr = rhs.map(function (i) { return "x_".concat(i); }).join(" + ");
+            return "".concat(lhsStr, " = ").concat(rhsStr);
+        });
+        facts.push("x_1 = 1");
+        // Now get the unique solution
+        var solution = trySolveEquations(this.numPartitions, this.enumerationOrder, this.intersectionHistory);
+        var solnStr = solution.map(function (x, i) { return "x_".concat(i + 1, " = ").concat(x); }).join(", ");
+        var total = solution.reduce(function (a, b) { return a + b; });
+        facts.push("Unique solution is: ".concat(solnStr, ", for a total of ").concat(total, " prisoners"));
+        return facts;
     };
     return FinalState;
 }());
@@ -415,6 +462,118 @@ var Graphics = /** @class */ (function () {
     return Graphics;
 }());
 exports.Graphics = Graphics;
+// If there's a unique solution, returns it, otherwise returns null
+function trySolveEquations(numVariables, lhss, rhss) {
+    // Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
+    // TODO: drop all console.logs
+    var numRows = lhss.length + 1; // +1 because x_1 = 1
+    var numCols = numVariables + 1;
+    var rows = lhss.map(function (lhs, i) {
+        var e_1, _a, e_2, _b;
+        var rhs = rhss[i];
+        var row = Array(numCols).fill(0);
+        try {
+            for (var lhs_1 = __values(lhs), lhs_1_1 = lhs_1.next(); !lhs_1_1.done; lhs_1_1 = lhs_1.next()) {
+                var x = lhs_1_1.value;
+                row[x - 1] += 1;
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (lhs_1_1 && !lhs_1_1.done && (_a = lhs_1["return"])) _a.call(lhs_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        try {
+            for (var rhs_1 = __values(rhs), rhs_1_1 = rhs_1.next(); !rhs_1_1.done; rhs_1_1 = rhs_1.next()) {
+                var x = rhs_1_1.value;
+                row[x - 1] -= 1;
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (rhs_1_1 && !rhs_1_1.done && (_b = rhs_1["return"])) _b.call(rhs_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        return row;
+    });
+    // This row encodes the fact that x_1 = 1
+    var lastRow = Array(numCols).fill(0);
+    lastRow[0] = lastRow[numCols - 1] = 1;
+    rows.push(lastRow);
+    // TODO: shunt this into some stdlib
+    function range(a, b) {
+        if (b < a) {
+            return [];
+        }
+        return Array(b - a).fill(0).map(function (_, i) { return i + a; });
+    }
+    function max_by(array, key) {
+        return array.reduce(function (a, b) { return key(a) >= key(b) ? a : b; });
+    }
+    // Now put the matrix in RREF form
+    var pivotRow = 0;
+    var pivotColumn = 0;
+    while (pivotRow < numRows && pivotColumn < numCols) {
+        // Find the pivot for this column
+        var _a = __read(max_by(range(pivotRow, numRows).map(function (i) { return [rows[i][pivotColumn], i]; }), function (tup) { return Math.abs(tup[0]); }), 2), valMax = _a[0], iMax = _a[1];
+        if (valMax == 0) {
+            // No pivot in this column
+            pivotColumn += 1;
+        }
+        else {
+            // Swap this row into the pivot row
+            var tmp = rows[pivotRow];
+            rows[pivotRow] = rows[iMax];
+            rows[iMax] = tmp;
+            // Normalize this row
+            var mul = rows[pivotRow][pivotColumn];
+            for (var j = 0; j < numCols; j++) {
+                rows[pivotRow][j] /= mul;
+            }
+            // For all rows other than pivot, clear the column
+            for (var i = 0; i < rows.length; i++) {
+                if (i == pivotRow) {
+                    continue;
+                }
+                var mul_1 = rows[i][pivotColumn];
+                for (var j = 0; j < numCols; j++) {
+                    rows[i][j] -= rows[pivotRow][j] * mul_1;
+                }
+            }
+            pivotRow += 1;
+            pivotColumn += 1;
+        }
+    }
+    // Detect whether we have a solution.
+    if (numRows < numVariables) {
+        return null;
+    }
+    // Check if the upper-left looks like an identity matrix.
+    for (var i = 0; i < numVariables; i++) {
+        for (var j = 0; j < numVariables; j++) {
+            if (i == j && rows[i][j] != 1) {
+                return null;
+            }
+            if (i != j && rows[i][j] != 0) {
+                return null;
+            }
+        }
+    }
+    // Sanity check, all other rows should be all zero
+    for (var i = numVariables; i < numRows; i++) {
+        for (var j = 0; j < numCols; j++) {
+            if (rows[i][j] != 0) {
+                throw "RREF failure!" + rows.toString();
+            }
+        }
+    }
+    // Great! Now we just copy off the last column
+    return range(0, numVariables).map(function (i) { return rows[i][numCols - 1]; });
+}
 //# sourceMappingURL=fancy.js.map
 
 /***/ }),
