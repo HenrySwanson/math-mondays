@@ -183,10 +183,14 @@ class Experiment<S extends IPrisonerState<S>> {
 		let state = this.prisoners[0].state;
 		return state.description();
 	}
+
+	commonKnowledge(): string {
+		let state = this.prisoners[0].state;
+		return "<ul>" + state.commonKnowledge().map(x => "<li>" + x + "</li>").join("\n") + "</ul>";
+	}
 }
 
-// TODO add 'start over' functionality!
-// TODO common knowledge field
+
 class ExperimentApplet<S extends IPrisonerState<S>> {
 	experiment: Experiment<S>;
 	nextButton: HTMLButtonElement;
@@ -195,6 +199,7 @@ class ExperimentApplet<S extends IPrisonerState<S>> {
 	startOverButton: HTMLButtonElement;
 	dayCounter: HTMLSpanElement;
 	stateText: HTMLSpanElement;
+	commonKnowledge: HTMLSpanElement;
 
 	constructor(numPrisoners: number, suffix: string, startStateFn: (captain: boolean) => S, graphicsFn: (drawing: svgjs.Doc, name: string) => IPrisonerGraphics<S>) {
 		this.experiment = new Experiment(
@@ -209,6 +214,7 @@ class ExperimentApplet<S extends IPrisonerState<S>> {
 		this.startOverButton = document.getElementById("start-over-button-" + suffix) as HTMLButtonElement;
 		this.dayCounter = document.getElementById("day-counter-" + suffix)!;
 		this.stateText = document.getElementById("state-description-" + suffix)!;
+		this.commonKnowledge = document.getElementById("common-knowledge-" + suffix)!;
 
 		this.nextButton.addEventListener("click", event => {
 			let currentPhase = this.experiment.prisoners[0].state.phase;
@@ -248,6 +254,7 @@ class ExperimentApplet<S extends IPrisonerState<S>> {
 		let time = this.experiment.state.state == "A" ? "Day" : "Night";
 		this.dayCounter.textContent = `${time} ${this.experiment.numDays}`
 		this.stateText.textContent = this.experiment.currentState();
+		this.commonKnowledge.innerHTML = this.experiment.commonKnowledge();
 	}
 }
 

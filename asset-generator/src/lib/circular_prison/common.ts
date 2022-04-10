@@ -5,6 +5,7 @@ import type { FiniteStateMachine, Subprocedure, SubprocedureResult } from "../fs
 export interface IPrisonerState<S> extends FiniteStateMachine<boolean, S> {
 	willFlip(): boolean;
 	description(): string;
+	commonKnowledge(): string[];
 	phase: string;  // TODO: make "final" less special
 }
 

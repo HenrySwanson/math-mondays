@@ -124,6 +124,9 @@ var UpperBoundPhase = /** @class */ (function () {
             return "Upper Bound Phase: Round ".concat(this.inner.round, ", Waning ").concat(this.inner.day, "/").concat(limit);
         }
     };
+    UpperBoundPhase.prototype.commonKnowledge = function () {
+        return [];
+    };
     return UpperBoundPhase;
 }());
 // TODO there's gotta be a better way than defining boring constructors
@@ -186,6 +189,15 @@ var FlashLightsPhase = /** @class */ (function () {
     FlashLightsPhase.prototype.description = function () {
         return "Flash Day: I = {".concat(this.context.currentSubset(), "}");
     };
+    FlashLightsPhase.prototype.commonKnowledge = function () {
+        var facts = ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numPartitions, " partitions")];
+        for (var i = 0; i < this.context.enumerationPosition; i++) {
+            // TODO should i track the set directly, instead of a boolean hitlist?
+            var tagged = this.context.intersectionHistory[i].flatMap(function (bool, i) { return bool ? [i + 1] : []; });
+            facts.push("".concat(this.context.enumerationOrder[i], " tagged ").concat(tagged));
+        }
+        return facts;
+    };
     return FlashLightsPhase;
 }());
 var RefinePartitionPhase1 = /** @class */ (function () {
@@ -216,6 +228,17 @@ var RefinePartitionPhase1 = /** @class */ (function () {
     RefinePartitionPhase1.prototype.description = function () {
         return "(I = {".concat(this.context.currentSubset(), "}) Announcement: S_").concat(this.subcontext.round, " \u2229 T? Step ").concat(this.announcement.day, "/").concat(this.context.upperBound);
     };
+    RefinePartitionPhase1.prototype.commonKnowledge = function () {
+        var facts = ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numPartitions, " partitions")];
+        for (var i = 0; i < this.context.enumerationPosition; i++) {
+            // TODO should i track the set directly, instead of a boolean hitlist?
+            var tagged_1 = this.context.intersectionHistory[i].flatMap(function (bool, i) { return bool ? [i] : []; });
+            facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(tagged_1, "}"));
+        }
+        var tagged = this.subcontext.intersected.flatMap(function (bool, i) { return bool ? [i + 1] : []; });
+        facts.push("{".concat(this.context.currentSubset(), "} tagged {").concat(tagged, ", ...}"));
+        return facts;
+    };
     return RefinePartitionPhase1;
 }());
 var RefinePartitionPhase2 = /** @class */ (function () {
@@ -237,22 +260,24 @@ var RefinePartitionPhase2 = /** @class */ (function () {
             var splitContext = this.context.splitIndex(this.subcontext.round, this.subcontext.wasFlashed);
             return new FlashLightsPhase(splitContext);
         }
+        // Otherwise, mark whether this group was intersected
+        var newIntersected = this.subcontext.intersected.concat([this.previousAnnouncement]);
         // Go to the next j, if possible
         if (this.subcontext.round != this.context.numPartitions) {
             var newSubcontext = {
                 wasFlashed: this.subcontext.wasFlashed,
                 round: this.subcontext.round + 1,
-                intersected: this.subcontext.intersected.concat([this.previousAnnouncement])
+                intersected: newIntersected
             };
             return RefinePartitionPhase1.start(this.context, newSubcontext);
         }
         // Otherwise, we've finished checking for this subset. Go to the next one.
-        var nextContext = this.context.bumpIndex(this.subcontext.intersected);
+        var nextContext = this.context.bumpIndex(newIntersected);
         if (nextContext !== null) {
             return new FlashLightsPhase(nextContext);
         }
         else {
-            return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory);
+            return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory.concat([newIntersected]));
         }
     };
     RefinePartitionPhase2.prototype.willFlip = function () {
@@ -260,6 +285,17 @@ var RefinePartitionPhase2 = /** @class */ (function () {
     };
     RefinePartitionPhase2.prototype.description = function () {
         return "(I = {".concat(this.context.currentSubset(), "}) Announcement: S_").concat(this.subcontext.round, " \\ T? Step ").concat(this.announcement.day, "/").concat(this.context.upperBound);
+    };
+    RefinePartitionPhase2.prototype.commonKnowledge = function () {
+        var facts = ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numPartitions, " partitions")];
+        for (var i = 0; i < this.context.enumerationPosition; i++) {
+            // TODO should i track the set directly, instead of a boolean hitlist?
+            var tagged_2 = this.context.intersectionHistory[i].flatMap(function (bool, i) { return bool ? [i + 1] : []; });
+            facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(tagged_2, "}"));
+        }
+        var tagged = this.subcontext.intersected.flatMap(function (bool, i) { return bool ? [i] : []; });
+        facts.push("{".concat(this.context.currentSubset(), "} tagged {").concat(tagged, ", ...}"));
+        return facts;
     };
     return RefinePartitionPhase2;
 }());
@@ -278,6 +314,9 @@ var FinalState = /** @class */ (function () {
     };
     FinalState.prototype.description = function () {
         return "Puzzle Complete";
+    };
+    FinalState.prototype.commonKnowledge = function () {
+        return ["TODO FILL THIS OUT DUMMY"];
     };
     return FinalState;
 }());
@@ -429,6 +468,9 @@ var UpperBoundPhase = /** @class */ (function () {
             return "Upper Bound Phase: Round ".concat(this.inner.round, ", Waning ").concat(this.inner.day, "/").concat(limit);
         }
     };
+    UpperBoundPhase.prototype.commonKnowledge = function () {
+        return [];
+    };
     return UpperBoundPhase;
 }());
 var AnyoneUnnumberedPhase = /** @class */ (function () {
@@ -464,6 +506,9 @@ var AnyoneUnnumberedPhase = /** @class */ (function () {
     AnyoneUnnumberedPhase.prototype.description = function () {
         return "Announcement: Anyone Unnumbered? Step ".concat(this.announcement.day, "/").concat(this.context.upperBound);
     };
+    AnyoneUnnumberedPhase.prototype.commonKnowledge = function () {
+        return ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numNumbered, " prisoners numbered")];
+    };
     return AnyoneUnnumberedPhase;
 }());
 var FinalState = /** @class */ (function () {
@@ -479,6 +524,9 @@ var FinalState = /** @class */ (function () {
     };
     FinalState.prototype.description = function () {
         return "Puzzle Complete";
+    };
+    FinalState.prototype.commonKnowledge = function () {
+        return ["N = ".concat(this.answer)];
     };
     return FinalState;
 }());
@@ -496,6 +544,9 @@ var CandidateSelectionPhase = /** @class */ (function () {
     };
     CandidateSelectionPhase.prototype.description = function () {
         return "Numbered Prisoners Flip Coin";
+    };
+    CandidateSelectionPhase.prototype.commonKnowledge = function () {
+        return ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numNumbered, " prisoners numbered")];
     };
     return CandidateSelectionPhase;
 }());
@@ -537,6 +588,9 @@ var CandidateReportingPhase = /** @class */ (function () {
     CandidateReportingPhase.prototype.description = function () {
         return "Announcement: Results of ".concat(this.round, "'s flip. Step ").concat(this.announcement.day, "/").concat(this.context.upperBound);
     };
+    CandidateReportingPhase.prototype.commonKnowledge = function () {
+        return ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numNumbered, " prisoners numbered"), "".concat(this.numHeads, " heads flipped (so far)")];
+    };
     return CandidateReportingPhase;
 }());
 var CandidateAnnouncementPhase = /** @class */ (function () {
@@ -576,6 +630,9 @@ var CandidateAnnouncementPhase = /** @class */ (function () {
     };
     CandidateAnnouncementPhase.prototype.description = function () {
         return "Announcement: Unnumbered Candidate? Step ".concat(this.announcement.day, "/").concat(this.context.upperBound);
+    };
+    CandidateAnnouncementPhase.prototype.commonKnowledge = function () {
+        return ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numNumbered, " prisoners numbered"), "".concat(this.numHeads, " heads flipped")];
     };
     return CandidateAnnouncementPhase;
 }());
@@ -861,10 +918,12 @@ var Experiment = /** @class */ (function () {
         var state = this.prisoners[0].state;
         return state.description();
     };
+    Experiment.prototype.commonKnowledge = function () {
+        var state = this.prisoners[0].state;
+        return "<ul>" + state.commonKnowledge().map(function (x) { return "<li>" + x + "</li>"; }).join("\n") + "</ul>";
+    };
     return Experiment;
 }());
-// TODO add 'start over' functionality!
-// TODO common knowledge field
 var ExperimentApplet = /** @class */ (function () {
     function ExperimentApplet(numPrisoners, suffix, startStateFn, graphicsFn) {
         var _this = this;
@@ -875,6 +934,7 @@ var ExperimentApplet = /** @class */ (function () {
         this.startOverButton = document.getElementById("start-over-button-" + suffix);
         this.dayCounter = document.getElementById("day-counter-" + suffix);
         this.stateText = document.getElementById("state-description-" + suffix);
+        this.commonKnowledge = document.getElementById("common-knowledge-" + suffix);
         this.nextButton.addEventListener("click", function (event) {
             var currentPhase = _this.experiment.prisoners[0].state.phase;
             if (currentPhase == "final") {
@@ -907,6 +967,7 @@ var ExperimentApplet = /** @class */ (function () {
         var time = this.experiment.state.state == "A" ? "Day" : "Night";
         this.dayCounter.textContent = "".concat(time, " ").concat(this.experiment.numDays);
         this.stateText.textContent = this.experiment.currentState();
+        this.commonKnowledge.innerHTML = this.experiment.commonKnowledge();
     };
     return ExperimentApplet;
 }());

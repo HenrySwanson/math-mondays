@@ -56,6 +56,10 @@ class UpperBoundPhase implements IPrisonerState<State> {
 			return `Upper Bound Phase: Round ${this.inner.round}, Waning ${this.inner.day}/${limit}`;
 		}
 	}
+
+	commonKnowledge(): string[] {
+		return [];
+	}
 }
 
 // TODO there's gotta be a better way than defining boring constructors
@@ -162,6 +166,16 @@ class FlashLightsPhase implements IPrisonerState<State> {
 	description(): string {
 		return `Flash Day: I = {${this.context.currentSubset()}}`;
 	}
+
+	commonKnowledge(): string[] {
+		let facts = [`N ≤ ${this.context.upperBound}`, `${this.context.numPartitions} partitions`];
+		for (let i = 0; i < this.context.enumerationPosition; i++) {
+			// TODO should i track the set directly, instead of a boolean hitlist?
+			let tagged = this.context.intersectionHistory[i].flatMap((bool, i) => bool ? [i + 1] : []);
+			facts.push(`${this.context.enumerationOrder[i]} tagged ${tagged}`);
+		}
+		return facts;
+	}
 }
 
 
@@ -203,6 +217,18 @@ class RefinePartitionPhase1 implements IPrisonerState<State> {
 	description(): string {
 		return `(I = {${this.context.currentSubset()}}) Announcement: S_${this.subcontext.round} ∩ T? Step ${this.announcement.day}/${this.context.upperBound}`;
 	}
+
+	commonKnowledge(): string[] {
+		let facts = [`N ≤ ${this.context.upperBound}`, `${this.context.numPartitions} partitions`];
+		for (let i = 0; i < this.context.enumerationPosition; i++) {
+			// TODO should i track the set directly, instead of a boolean hitlist?
+			let tagged = this.context.intersectionHistory[i].flatMap((bool, i) => bool ? [i] : []);
+			facts.push(`{${this.context.enumerationOrder[i]}} tagged {${tagged}}`);
+		}
+		let tagged = this.subcontext.intersected.flatMap((bool, i) => bool ? [i + 1] : []);
+		facts.push(`{${this.context.currentSubset()}} tagged {${tagged}, ...}`);
+		return facts;
+	}
 }
 
 class RefinePartitionPhase2 implements IPrisonerState<State> {
@@ -233,22 +259,25 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 			return new FlashLightsPhase(splitContext);
 		}
 
+		// Otherwise, mark whether this group was intersected
+		let newIntersected = this.subcontext.intersected.concat([this.previousAnnouncement]);
+
 		// Go to the next j, if possible
 		if (this.subcontext.round != this.context.numPartitions) {
 			let newSubcontext = {
 				wasFlashed: this.subcontext.wasFlashed,
 				round: this.subcontext.round + 1,
-				intersected: this.subcontext.intersected.concat([this.previousAnnouncement]),
+				intersected: newIntersected,
 			}
 			return RefinePartitionPhase1.start(this.context, newSubcontext);
 		}
 
 		// Otherwise, we've finished checking for this subset. Go to the next one.
-		let nextContext = this.context.bumpIndex(this.subcontext.intersected);
+		let nextContext = this.context.bumpIndex(newIntersected);
 		if (nextContext !== null) {
 			return new FlashLightsPhase(nextContext);
 		} else {
-			return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory);
+			return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory.concat([newIntersected]));
 		}
 	}
 
@@ -258,6 +287,18 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 
 	description(): string {
 		return `(I = {${this.context.currentSubset()}}) Announcement: S_${this.subcontext.round} \\ T? Step ${this.announcement.day}/${this.context.upperBound}`;
+	}
+
+	commonKnowledge(): string[] {
+		let facts = [`N ≤ ${this.context.upperBound}`, `${this.context.numPartitions} partitions`];
+		for (let i = 0; i < this.context.enumerationPosition; i++) {
+			// TODO should i track the set directly, instead of a boolean hitlist?
+			let tagged = this.context.intersectionHistory[i].flatMap((bool, i) => bool ? [i + 1] : []);
+			facts.push(`{${this.context.enumerationOrder[i]}} tagged {${tagged}}`);
+		}
+		let tagged = this.subcontext.intersected.flatMap((bool, i) => bool ? [i + 1] : []);
+		facts.push(`{${this.context.currentSubset()}} tagged {${tagged}, ...}`);
+		return facts;
 	}
 }
 
@@ -284,6 +325,10 @@ class FinalState implements IPrisonerState<State> {
 
 	description(): string {
 		return `Puzzle Complete`
+	}
+
+	commonKnowledge(): string[] {
+		return ["TODO FILL THIS OUT DUMMY"]
 	}
 }
 

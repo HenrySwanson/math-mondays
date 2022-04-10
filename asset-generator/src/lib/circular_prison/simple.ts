@@ -55,6 +55,10 @@ class UpperBoundPhase implements IPrisonerState<State> {
 			return `Upper Bound Phase: Round ${this.inner.round}, Waning ${this.inner.day}/${limit}`;
 		}
 	}
+
+	commonKnowledge(): string[] {
+		return [];
+	}
 }
 
 type NumberingPhaseContext = {
@@ -104,6 +108,10 @@ class AnyoneUnnumberedPhase implements IPrisonerState<State> {
 	description(): string {
 		return `Announcement: Anyone Unnumbered? Step ${this.announcement.day}/${this.context.upperBound}`;
 	}
+
+	commonKnowledge(): string[] {
+		return [`N ≤ ${this.context.upperBound}`, `${this.context.numNumbered} prisoners numbered`];
+	}
 }
 
 class FinalState implements IPrisonerState<State> {
@@ -125,6 +133,10 @@ class FinalState implements IPrisonerState<State> {
 
 	description(): string {
 		return `Puzzle Complete`;
+	}
+
+	commonKnowledge(): string[] {
+		return [`N = ${this.answer}`];
 	}
 }
 
@@ -149,6 +161,10 @@ class CandidateSelectionPhase implements IPrisonerState<State> {
 
 	description(): string {
 		return `Numbered Prisoners Flip Coin`;
+	}
+
+	commonKnowledge(): string[] {
+		return [`N ≤ ${this.context.upperBound}`, `${this.context.numNumbered} prisoners numbered`];
 	}
 }
 
@@ -204,6 +220,10 @@ class CandidateReportingPhase implements IPrisonerState<State> {
 	description(): string {
 		return `Announcement: Results of ${this.round}'s flip. Step ${this.announcement.day}/${this.context.upperBound}`;
 	}
+
+	commonKnowledge(): string[] {
+		return [`N ≤ ${this.context.upperBound}`, `${this.context.numNumbered} prisoners numbered`, `${this.numHeads} heads flipped (so far)`];
+	}
 }
 
 class CandidateAnnouncementPhase implements IPrisonerState<State> {
@@ -253,6 +273,10 @@ class CandidateAnnouncementPhase implements IPrisonerState<State> {
 
 	description(): string {
 		return `Announcement: Unnumbered Candidate? Step ${this.announcement.day}/${this.context.upperBound}`;
+	}
+
+	commonKnowledge(): string[] {
+		return [`N ≤ ${this.context.upperBound}`, `${this.context.numNumbered} prisoners numbered`, `${this.numHeads} heads flipped`];
 	}
 }
 

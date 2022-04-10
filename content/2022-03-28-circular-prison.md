@@ -102,12 +102,11 @@ The prisoners are named $A$ through $E$, but this is just so that you can track 
   </div>
 </div>
 
-<div>
-<span id="state-description-1"></span>
-<span id="common-knowledge-1" style="float:right;"></span>
-</div>
+<div><span id="state-description-1"></span></div>
 
 <div id="prison-interactive-1" style="border-style: solid;border-width: 3px;border-radius: 5px;background-color: #fff"></div>
+
+<div><span id="common-knowledge-1"></span></div>
 
 # Solution by Linear Algebra
 
@@ -176,12 +175,11 @@ TODO: get this working.
   </div>
 </div>
 
-<div>
-<span id="state-description-2"></span>
-<span id="common-knowledge-2" style="float:right;"></span>
-</div>
+<div><span id="state-description-2"></span></div>
 
 <div id="prison-interactive-2" style="border-style: solid;border-width: 3px;border-radius: 5px;background-color: #fff"></div>
+
+<div><span id="common-knowledge-2"></span></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.1/svg.js"></script>
 <script src="/js/circular_prison.js"></script>
