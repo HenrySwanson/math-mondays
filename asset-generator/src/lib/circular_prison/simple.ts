@@ -23,11 +23,8 @@ export function startState(captain: boolean): State {
 
 class UpperBoundPhase implements IPrisonerState<State> {
 	phase: "upper-bound" = "upper-bound";
-	inner: WaxingPhase | WaningPhase;
 
-	constructor(inner: WaxingPhase | WaningPhase) {
-		this.inner = inner;
-	}
+	constructor(public inner: WaxingPhase | WaningPhase) { }
 
 	static start(captain: boolean) {
 		return new UpperBoundPhase(new WaxingPhase(captain, 1, 1, captain));
@@ -70,13 +67,7 @@ type NumberingPhaseContext = {
 class AnyoneUnnumberedPhase implements IPrisonerState<State> {
 	phase: "unnumbered-announce" = "unnumbered-announce";
 
-	context: NumberingPhaseContext;
-	announcement: Announcement;
-
-	constructor(context: NumberingPhaseContext, announcement: Announcement) {
-		this.context = context;
-		this.announcement = announcement;
-	}
+	constructor(public context: NumberingPhaseContext, public announcement: Announcement) { }
 
 	static start(context: NumberingPhaseContext): AnyoneUnnumberedPhase {
 		let a = new Announcement(context.myNumber === null, context.upperBound, 1);
@@ -117,11 +108,7 @@ class AnyoneUnnumberedPhase implements IPrisonerState<State> {
 class FinalState implements IPrisonerState<State> {
 	phase: "final" = "final";
 
-	answer: number;
-
-	constructor(answer: number) {
-		this.answer = answer;
-	}
+	constructor(public answer: number) { }
 
 	next(t: boolean): State {
 		return this;
@@ -143,13 +130,7 @@ class FinalState implements IPrisonerState<State> {
 class CandidateSelectionPhase implements IPrisonerState<State> {
 	phase: "coin-flip" = "coin-flip";
 
-	context: NumberingPhaseContext;
-	coinFlip: boolean;
-
-	constructor(context: NumberingPhaseContext, coinFlip: boolean) {
-		this.context = context;
-		this.coinFlip = coinFlip;
-	}
+	constructor(public context: NumberingPhaseContext, public coinFlip: boolean) { }
 
 	next(t: boolean): State {
 		return CandidateReportingPhase.start(this.context, this.coinFlip, t);
@@ -171,21 +152,13 @@ class CandidateSelectionPhase implements IPrisonerState<State> {
 class CandidateReportingPhase implements IPrisonerState<State> {
 	phase: "coin-announce" = "coin-announce";
 
-	context: NumberingPhaseContext;
-	coinFlip: boolean;
-	isCandidate: boolean;
-	numHeads: number;
-	round: number;
-	announcement: Announcement;
-
-	constructor(context: NumberingPhaseContext, coinFlip: boolean, isCandidate: boolean, numHeads: number, round: number, announcement: Announcement) {
-		this.context = context;
-		this.coinFlip = coinFlip;
-		this.isCandidate = isCandidate;
-		this.numHeads = numHeads;
-		this.round = round;
-		this.announcement = announcement;
-	}
+	constructor(
+		public context: NumberingPhaseContext,
+		public coinFlip: boolean,
+		public isCandidate: boolean,
+		public numHeads: number,
+		public round: number,
+		public announcement: Announcement) { }
 
 	static start(context: NumberingPhaseContext, coinFlip: boolean, isCandidate: boolean): CandidateReportingPhase {
 		return CandidateReportingPhase.startOfRound(context, coinFlip, isCandidate, 0, 1);
@@ -229,17 +202,11 @@ class CandidateReportingPhase implements IPrisonerState<State> {
 class CandidateAnnouncementPhase implements IPrisonerState<State> {
 	phase: "candidate-announce" = "candidate-announce";
 
-	context: NumberingPhaseContext;
-	isCandidate: boolean;
-	numHeads: number;
-	announcement: Announcement;
-
-	constructor(context: NumberingPhaseContext, isCandidate: boolean, numHeads: number, announcement: Announcement) {
-		this.context = context;
-		this.isCandidate = isCandidate;
-		this.numHeads = numHeads;
-		this.announcement = announcement;
-	}
+	constructor(
+		public context: NumberingPhaseContext,
+		public isCandidate: boolean,
+		public numHeads: number,
+		public announcement: Announcement) { }
 
 	static start(context: NumberingPhaseContext, isCandidate: boolean, numHeads: number): CandidateAnnouncementPhase {
 		let a = new Announcement(context.myNumber === null && isCandidate, context.upperBound, 1);

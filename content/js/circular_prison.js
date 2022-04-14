@@ -124,8 +124,8 @@ function startState(captain) {
 exports.startState = startState;
 var UpperBoundPhase = /** @class */ (function () {
     function UpperBoundPhase(inner) {
-        this.phase = "upper-bound";
         this.inner = inner;
+        this.phase = "upper-bound";
     }
     UpperBoundPhase.start = function (captain) {
         return new UpperBoundPhase(new common_1.WaxingPhase(captain, 1, 1, captain));
@@ -234,8 +234,8 @@ var PartitionSubcontext = /** @class */ (function () {
 }());
 var FlashLightsPhase = /** @class */ (function () {
     function FlashLightsPhase(context) {
-        this.phase = "flash";
         this.context = context;
+        this.phase = "flash";
     }
     FlashLightsPhase.prototype.next = function (t) {
         var subcontext = new PartitionSubcontext(this.context.numPartitions, t, 1, []);
@@ -258,10 +258,10 @@ var FlashLightsPhase = /** @class */ (function () {
 }());
 var RefinePartitionPhase1 = /** @class */ (function () {
     function RefinePartitionPhase1(context, subcontext, announcement) {
-        this.phase = "refine-1";
         this.context = context;
         this.subcontext = subcontext;
         this.announcement = announcement;
+        this.phase = "refine-1";
     }
     RefinePartitionPhase1.start = function (context, subcontext) {
         // Announce if you're in S_j and T
@@ -296,11 +296,11 @@ var RefinePartitionPhase1 = /** @class */ (function () {
 }());
 var RefinePartitionPhase2 = /** @class */ (function () {
     function RefinePartitionPhase2(context, subcontext, previousAnnouncement, announcement) {
-        this.phase = "refine-2";
         this.context = context;
         this.subcontext = subcontext;
         this.previousAnnouncement = previousAnnouncement;
         this.announcement = announcement;
+        this.phase = "refine-2";
     }
     RefinePartitionPhase2.prototype.next = function (t) {
         var x = this.announcement.next(t);
@@ -345,10 +345,10 @@ var RefinePartitionPhase2 = /** @class */ (function () {
 }());
 var FinalState = /** @class */ (function () {
     function FinalState(numPartitions, enumerationOrder, intersectionHistory) {
-        this.phase = "final";
         this.numPartitions = numPartitions;
         this.enumerationOrder = enumerationOrder;
         this.intersectionHistory = intersectionHistory;
+        this.phase = "final";
     }
     FinalState.prototype.next = function (t) {
         return this;
@@ -610,8 +610,8 @@ function startState(captain) {
 exports.startState = startState;
 var UpperBoundPhase = /** @class */ (function () {
     function UpperBoundPhase(inner) {
-        this.phase = "upper-bound";
         this.inner = inner;
+        this.phase = "upper-bound";
     }
     UpperBoundPhase.start = function (captain) {
         return new UpperBoundPhase(new common_1.WaxingPhase(captain, 1, 1, captain));
@@ -643,9 +643,9 @@ var UpperBoundPhase = /** @class */ (function () {
 }());
 var AnyoneUnnumberedPhase = /** @class */ (function () {
     function AnyoneUnnumberedPhase(context, announcement) {
-        this.phase = "unnumbered-announce";
         this.context = context;
         this.announcement = announcement;
+        this.phase = "unnumbered-announce";
     }
     AnyoneUnnumberedPhase.start = function (context) {
         var a = new common_1.Announcement(context.myNumber === null, context.upperBound, 1);
@@ -681,8 +681,8 @@ var AnyoneUnnumberedPhase = /** @class */ (function () {
 }());
 var FinalState = /** @class */ (function () {
     function FinalState(answer) {
-        this.phase = "final";
         this.answer = answer;
+        this.phase = "final";
     }
     FinalState.prototype.next = function (t) {
         return this;
@@ -700,9 +700,9 @@ var FinalState = /** @class */ (function () {
 }());
 var CandidateSelectionPhase = /** @class */ (function () {
     function CandidateSelectionPhase(context, coinFlip) {
-        this.phase = "coin-flip";
         this.context = context;
         this.coinFlip = coinFlip;
+        this.phase = "coin-flip";
     }
     CandidateSelectionPhase.prototype.next = function (t) {
         return CandidateReportingPhase.start(this.context, this.coinFlip, t);
@@ -720,13 +720,13 @@ var CandidateSelectionPhase = /** @class */ (function () {
 }());
 var CandidateReportingPhase = /** @class */ (function () {
     function CandidateReportingPhase(context, coinFlip, isCandidate, numHeads, round, announcement) {
-        this.phase = "coin-announce";
         this.context = context;
         this.coinFlip = coinFlip;
         this.isCandidate = isCandidate;
         this.numHeads = numHeads;
         this.round = round;
         this.announcement = announcement;
+        this.phase = "coin-announce";
     }
     CandidateReportingPhase.start = function (context, coinFlip, isCandidate) {
         return CandidateReportingPhase.startOfRound(context, coinFlip, isCandidate, 0, 1);
@@ -763,11 +763,11 @@ var CandidateReportingPhase = /** @class */ (function () {
 }());
 var CandidateAnnouncementPhase = /** @class */ (function () {
     function CandidateAnnouncementPhase(context, isCandidate, numHeads, announcement) {
-        this.phase = "candidate-announce";
         this.context = context;
         this.isCandidate = isCandidate;
         this.numHeads = numHeads;
         this.announcement = announcement;
+        this.phase = "candidate-announce";
     }
     CandidateAnnouncementPhase.start = function (context, isCandidate, numHeads) {
         var a = new common_1.Announcement(context.myNumber === null && isCandidate, context.upperBound, 1);

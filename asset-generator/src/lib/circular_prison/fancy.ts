@@ -24,11 +24,8 @@ export function startState(captain: boolean): State {
 
 class UpperBoundPhase implements IPrisonerState<State> {
 	phase: "upper-bound" = "upper-bound";
-	inner: WaxingPhase | WaningPhase;
 
-	constructor(inner: WaxingPhase | WaningPhase) {
-		this.inner = inner;
-	}
+	constructor(public inner: WaxingPhase | WaningPhase) { }
 
 	static start(captain: boolean) {
 		return new UpperBoundPhase(new WaxingPhase(captain, 1, 1, captain));
@@ -65,27 +62,13 @@ class UpperBoundPhase implements IPrisonerState<State> {
 
 // TODO there's gotta be a better way than defining boring constructors
 class PartitionContext implements Subprocedure<number[], PartitionContext, [number[][], number[][]]> {
-	upperBound: number;
-	numPartitions: number;
-	myPartition: number;
-	enumerationOrder: number[][];
-	enumerationPosition: number;
-	intersectionHistory: number[][];
 
-	constructor(upperBound: number,
-		numPartitions: number,
-		myPartition: number,
-		enumerationOrder: number[][],
-		enumerationPosition: number,
-		intersectionHistory: number[][]
-	) {
-		this.upperBound = upperBound;
-		this.numPartitions = numPartitions;
-		this.myPartition = myPartition;
-		this.enumerationOrder = enumerationOrder;
-		this.enumerationPosition = enumerationPosition;
-		this.intersectionHistory = intersectionHistory;
-	}
+	constructor(public upperBound: number,
+		public numPartitions: number,
+		public myPartition: number,
+		public enumerationOrder: number[][],
+		public enumerationPosition: number,
+		public intersectionHistory: number[][]) { }
 
 	static createNew(upperBound: number, numPartitions: number, myPartition: number): PartitionContext {
 		// Create a list of all subsets, except the trivial ones
@@ -163,17 +146,12 @@ class PartitionContext implements Subprocedure<number[], PartitionContext, [numb
 }
 
 class PartitionSubcontext implements Subprocedure<boolean, PartitionSubcontext, number[]> {
-	numPartitions: number;
-	wasFlashed: boolean;
-	round: number;
-	intersected: number[];
 
-	constructor(numPartitions: number, wasFlashed: boolean, round: number, intersected: number[]) {
-		this.numPartitions = numPartitions;
-		this.wasFlashed = wasFlashed;
-		this.round = round;
-		this.intersected = intersected;
-	}
+	constructor(
+		public numPartitions: number,
+		public wasFlashed: boolean,
+		public round: number,
+		public intersected: number[]) { }
 
 	next(t: boolean): SubprocedureResult<PartitionSubcontext, number[]> {
 		let x = this.intersected.concat(t ? [this.round] : []);
@@ -189,11 +167,7 @@ class PartitionSubcontext implements Subprocedure<boolean, PartitionSubcontext, 
 class FlashLightsPhase implements IPrisonerState<State> {
 	phase: "flash" = "flash";
 
-	context: PartitionContext;
-
-	constructor(context: PartitionContext) {
-		this.context = context;
-	}
+	constructor(public context: PartitionContext) { }
 
 	next(t: boolean): State {
 		let subcontext = new PartitionSubcontext(this.context.numPartitions, t, 1, []);
@@ -221,15 +195,10 @@ class FlashLightsPhase implements IPrisonerState<State> {
 class RefinePartitionPhase1 implements IPrisonerState<State> {
 	phase: "refine-1" = "refine-1";
 
-	context: PartitionContext;
-	subcontext: PartitionSubcontext;
-	announcement: Announcement;
-
-	constructor(context: PartitionContext, subcontext: PartitionSubcontext, announcement: Announcement) {
-		this.context = context;
-		this.subcontext = subcontext;
-		this.announcement = announcement;
-	}
+	constructor(
+		public context: PartitionContext,
+		public subcontext: PartitionSubcontext,
+		public announcement: Announcement) { }
 
 	static start(context: PartitionContext, subcontext: PartitionSubcontext): RefinePartitionPhase1 {
 		// Announce if you're in S_j and T
@@ -270,17 +239,11 @@ class RefinePartitionPhase1 implements IPrisonerState<State> {
 class RefinePartitionPhase2 implements IPrisonerState<State> {
 	phase: "refine-2" = "refine-2";
 
-	context: PartitionContext;
-	subcontext: PartitionSubcontext;
-	previousAnnouncement: boolean;
-	announcement: Announcement;
-
-	constructor(context: PartitionContext, subcontext: PartitionSubcontext, previousAnnouncement: boolean, announcement: Announcement) {
-		this.context = context;
-		this.subcontext = subcontext;
-		this.previousAnnouncement = previousAnnouncement;
-		this.announcement = announcement;
-	}
+	constructor(
+		public context: PartitionContext,
+		public subcontext: PartitionSubcontext,
+		public previousAnnouncement: boolean,
+		public announcement: Announcement) { }
 
 	next(t: boolean): State {
 		let x = this.announcement.next(t);
@@ -333,15 +296,10 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 class FinalState implements IPrisonerState<State> {
 	phase: "final" = "final";
 
-	numPartitions: number;
-	enumerationOrder: number[][];
-	intersectionHistory: number[][];
-
-	constructor(numPartitions: number, enumerationOrder: number[][], intersectionHistory: number[][]) {
-		this.numPartitions = numPartitions;
-		this.enumerationOrder = enumerationOrder;
-		this.intersectionHistory = intersectionHistory;
-	}
+	constructor(
+		public numPartitions: number,
+		public enumerationOrder: number[][],
+		public intersectionHistory: number[][]) { }
 
 	next(t: boolean): State {
 		return this;
