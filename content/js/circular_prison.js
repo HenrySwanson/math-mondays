@@ -107,6 +107,7 @@ var __values = (this && this.__values) || function(o) {
 };
 exports.__esModule = true;
 exports.Graphics = exports.startState = void 0;
+var matrix_1 = __webpack_require__(825);
 var common_1 = __webpack_require__(353);
 var ACTIVE_COLOR = "#ffff00";
 var WANING_COLOR = "#ffcc00";
@@ -475,12 +476,10 @@ exports.Graphics = Graphics;
 // If there's a unique solution, returns it, otherwise returns null
 function trySolveEquations(numVariables, lhss, rhss) {
     // Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
-    var numRows = lhss.length + 1; // +1 because x_1 = 1
-    var numCols = numVariables + 1;
     var rows = lhss.map(function (lhs, i) {
         var e_1, _a, e_2, _b;
         var rhs = rhss[i];
-        var row = Array(numCols).fill(0);
+        var row = Array(numVariables + 1).fill(0);
         try {
             for (var lhs_1 = __values(lhs), lhs_1_1 = lhs_1.next(); !lhs_1_1.done; lhs_1_1 = lhs_1.next()) {
                 var x = lhs_1_1.value;
@@ -510,55 +509,13 @@ function trySolveEquations(numVariables, lhss, rhss) {
         return row;
     });
     // This row encodes the fact that x_1 = 1
-    var lastRow = Array(numCols).fill(0);
-    lastRow[0] = lastRow[numCols - 1] = 1;
+    var lastRow = Array(numVariables + 1).fill(0);
+    lastRow[0] = lastRow[numVariables] = 1;
     rows.push(lastRow);
-    // TODO: shunt this into some stdlib
-    function range(a, b) {
-        if (b < a) {
-            return [];
-        }
-        return Array(b - a).fill(0).map(function (_, i) { return i + a; });
-    }
-    function max_by(array, key) {
-        return array.reduce(function (a, b) { return key(a) >= key(b) ? a : b; });
-    }
-    // Now put the matrix in RREF form
-    var pivotRow = 0;
-    var pivotColumn = 0;
-    while (pivotRow < numRows && pivotColumn < numCols) {
-        // Find the pivot for this column
-        var _a = __read(max_by(range(pivotRow, numRows).map(function (i) { return [rows[i][pivotColumn], i]; }), function (tup) { return Math.abs(tup[0]); }), 2), valMax = _a[0], iMax = _a[1];
-        if (valMax == 0) {
-            // No pivot in this column
-            pivotColumn += 1;
-        }
-        else {
-            // Swap this row into the pivot row
-            var tmp = rows[pivotRow];
-            rows[pivotRow] = rows[iMax];
-            rows[iMax] = tmp;
-            // Normalize this row
-            var mul = rows[pivotRow][pivotColumn];
-            for (var j = 0; j < numCols; j++) {
-                rows[pivotRow][j] /= mul;
-            }
-            // For all rows other than pivot, clear the column
-            for (var i = 0; i < rows.length; i++) {
-                if (i == pivotRow) {
-                    continue;
-                }
-                var mul_1 = rows[i][pivotColumn];
-                for (var j = 0; j < numCols; j++) {
-                    rows[i][j] -= rows[pivotRow][j] * mul_1;
-                }
-            }
-            pivotRow += 1;
-            pivotColumn += 1;
-        }
-    }
+    var m = matrix_1.Matrix.fromRows(rows);
+    m.rref();
     // Detect whether we have a solution.
-    if (numRows < numVariables) {
+    if (m.nRows < numVariables) {
         return null;
     }
     // Check if the upper-left looks like an identity matrix.
@@ -573,15 +530,15 @@ function trySolveEquations(numVariables, lhss, rhss) {
         }
     }
     // Sanity check, all other rows should be all zero
-    for (var i = numVariables; i < numRows; i++) {
-        for (var j = 0; j < numCols; j++) {
+    for (var i = numVariables; i < m.nRows; i++) {
+        for (var j = 0; j < m.nCols; j++) {
             if (rows[i][j] != 0) {
                 throw "RREF failure!" + rows.toString();
             }
         }
     }
     // Great! Now we just copy off the last column
-    return range(0, numVariables).map(function (i) { return rows[i][numCols - 1]; });
+    return m.getCol(m.nCols - 1).slice(0, numVariables);
 }
 //# sourceMappingURL=fancy.js.map
 
@@ -924,6 +881,115 @@ var Graphics = /** @class */ (function () {
 }());
 exports.Graphics = Graphics;
 //# sourceMappingURL=simple.js.map
+
+/***/ }),
+
+/***/ 857:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+exports.__esModule = true;
+exports.max_by = exports.range = void 0;
+function range(a, b) {
+    if (b < a) {
+        return [];
+    }
+    return Array(b - a).fill(0).map(function (_, i) { return i + a; });
+}
+exports.range = range;
+function max_by(array, key) {
+    return array.reduce(function (a, b) { return key(a) >= key(b) ? a : b; });
+}
+exports.max_by = max_by;
+//# sourceMappingURL=iter.js.map
+
+/***/ }),
+
+/***/ 825:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+exports.__esModule = true;
+exports.Matrix = void 0;
+var iter_1 = __webpack_require__(857);
+var Matrix = /** @class */ (function () {
+    function Matrix(rows, nRows, nCols) {
+        this.rows = rows;
+        this.nRows = nRows;
+        this.nCols = nCols;
+    }
+    Matrix.fromRows = function (rows) {
+        return new Matrix(rows, rows.length, rows[0].length);
+    };
+    Matrix.prototype.getRow = function (n) {
+        return this.rows[n].slice();
+    };
+    Matrix.prototype.getCol = function (n) {
+        return this.rows.map(function (r) { return r[n]; });
+    };
+    Matrix.prototype.swapRows = function (n, m) {
+        var tmp = this.rows[n];
+        this.rows[n] = this.rows[m];
+        this.rows[m] = tmp;
+    };
+    Matrix.prototype.scaleRow = function (n, a) {
+        for (var j = 0; j < this.nCols; j++) {
+            this.rows[n][j] *= a;
+        }
+    };
+    Matrix.prototype.addmulRow = function (n, m, a) {
+        for (var j = 0; j < this.nCols; j++) {
+            this.rows[n][j] += this.rows[m][j] * a;
+        }
+    };
+    Matrix.prototype.rref = function () {
+        var _this = this;
+        var pivotRow = 0;
+        var pivotColumn = 0;
+        while (pivotRow < this.nRows && pivotColumn < this.nCols) {
+            // Find the pivot for this column
+            var _a = __read((0, iter_1.max_by)((0, iter_1.range)(pivotRow, this.nRows).map(function (i) { return [_this.rows[i][pivotColumn], i]; }), function (tup) { return Math.abs(tup[0]); }), 2), valMax = _a[0], iMax = _a[1];
+            if (valMax == 0) {
+                // No pivot in this column
+                pivotColumn += 1;
+            }
+            else {
+                // Swap this row into the pivot row
+                this.swapRows(pivotRow, iMax);
+                // Normalize this row
+                this.scaleRow(pivotRow, 1 / this.rows[pivotRow][pivotColumn]);
+                // For all rows other than pivot, clear the column
+                for (var i = 0; i < this.nRows; i++) {
+                    if (i == pivotRow) {
+                        continue;
+                    }
+                    this.addmulRow(i, pivotRow, -this.rows[i][pivotColumn]);
+                }
+                pivotRow += 1;
+                pivotColumn += 1;
+            }
+        }
+    };
+    return Matrix;
+}());
+exports.Matrix = Matrix;
+//# sourceMappingURL=matrix.js.map
 
 /***/ }),
 

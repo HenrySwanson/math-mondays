@@ -1,6 +1,7 @@
 "use strict";
 
 import { Subprocedure, SubprocedureResult } from "../fsm";
+import { Matrix } from "../matrix";
 import { IPrisonerState, Announcement, WaxingPhase, WaningPhase } from "./common";
 
 const ACTIVE_COLOR = "#ffff00";
@@ -446,12 +447,9 @@ export class Graphics {
 function trySolveEquations(numVariables: number, lhss: number[][], rhss: number[][]): number[] | null {
 	// Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
 
-	let numRows = lhss.length + 1;  // +1 because x_1 = 1
-	let numCols = numVariables + 1;
-
 	let rows = lhss.map((lhs, i) => {
 		let rhs = rhss[i];
-		let row: number[] = Array(numCols).fill(0);
+		let row: number[] = Array(numVariables + 1).fill(0);
 		for (let x of lhs) {
 			row[x - 1] += 1;
 		}
@@ -462,65 +460,15 @@ function trySolveEquations(numVariables: number, lhss: number[][], rhss: number[
 	});
 
 	// This row encodes the fact that x_1 = 1
-	let lastRow = Array(numCols).fill(0);
-	lastRow[0] = lastRow[numCols - 1] = 1;
+	let lastRow = Array(numVariables + 1).fill(0);
+	lastRow[0] = lastRow[numVariables] = 1;
 	rows.push(lastRow);
 
-	// TODO: shunt this into some stdlib
-	function range(a: number, b: number) {
-		if (b < a) {
-			return [];
-		}
-		return Array(b - a).fill(0).map((_, i) => i + a);
-	}
-
-	function max_by<T>(array: T[], key: (t: T) => number): T {
-		return array.reduce((a, b) => key(a) >= key(b) ? a : b);
-	}
-
-	// Now put the matrix in RREF form
-	let pivotRow = 0;
-	let pivotColumn = 0;
-	while (pivotRow < numRows && pivotColumn < numCols) {
-		// Find the pivot for this column
-		let [valMax, iMax] = max_by(
-			range(pivotRow, numRows).map(i => [rows[i][pivotColumn], i]),
-			tup => Math.abs(tup[0])
-		);
-
-		if (valMax == 0) {
-			// No pivot in this column
-			pivotColumn += 1;
-		} else {
-			// Swap this row into the pivot row
-			let tmp = rows[pivotRow];
-			rows[pivotRow] = rows[iMax];
-			rows[iMax] = tmp;
-
-			// Normalize this row
-			let mul = rows[pivotRow][pivotColumn];
-			for (let j = 0; j < numCols; j++) {
-				rows[pivotRow][j] /= mul;
-			}
-
-			// For all rows other than pivot, clear the column
-			for (let i = 0; i < rows.length; i++) {
-				if (i == pivotRow) {
-					continue;
-				}
-
-				let mul = rows[i][pivotColumn];
-				for (let j = 0; j < numCols; j++) {
-					rows[i][j] -= rows[pivotRow][j] * mul;
-				}
-			}
-			pivotRow += 1;
-			pivotColumn += 1;
-		}
-	}
+	let m = Matrix.fromRows(rows);
+	m.rref();
 
 	// Detect whether we have a solution.
-	if (numRows < numVariables) {
+	if (m.nRows < numVariables) {
 		return null;
 	}
 
@@ -537,8 +485,8 @@ function trySolveEquations(numVariables: number, lhss: number[][], rhss: number[
 	}
 
 	// Sanity check, all other rows should be all zero
-	for (let i = numVariables; i < numRows; i++) {
-		for (let j = 0; j < numCols; j++) {
+	for (let i = numVariables; i < m.nRows; i++) {
+		for (let j = 0; j < m.nCols; j++) {
 			if (rows[i][j] != 0) {
 				throw "RREF failure!" + rows.toString();
 			}
@@ -546,5 +494,5 @@ function trySolveEquations(numVariables: number, lhss: number[][], rhss: number[
 	}
 
 	// Great! Now we just copy off the last column
-	return range(0, numVariables).map(i => rows[i][numCols - 1]);
+	return m.getCol(m.nCols - 1).slice(0, numVariables);
 }
