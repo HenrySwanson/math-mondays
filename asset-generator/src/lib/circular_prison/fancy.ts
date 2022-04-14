@@ -1,6 +1,7 @@
 "use strict";
 
 import { Subprocedure, SubprocedureResult } from "../fsm";
+import { zip } from "../iter";
 import { Matrix } from "../matrix";
 import { IPrisonerState, Announcement, WaxingPhase, WaningPhase } from "./common";
 
@@ -61,8 +62,12 @@ class UpperBoundPhase implements IPrisonerState<State> {
 	}
 }
 
-// TODO there's gotta be a better way than defining boring constructors
-class PartitionContext implements Subprocedure<number[], PartitionContext, [number[][], number[][]]> {
+type Equation = {
+	lhs: number[],
+	rhs: number[],
+}
+
+class PartitionContext implements Subprocedure<number[], PartitionContext, Equation[]> {
 
 	constructor(public upperBound: number,
 		public numPartitions: number,
@@ -92,7 +97,7 @@ class PartitionContext implements Subprocedure<number[], PartitionContext, [numb
 		)
 	}
 
-	next(t: number[]): SubprocedureResult<PartitionContext, [number[][], number[][]]> {
+	next(t: number[]): SubprocedureResult<PartitionContext, Equation[]> {
 		if (this.enumerationPosition == this.enumerationOrder.length) {
 			throw "Internal error, should not have called PartitionContext.next() that many times";
 		}
@@ -109,13 +114,14 @@ class PartitionContext implements Subprocedure<number[], PartitionContext, [numb
 		copy.enumerationPosition += 1;
 
 		// Check if we can solve the equation right now
-		let lhs = copy.enumerationOrder.slice(0, copy.enumerationPosition);
-		let rhs = copy.intersectionHistory;
-		let result = trySolveEquations(copy.numPartitions, lhs, rhs);
+		let equations = zip(copy.enumerationOrder, copy.intersectionHistory).map(
+			([x, y]) => ({ lhs: x, rhs: y })
+		);
+		let result = trySolveEquations(copy.numPartitions, equations);
 		if (result == null) {
 			return { done: false, value: copy };
 		} else {
-			return { done: true, value: [lhs, rhs] };
+			return { done: true, value: equations };
 		}
 	}
 
@@ -272,8 +278,7 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 		}
 
 		// Otherwise, we're done!
-		let [lhs, rhs] = result2.value;
-		return new FinalState(this.context.numPartitions, lhs, rhs);
+		return new FinalState(this.context.numPartitions, result2.value);
 	}
 
 	willFlip(): boolean {
@@ -299,8 +304,7 @@ class FinalState implements IPrisonerState<State> {
 
 	constructor(
 		public numPartitions: number,
-		public enumerationOrder: number[][],
-		public intersectionHistory: number[][]) { }
+		public equations: Equation[]) { }
 
 	next(t: boolean): State {
 		return this;
@@ -315,16 +319,15 @@ class FinalState implements IPrisonerState<State> {
 	}
 
 	commonKnowledge(): string[] {
-		let facts = this.enumerationOrder.map((lhs, i) => {
-			let rhs = this.intersectionHistory[i];
-			let lhsStr = lhs.map(i => `x_${i}`).join(" + ");
-			let rhsStr = rhs.map(i => `x_${i}`).join(" + ");
+		let facts = this.equations.map(e => {
+			let lhsStr = e.lhs.map(i => `x_${i}`).join(" + ");
+			let rhsStr = e.rhs.map(i => `x_${i}`).join(" + ");
 			return `${lhsStr} = ${rhsStr}`;
 		});
 		facts.push("x_1 = 1");
 
 		// Now get the unique solution
-		let solution = trySolveEquations(this.numPartitions, this.enumerationOrder, this.intersectionHistory)!;
+		let solution = trySolveEquations(this.numPartitions, this.equations)!;
 		let solnStr = solution.map((x, i) => `x_${i + 1} = ${x}`).join(", ");
 		let total = solution.reduce((a, b) => a + b);
 		facts.push(`Unique solution is: ${solnStr}, for a total of ${total} prisoners`);
@@ -444,16 +447,15 @@ export class Graphics {
 }
 
 // If there's a unique solution, returns it, otherwise returns null
-function trySolveEquations(numVariables: number, lhss: number[][], rhss: number[][]): number[] | null {
+function trySolveEquations(numVariables: number, equations: Equation[]): number[] | null {
 	// Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
 
-	let rows = lhss.map((lhs, i) => {
-		let rhs = rhss[i];
+	let rows = equations.map(e => {
 		let row: number[] = Array(numVariables + 1).fill(0);
-		for (let x of lhs) {
+		for (let x of e.lhs) {
 			row[x - 1] += 1;
 		}
-		for (let x of rhs) {
+		for (let x of e.rhs) {
 			row[x - 1] -= 1;
 		}
 		return row;

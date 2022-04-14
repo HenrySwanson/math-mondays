@@ -107,6 +107,7 @@ var __values = (this && this.__values) || function(o) {
 };
 exports.__esModule = true;
 exports.Graphics = exports.startState = void 0;
+var iter_1 = __webpack_require__(857);
 var matrix_1 = __webpack_require__(825);
 var common_1 = __webpack_require__(353);
 var ACTIVE_COLOR = "#ffff00";
@@ -157,7 +158,6 @@ var UpperBoundPhase = /** @class */ (function () {
     };
     return UpperBoundPhase;
 }());
-// TODO there's gotta be a better way than defining boring constructors
 var PartitionContext = /** @class */ (function () {
     function PartitionContext(upperBound, numPartitions, myPartition, enumerationOrder, enumerationPosition, intersectionHistory) {
         this.upperBound = upperBound;
@@ -190,14 +190,16 @@ var PartitionContext = /** @class */ (function () {
         copy.intersectionHistory.push(t);
         copy.enumerationPosition += 1;
         // Check if we can solve the equation right now
-        var lhs = copy.enumerationOrder.slice(0, copy.enumerationPosition);
-        var rhs = copy.intersectionHistory;
-        var result = trySolveEquations(copy.numPartitions, lhs, rhs);
+        var equations = (0, iter_1.zip)(copy.enumerationOrder, copy.intersectionHistory).map(function (_a) {
+            var _b = __read(_a, 2), x = _b[0], y = _b[1];
+            return ({ lhs: x, rhs: y });
+        });
+        var result = trySolveEquations(copy.numPartitions, equations);
         if (result == null) {
             return { done: false, value: copy };
         }
         else {
-            return { done: true, value: [lhs, rhs] };
+            return { done: true, value: equations };
         }
     };
     PartitionContext.prototype.currentSubset = function () {
@@ -325,8 +327,7 @@ var RefinePartitionPhase2 = /** @class */ (function () {
             return new FlashLightsPhase(result2.value);
         }
         // Otherwise, we're done!
-        var _a = __read(result2.value, 2), lhs = _a[0], rhs = _a[1];
-        return new FinalState(this.context.numPartitions, lhs, rhs);
+        return new FinalState(this.context.numPartitions, result2.value);
     };
     RefinePartitionPhase2.prototype.willFlip = function () {
         return this.announcement.active;
@@ -345,10 +346,9 @@ var RefinePartitionPhase2 = /** @class */ (function () {
     return RefinePartitionPhase2;
 }());
 var FinalState = /** @class */ (function () {
-    function FinalState(numPartitions, enumerationOrder, intersectionHistory) {
+    function FinalState(numPartitions, equations) {
         this.numPartitions = numPartitions;
-        this.enumerationOrder = enumerationOrder;
-        this.intersectionHistory = intersectionHistory;
+        this.equations = equations;
         this.phase = "final";
     }
     FinalState.prototype.next = function (t) {
@@ -361,16 +361,14 @@ var FinalState = /** @class */ (function () {
         return "Puzzle Complete";
     };
     FinalState.prototype.commonKnowledge = function () {
-        var _this = this;
-        var facts = this.enumerationOrder.map(function (lhs, i) {
-            var rhs = _this.intersectionHistory[i];
-            var lhsStr = lhs.map(function (i) { return "x_".concat(i); }).join(" + ");
-            var rhsStr = rhs.map(function (i) { return "x_".concat(i); }).join(" + ");
+        var facts = this.equations.map(function (e) {
+            var lhsStr = e.lhs.map(function (i) { return "x_".concat(i); }).join(" + ");
+            var rhsStr = e.rhs.map(function (i) { return "x_".concat(i); }).join(" + ");
             return "".concat(lhsStr, " = ").concat(rhsStr);
         });
         facts.push("x_1 = 1");
         // Now get the unique solution
-        var solution = trySolveEquations(this.numPartitions, this.enumerationOrder, this.intersectionHistory);
+        var solution = trySolveEquations(this.numPartitions, this.equations);
         var solnStr = solution.map(function (x, i) { return "x_".concat(i + 1, " = ").concat(x); }).join(", ");
         var total = solution.reduce(function (a, b) { return a + b; });
         facts.push("Unique solution is: ".concat(solnStr, ", for a total of ").concat(total, " prisoners"));
@@ -474,35 +472,35 @@ var Graphics = /** @class */ (function () {
 }());
 exports.Graphics = Graphics;
 // If there's a unique solution, returns it, otherwise returns null
-function trySolveEquations(numVariables, lhss, rhss) {
+function trySolveEquations(numVariables, equations) {
     // Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
-    var rows = lhss.map(function (lhs, i) {
+    console.log(equations);
+    var rows = equations.map(function (e) {
         var e_1, _a, e_2, _b;
-        var rhs = rhss[i];
         var row = Array(numVariables + 1).fill(0);
         try {
-            for (var lhs_1 = __values(lhs), lhs_1_1 = lhs_1.next(); !lhs_1_1.done; lhs_1_1 = lhs_1.next()) {
-                var x = lhs_1_1.value;
+            for (var _c = __values(e.lhs), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var x = _d.value;
                 row[x - 1] += 1;
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (lhs_1_1 && !lhs_1_1.done && (_a = lhs_1["return"])) _a.call(lhs_1);
+                if (_d && !_d.done && (_a = _c["return"])) _a.call(_c);
             }
             finally { if (e_1) throw e_1.error; }
         }
         try {
-            for (var rhs_1 = __values(rhs), rhs_1_1 = rhs_1.next(); !rhs_1_1.done; rhs_1_1 = rhs_1.next()) {
-                var x = rhs_1_1.value;
+            for (var _e = __values(e.rhs), _f = _e.next(); !_f.done; _f = _e.next()) {
+                var x = _f.value;
                 row[x - 1] -= 1;
             }
         }
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
-                if (rhs_1_1 && !rhs_1_1.done && (_b = rhs_1["return"])) _b.call(rhs_1);
+                if (_f && !_f.done && (_b = _e["return"])) _b.call(_e);
             }
             finally { if (e_2) throw e_2.error; }
         }
@@ -889,7 +887,7 @@ exports.Graphics = Graphics;
 
 
 exports.__esModule = true;
-exports.max_by = exports.range = void 0;
+exports.zip = exports.max_by = exports.range = void 0;
 function range(a, b) {
     if (b < a) {
         return [];
@@ -901,6 +899,15 @@ function max_by(array, key) {
     return array.reduce(function (a, b) { return key(a) >= key(b) ? a : b; });
 }
 exports.max_by = max_by;
+function zip(ts, us) {
+    var len = Math.min(ts.length, us.length);
+    var out = [];
+    for (var i = 0; i < len; i++) {
+        out.push([ts[i], us[i]]);
+    }
+    return out;
+}
+exports.zip = zip;
 //# sourceMappingURL=iter.js.map
 
 /***/ }),
