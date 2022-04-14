@@ -1,5 +1,6 @@
 "use strict";
 
+import { Subprocedure, SubprocedureResult } from "../fsm";
 import { IPrisonerState, Announcement, WaxingPhase, WaningPhase } from "./common";
 
 const ACTIVE_COLOR = "#ffff00";
@@ -63,7 +64,7 @@ class UpperBoundPhase implements IPrisonerState<State> {
 }
 
 // TODO there's gotta be a better way than defining boring constructors
-class PartitionContext {
+class PartitionContext implements Subprocedure<number[], PartitionContext, [number[][], number[][]]> {
 	upperBound: number;
 	numPartitions: number;
 	myPartition: number;
@@ -107,6 +108,33 @@ class PartitionContext {
 		)
 	}
 
+	next(t: number[]): SubprocedureResult<PartitionContext, [number[][], number[][]]> {
+		if (this.enumerationPosition == this.enumerationOrder.length) {
+			throw "Internal error, should not have called PartitionContext.next() that many times";
+		}
+
+		// Add the new equation
+		let copy = new PartitionContext(
+			this.upperBound,
+			this.numPartitions,
+			this.myPartition,
+			this.enumerationOrder,
+			this.enumerationPosition,
+			this.intersectionHistory);
+		copy.intersectionHistory.push(t);
+		copy.enumerationPosition += 1;
+
+		// Check if we can solve the equation right now
+		let lhs = copy.enumerationOrder.slice(0, copy.enumerationPosition);
+		let rhs = copy.intersectionHistory;
+		let result = trySolveEquations(copy.numPartitions, lhs, rhs);
+		if (result == null) {
+			return { done: false, value: copy };
+		} else {
+			return { done: true, value: [lhs, rhs] };
+		}
+	}
+
 	currentSubset(): number[] {
 		return this.enumerationOrder[this.enumerationPosition];
 	}
@@ -134,12 +162,29 @@ class PartitionContext {
 	}
 }
 
-type PartitionSubcontext = {
+class PartitionSubcontext implements Subprocedure<boolean, PartitionSubcontext, number[]> {
+	numPartitions: number;
 	wasFlashed: boolean;
 	round: number;
 	intersected: number[];
-}
 
+	constructor(numPartitions: number, wasFlashed: boolean, round: number, intersected: number[]) {
+		this.numPartitions = numPartitions;
+		this.wasFlashed = wasFlashed;
+		this.round = round;
+		this.intersected = intersected;
+	}
+
+	next(t: boolean): SubprocedureResult<PartitionSubcontext, number[]> {
+		let x = this.intersected.concat(t ? [this.round] : []);
+
+		if (this.round != this.numPartitions) {
+			return { done: false, value: new PartitionSubcontext(this.numPartitions, this.wasFlashed, this.round + 1, x) };
+		}
+
+		return { done: true, value: x };
+	}
+}
 
 class FlashLightsPhase implements IPrisonerState<State> {
 	phase: "flash" = "flash";
@@ -151,11 +196,7 @@ class FlashLightsPhase implements IPrisonerState<State> {
 	}
 
 	next(t: boolean): State {
-		let subcontext = {
-			wasFlashed: t,
-			round: 1,
-			intersected: [],
-		}
+		let subcontext = new PartitionSubcontext(this.context.numPartitions, t, 1, []);
 		return RefinePartitionPhase1.start(this.context, subcontext);
 	}
 
@@ -254,38 +295,21 @@ class RefinePartitionPhase2 implements IPrisonerState<State> {
 			return new FlashLightsPhase(splitContext);
 		}
 
-		// Otherwise, mark whether this group was intersected
-		let newIntersected = this.subcontext.intersected.slice();
-		if (this.previousAnnouncement) {
-			newIntersected.push(this.subcontext.round);
+		// Check whether we're still working in the same round
+		let result = this.subcontext.next(this.previousAnnouncement);
+		if (!result.done) {
+			return RefinePartitionPhase1.start(this.context, result.value);
 		}
 
-		// Go to the next j, if possible
-		if (this.subcontext.round != this.context.numPartitions) {
-			let newSubcontext = {
-				wasFlashed: this.subcontext.wasFlashed,
-				round: this.subcontext.round + 1,
-				intersected: newIntersected,
-			}
-			return RefinePartitionPhase1.start(this.context, newSubcontext);
+		// Check whether we're done with the parent context too
+		let result2 = this.context.next(result.value);
+		if (!result2.done) {
+			return new FlashLightsPhase(result2.value);
 		}
 
-		// Otherwise, we've finished checking for this subset. Go to the next one.
-		let nextContext = this.context.bumpIndex(newIntersected);
-		if (nextContext !== null) {
-			// Hold up, what if we can solve this right now?
-			let lhs = nextContext.enumerationOrder.slice(0, nextContext.enumerationPosition);
-			let rhs = nextContext.intersectionHistory;
-			let result = trySolveEquations(nextContext.numPartitions, lhs, rhs);
-			if (result == null) {
-				return new FlashLightsPhase(nextContext);
-			} else {
-				return new FinalState(nextContext.numPartitions, lhs, rhs);
-			}
-		} else {
-			// Remember, gotta tack on the newIntersected. This is kinda clunky... :(
-			return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory.concat([newIntersected]));
-		}
+		// Otherwise, we're done!
+		let [lhs, rhs] = result2.value;
+		return new FinalState(this.context.numPartitions, lhs, rhs);
 	}
 
 	willFlip(): boolean {
@@ -339,10 +363,10 @@ class FinalState implements IPrisonerState<State> {
 			return `${lhsStr} = ${rhsStr}`;
 		});
 		facts.push("x_1 = 1");
-		
+
 		// Now get the unique solution
 		let solution = trySolveEquations(this.numPartitions, this.enumerationOrder, this.intersectionHistory)!;
-		let solnStr = solution.map((x, i) => `x_${i+1} = ${x}`).join(", ");
+		let solnStr = solution.map((x, i) => `x_${i + 1} = ${x}`).join(", ");
 		let total = solution.reduce((a, b) => a + b);
 		facts.push(`Unique solution is: ${solnStr}, for a total of ${total} prisoners`);
 
@@ -541,7 +565,7 @@ function trySolveEquations(numVariables: number, lhss: number[][], rhss: number[
 	if (numRows < numVariables) {
 		return null;
 	}
-	
+
 	// Check if the upper-left looks like an identity matrix.
 	for (let i = 0; i < numVariables; i++) {
 		for (let j = 0; j < numVariables; j++) {

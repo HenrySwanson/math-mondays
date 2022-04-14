@@ -78,17 +78,6 @@ exports.Announcement = Announcement;
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
-var __values = (this && this.__values) || function(o) {
-    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-    if (m) return m.call(o);
-    if (o && typeof o.length === "number") return {
-        next: function () {
-            if (o && i >= o.length) o = void 0;
-            return { value: o && o[i++], done: !o };
-        }
-    };
-    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-};
 var __read = (this && this.__read) || function (o, n) {
     var m = typeof Symbol === "function" && o[Symbol.iterator];
     if (!m) return o;
@@ -104,6 +93,17 @@ var __read = (this && this.__read) || function (o, n) {
         finally { if (e) throw e.error; }
     }
     return ar;
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 exports.__esModule = true;
 exports.Graphics = exports.startState = void 0;
@@ -180,6 +180,25 @@ var PartitionContext = /** @class */ (function () {
         subsets = subsets.slice(1, -1);
         return new PartitionContext(upperBound, numPartitions, myPartition, subsets, 0, []);
     };
+    PartitionContext.prototype.next = function (t) {
+        if (this.enumerationPosition == this.enumerationOrder.length) {
+            throw "Internal error, should not have called PartitionContext.next() that many times";
+        }
+        // Add the new equation
+        var copy = new PartitionContext(this.upperBound, this.numPartitions, this.myPartition, this.enumerationOrder, this.enumerationPosition, this.intersectionHistory);
+        copy.intersectionHistory.push(t);
+        copy.enumerationPosition += 1;
+        // Check if we can solve the equation right now
+        var lhs = copy.enumerationOrder.slice(0, copy.enumerationPosition);
+        var rhs = copy.intersectionHistory;
+        var result = trySolveEquations(copy.numPartitions, lhs, rhs);
+        if (result == null) {
+            return { done: false, value: copy };
+        }
+        else {
+            return { done: true, value: [lhs, rhs] };
+        }
+    };
     PartitionContext.prototype.currentSubset = function () {
         return this.enumerationOrder[this.enumerationPosition];
     };
@@ -197,17 +216,29 @@ var PartitionContext = /** @class */ (function () {
     };
     return PartitionContext;
 }());
+var PartitionSubcontext = /** @class */ (function () {
+    function PartitionSubcontext(numPartitions, wasFlashed, round, intersected) {
+        this.numPartitions = numPartitions;
+        this.wasFlashed = wasFlashed;
+        this.round = round;
+        this.intersected = intersected;
+    }
+    PartitionSubcontext.prototype.next = function (t) {
+        var x = this.intersected.concat(t ? [this.round] : []);
+        if (this.round != this.numPartitions) {
+            return { done: false, value: new PartitionSubcontext(this.numPartitions, this.wasFlashed, this.round + 1, x) };
+        }
+        return { done: true, value: x };
+    };
+    return PartitionSubcontext;
+}());
 var FlashLightsPhase = /** @class */ (function () {
     function FlashLightsPhase(context) {
         this.phase = "flash";
         this.context = context;
     }
     FlashLightsPhase.prototype.next = function (t) {
-        var subcontext = {
-            wasFlashed: t,
-            round: 1,
-            intersected: []
-        };
+        var subcontext = new PartitionSubcontext(this.context.numPartitions, t, 1, []);
         return RefinePartitionPhase1.start(this.context, subcontext);
     };
     FlashLightsPhase.prototype.willFlip = function () {
@@ -221,7 +252,6 @@ var FlashLightsPhase = /** @class */ (function () {
         for (var i = 0; i < this.context.enumerationPosition; i++) {
             facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(this.context.intersectionHistory[i], "}"));
         }
-        // TODO actually solve the equations
         return facts;
     };
     return FlashLightsPhase;
@@ -257,7 +287,6 @@ var RefinePartitionPhase1 = /** @class */ (function () {
     RefinePartitionPhase1.prototype.commonKnowledge = function () {
         var facts = ["N \u2264 ".concat(this.context.upperBound), "".concat(this.context.numPartitions, " partitions")];
         for (var i = 0; i < this.context.enumerationPosition; i++) {
-            // TODO should i track the set directly, instead of a boolean hitlist?
             facts.push("{".concat(this.context.enumerationOrder[i], "} tagged {").concat(this.context.intersectionHistory[i], "}"));
         }
         facts.push("{".concat(this.context.currentSubset(), "} tagged {").concat(this.subcontext.intersected, ", ...}"));
@@ -284,38 +313,19 @@ var RefinePartitionPhase2 = /** @class */ (function () {
             var splitContext = this.context.splitIndex(this.subcontext.round, this.subcontext.wasFlashed);
             return new FlashLightsPhase(splitContext);
         }
-        // Otherwise, mark whether this group was intersected
-        var newIntersected = this.subcontext.intersected.slice();
-        if (this.previousAnnouncement) {
-            newIntersected.push(this.subcontext.round);
+        // Check whether we're still working in the same round
+        var result = this.subcontext.next(this.previousAnnouncement);
+        if (!result.done) {
+            return RefinePartitionPhase1.start(this.context, result.value);
         }
-        // Go to the next j, if possible
-        if (this.subcontext.round != this.context.numPartitions) {
-            var newSubcontext = {
-                wasFlashed: this.subcontext.wasFlashed,
-                round: this.subcontext.round + 1,
-                intersected: newIntersected
-            };
-            return RefinePartitionPhase1.start(this.context, newSubcontext);
+        // Check whether we're done with the parent context too
+        var result2 = this.context.next(result.value);
+        if (!result2.done) {
+            return new FlashLightsPhase(result2.value);
         }
-        // Otherwise, we've finished checking for this subset. Go to the next one.
-        var nextContext = this.context.bumpIndex(newIntersected);
-        if (nextContext !== null) {
-            // Hold up, what if we can solve this right now?
-            var lhs = nextContext.enumerationOrder.slice(0, nextContext.enumerationPosition);
-            var rhs = nextContext.intersectionHistory;
-            var result = trySolveEquations(nextContext.numPartitions, lhs, rhs);
-            if (result == null) {
-                return new FlashLightsPhase(nextContext);
-            }
-            else {
-                return new FinalState(nextContext.numPartitions, lhs, rhs);
-            }
-        }
-        else {
-            // Remember, gotta tack on the newIntersected. This is kinda clunky... :(
-            return new FinalState(this.context.numPartitions, this.context.enumerationOrder, this.context.intersectionHistory.concat([newIntersected]));
-        }
+        // Otherwise, we're done!
+        var _a = __read(result2.value, 2), lhs = _a[0], rhs = _a[1];
+        return new FinalState(this.context.numPartitions, lhs, rhs);
     };
     RefinePartitionPhase2.prototype.willFlip = function () {
         return this.announcement.active;
@@ -465,7 +475,6 @@ exports.Graphics = Graphics;
 // If there's a unique solution, returns it, otherwise returns null
 function trySolveEquations(numVariables, lhss, rhss) {
     // Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
-    // TODO: drop all console.logs
     var numRows = lhss.length + 1; // +1 because x_1 = 1
     var numCols = numVariables + 1;
     var rows = lhss.map(function (lhs, i) {
