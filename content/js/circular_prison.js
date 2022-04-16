@@ -158,6 +158,33 @@ var UpperBoundPhase = /** @class */ (function () {
     };
     return UpperBoundPhase;
 }());
+// Create a list of all subsets, except the trivial ones
+function getSubsetList(n) {
+    var subsets = [[]];
+    var _loop_1 = function (i) {
+        // Add subsets with and without the element i
+        subsets = subsets.concat(subsets.map(function (x) { return x.concat([i]); }));
+    };
+    for (var i = 1; i <= n; i++) {
+        _loop_1(i);
+    }
+    // Drop the first and last element
+    subsets = subsets.slice(1, -1);
+    subsets.sort(function (a, b) {
+        var lengthDiff = a.length - b.length;
+        if (lengthDiff != 0) {
+            return lengthDiff;
+        }
+        for (var i = 0; i < a.length; i++) {
+            var diff = a[i] - b[i];
+            if (diff != 0) {
+                return diff;
+            }
+        }
+        return 0;
+    });
+    return subsets;
+}
 var PartitionContext = /** @class */ (function () {
     function PartitionContext(upperBound, numPartitions, myPartition, enumerationOrder, enumerationPosition, intersectionHistory) {
         this.upperBound = upperBound;
@@ -168,18 +195,7 @@ var PartitionContext = /** @class */ (function () {
         this.intersectionHistory = intersectionHistory;
     }
     PartitionContext.createNew = function (upperBound, numPartitions, myPartition) {
-        // Create a list of all subsets, except the trivial ones
-        var subsets = [[]];
-        var _loop_1 = function (i) {
-            // Add subsets with and without the element i
-            subsets = subsets.concat(subsets.map(function (x) { return x.concat([i]); }));
-        };
-        for (var i = 1; i <= numPartitions; i++) {
-            _loop_1(i);
-        }
-        // Drop the first and last element
-        subsets = subsets.slice(1, -1);
-        return new PartitionContext(upperBound, numPartitions, myPartition, subsets, 0, []);
+        return new PartitionContext(upperBound, numPartitions, myPartition, getSubsetList(numPartitions), 0, []);
     };
     PartitionContext.prototype.next = function (t) {
         if (this.enumerationPosition == this.enumerationOrder.length) {
@@ -474,7 +490,6 @@ exports.Graphics = Graphics;
 // If there's a unique solution, returns it, otherwise returns null
 function trySolveEquations(numVariables, equations) {
     // Remember, these are 1-indexed! TODO: make everything 0 indexed where possible
-    console.log(equations);
     var rows = equations.map(function (e) {
         var e_1, _a, e_2, _b;
         var row = Array(numVariables + 1).fill(0);

@@ -62,6 +62,34 @@ class UpperBoundPhase implements IPrisonerState<State> {
 	}
 }
 
+// Create a list of all subsets, except the trivial ones
+function getSubsetList(n: number): number[][] {
+	let subsets: number[][] = [[]];
+	for (let i = 1; i <= n; i++) {
+		// Add subsets with and without the element i
+		subsets = subsets.concat(subsets.map(x => x.concat([i])));
+	}
+
+	// Drop the first and last element
+	subsets = subsets.slice(1, -1);
+
+	subsets.sort((a, b) => {
+		let lengthDiff = a.length - b.length;
+		if (lengthDiff != 0) {
+			return lengthDiff;
+		}
+		for(let i = 0; i < a.length; i++) {
+			let diff = a[i] - b[i];
+			if (diff != 0) {
+				return diff;
+			}
+		}
+		return 0;
+	})
+
+	return subsets;
+}
+
 type Equation = {
 	lhs: number[],
 	rhs: number[],
@@ -77,21 +105,11 @@ class PartitionContext implements Subprocedure<number[], PartitionContext, Equat
 		public intersectionHistory: number[][]) { }
 
 	static createNew(upperBound: number, numPartitions: number, myPartition: number): PartitionContext {
-		// Create a list of all subsets, except the trivial ones
-		let subsets: number[][] = [[]];
-		for (let i = 1; i <= numPartitions; i++) {
-			// Add subsets with and without the element i
-			subsets = subsets.concat(subsets.map(x => x.concat([i])));
-		}
-
-		// Drop the first and last element
-		subsets = subsets.slice(1, -1);
-
 		return new PartitionContext(
 			upperBound,
 			numPartitions,
 			myPartition,
-			subsets,
+			getSubsetList(numPartitions),
 			0,
 			[],
 		)
