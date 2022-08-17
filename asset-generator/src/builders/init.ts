@@ -2,6 +2,7 @@
 
 // @ts-ignore
 import { createSVGWindow } from 'svgdom';
+import * as SVG from "@svgdotjs/svg.js";
 
 // This file contains methods setting up external libraries for builder/.
 // In website/, the same libraries will be provided externally, fetched from
@@ -52,12 +53,11 @@ export let MathJax = (function (): any {
     return global.MathJax;
 })();
 
-// private global for svgdom's window
-let svgdom_window = createSVGWindow();
-
-// Set up a fake DOM with a single SVG element at the root
-export let SVG: svgjs.Library = require('svg.js')(svgdom_window);
-
-export let getSVGCanvas = memoize_forever(function (): svgjs.Container {
-    return SVG(svgdom_window.document.documentElement);
+export let getSVGCanvas = memoize_forever(function (): SVG.Container {
+    // only runs once due to memoize
+    let window = createSVGWindow();
+    let document = window.document;
+    SVG.registerWindow(window, document);
+    // @ts-ignore
+    return SVG.SVG(document.documentElement);
 });

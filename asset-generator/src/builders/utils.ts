@@ -1,26 +1,29 @@
 "use strict;"
 
-import { MathJax, SVG } from './init';
+import { MathJax } from './init';
 import { FILE_CONFIG } from "./config";
 import path = require('path');
 import TextToSVG = require('text-to-svg');
-import type { svgjs } from "svg.js";
+import * as SVG from "@svgdotjs/svg.js";
 
 export function loadFont(fontPath: string): TextToSVG {
 	return TextToSVG.loadSync(path.join(FILE_CONFIG.FONTS, fontPath));
 }
 
-function scaleFromOrigin(svgObj: svgjs.Shape, scaleFactor: number): void {
+function scaleFromOrigin(svgObj: SVG.Shape, scaleFactor: number): void {
+	// svgObj.scale(scaleFactor);
+	// TODO: what the hell is this NumberAlias thing?
+
 	// Oftentimes, mostly for text, we want to scale from the origin, not from
 	// the upper-left corner. So we do it here.
-	svgObj.size(svgObj.width() * scaleFactor, svgObj.height() * scaleFactor);
+	svgObj.size(svgObj.width() as number * scaleFactor, svgObj.height() as number * scaleFactor);
 
 	// We know where the upper-left corner of the bbox should be, because
 	// scaling from the origin is easy. So let's move the object there.
-	svgObj.move(svgObj.x() * scaleFactor, svgObj.y() * scaleFactor);
+	svgObj.move(svgObj.x() as number * scaleFactor, svgObj.y() as number * scaleFactor);
 }
 
-export function makeTextPath(canvas: svgjs.Container, fontObj: TextToSVG, text: string, fontSizePx: number): svgjs.Path {
+export function makeTextPath(canvas: SVG.Container, fontObj: TextToSVG, text: string, fontSizePx: number): SVG.Path {
 	// 72 is big enough to render crisply
 	var path = canvas.path(fontObj.getD(text, { fontSize: 72 }));
 
@@ -34,7 +37,7 @@ export function makeTextPath(canvas: svgjs.Container, fontObj: TextToSVG, text: 
 	return path;
 }
 
-export function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: number): svgjs.Element {
+export function makeMathSvg(canvas: SVG.Container, tex: string, fontSizePx: number): SVG.Element {
 	// Returns some math text with the baseline at the origin.
 	const adaptor = MathJax.startup.adaptor;
 	const node = MathJax.tex2svg(tex, { display: true });
@@ -85,27 +88,27 @@ export function makeMathSvg(canvas: svgjs.Container, tex: string, fontSizePx: nu
 // Saving images to file
 //--------------------------------
 
-export function shrinkCanvas(canvas: svgjs.Container, margin: number = 0): void {
+export function shrinkCanvas(canvas: SVG.Container, margin: number = 0): void {
 	// Computes bounding box over all elements in the canvas, and resizes the
 	// viewbox to fit it.
-	var box: svgjs.Box = canvas.bbox();
 
-	function merge(element: svgjs.Element) {
+	var box: SVG.Box = new SVG.Box();
+
+	function merge(element: SVG.Element) {
 		// Explicitly exclude defs, because they're not really in the doc
 		if (element.type == 'defs') {
 			return;
 		}
+		
 		// SVG.js creates an zero-opacity SVG.js for 'parsing'; we want to omit
-		// this from our calculations
-		// @ts-ignore
-		if (element.type === "svg" && element.style("opacity") === "0") {
-			return;
-		}
+		// this from our calculations.
+		// But I think it's already skipped in the `children` list :)
+		
 		if (element instanceof SVG.Shape && element.visible()) {
 			box = box.merge(element.rbox(canvas));
 		}
 		if (element instanceof SVG.Container) {
-			(element as svgjs.Container).children().forEach(merge);
+			(element as SVG.Container).children().forEach(merge);
 		}
 	}
 
@@ -115,7 +118,7 @@ export function shrinkCanvas(canvas: svgjs.Container, margin: number = 0): void 
 	);
 }
 
-export function adjustCanvas(canvas: svgjs.Container, left: number, right: number, top: number, bottom: number) {
+export function adjustCanvas(canvas: SVG.Container, left: number, right: number, top: number, bottom: number) {
 	var viewbox = canvas.viewbox();
 	canvas.viewbox(
 		viewbox.x - left, viewbox.y - top,

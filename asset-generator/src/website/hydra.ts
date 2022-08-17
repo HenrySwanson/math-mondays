@@ -2,6 +2,7 @@
 
 import type { Tree } from "../lib/tree";
 import { HydraSkeleton, TreeLayout, SvgHeadData, SvgHydra, LEVEL_SPACING, NODE_SPACING, NODE_DIAM, NECK_WIDTH, CLONE_COLOR } from "../lib/hydra";
+import * as SVG from "@svgdotjs/svg.js"
 
 var V_PADDING = 0.7;
 var H_PADDING = 0.5;
@@ -13,8 +14,7 @@ var CLONE_DURATION = 200;
 var resetButton = document.getElementById("reset-button")!;
 var clickCounter = document.getElementById("click-counter")!;
 
-// @ts-ignore
-var drawing = SVG("hydra-interactive");  // really an svg.js element
+var drawing = SVG.SVG().addTo("#hydra-interactive");
 
 // Keeps track of number of clicks
 var numClicks = 0;
@@ -46,7 +46,7 @@ function resetHydra() {
 	setListeners(drawing, svgHydra, svgHydra.svgTree, updateCounter);
 }
 
-function resizeViewbox(drawing: svgjs.Container, layout: TreeLayout) {
+function resizeViewbox(drawing: SVG.Container | SVG.Runner, layout: TreeLayout) {
 	var boxWidth = 3 * LEVEL_SPACING;
 	var boxHeight = layout.getWidth() * NODE_SPACING;
 
@@ -58,11 +58,11 @@ function resizeViewbox(drawing: svgjs.Container, layout: TreeLayout) {
 	);
 }
 
-function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tree<SvgHeadData>, clickCallback: () => void) {
+function setListeners(drawing: SVG.Container, hydra: SvgHydra, node: Tree<SvgHeadData>, clickCallback: () => void) {
 
 	// Data passed between callbacks
 	let wasClicked = false;
-	let opacityGroup: svgjs.G;
+	let opacityGroup: SVG.G;
 	let svgHead = node.payload;
 
 	// We've got a sequence of animation callbacks
@@ -77,8 +77,7 @@ function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tree<SvgH
 		// Opacity has to be controlled as a group or else the overlap causes
 		// problems. But make sure to kill the group later.
 		opacityGroup = drawing.group().add(svgHead.neck!).add(svgHead.head);
-		// @ts-ignore
-		opacityGroup.animate(DIE_DURATION, ">", 0).opacity(0).afterAll(cut2);
+		opacityGroup.animate(DIE_DURATION, 0, "now").ease(">").attr({ opacity: 0 }).after(cut2);
 	}
 
 	function cut2() {
@@ -120,8 +119,7 @@ function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tree<SvgH
 
 		// Lastly, make everyone involved blue.
 		copies.forEach(copy => makeBlue(copy));
-		// @ts-ignore
-		makeBlue(parent).afterAll(cut3);
+		makeBlue(parent).after(cut3);
 	}
 
 	function cut3() {
@@ -132,25 +130,30 @@ function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tree<SvgH
 		hydra.svgTree.zip(layout.tree).forEachPreorderX(node => {
 			let svgHead = node.payload[0];
 			let position = node.payload[1];
-			let headAnim = svgHead.head.animate(MOVE_DURATION, "<", 0);
-			// @ts-ignore
-			headAnim.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING).fill("#000");
+			svgHead
+				.head
+				.animate(MOVE_DURATION, 0, "now")
+				.ease("<")
+				.center(position.y * LEVEL_SPACING, position.x * NODE_SPACING)
+				.attr({ fill: "#000" });
+
 			if (node.parent !== null) {
 				let prevPosition = node.parent.payload[1];
-				let neckAnim = svgHead.neck?.animate(MOVE_DURATION, "<", 0);
-				// @ts-ignore
-				neckAnim.plot(
-					position.y * LEVEL_SPACING,
-					position.x * NODE_SPACING,
-					prevPosition.y * LEVEL_SPACING,
-					prevPosition.x * NODE_SPACING
-				).stroke("#000");
+				svgHead
+					.neck
+					?.animate(MOVE_DURATION, 0, "now")
+					.ease("<")
+					.plot(
+						position.y * LEVEL_SPACING,
+						position.x * NODE_SPACING,
+						prevPosition.y * LEVEL_SPACING,
+						prevPosition.x * NODE_SPACING
+					).attr({ stroke: "#000" });
 			}
 		});
 
 		resizeViewbox(
-			// @ts-ignore
-			drawing.animate(MOVE_DURATION, "<", 0),
+			drawing.animate(MOVE_DURATION, 0, "now").ease("<"),
 			layout,
 		);
 
@@ -170,17 +173,15 @@ function setListeners(drawing: svgjs.Container, hydra: SvgHydra, node: Tree<SvgH
 	// helper function
 	// this needs to do the recursion manually for now, so that we return the final animation
 	// and use it for afterAll callbacks
-	function makeBlue(h: Tree<SvgHeadData>) {
+	function makeBlue(h: Tree<SvgHeadData>): SVG.Runner {
 		// Recurse
 		h.children.forEach(child => makeBlue(child));
 
 		let svgHead = h.payload;
 		if (svgHead.neck !== null) {
-			// @ts-ignore
-			svgHead.neck.animate(CLONE_DURATION, "<", 0).stroke(CLONE_COLOR);
+			svgHead.neck.animate(CLONE_DURATION, 0, "now").ease("<").attr({ stroke: CLONE_COLOR });
 		}
-		// @ts-ignore
-		return svgHead.head.animate(CLONE_DURATION, "<", 0).fill(CLONE_COLOR);
+		return svgHead.head.animate(CLONE_DURATION, 0).ease("<").attr({ fill: CLONE_COLOR });
 	}
 
 	// Finally, now that everything's defined, assign the click handler

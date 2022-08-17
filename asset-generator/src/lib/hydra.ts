@@ -1,6 +1,6 @@
 "use strict";
 
-import type { svgjs } from "svg.js";
+import * as SVG from "@svgdotjs/svg.js";
 
 // Constants
 export const NODE_DIAM = 0.5;
@@ -137,13 +137,13 @@ export class TreeLayout {
 }
 
 export class SvgHeadData {
-	head: svgjs.Circle
-	neck: svgjs.Line | null
+	head: SVG.Circle
+	neck: SVG.Line | null
 
-	constructor(group: svgjs.G, neck: boolean) {
+	constructor(group: SVG.G, neck: boolean) {
 		this.head = group.circle(NODE_DIAM);
 		if (neck) {
-			this.neck = group.line([0, 0, 0, 0]).stroke({ width: NECK_WIDTH });
+			this.neck = group.line([0, 0, 0, 0]).stroke({ color: "#000000", width: NECK_WIDTH });
 			this.neck.back();  // put it behind head
 		} else {
 			this.neck = null;
@@ -154,9 +154,9 @@ export class SvgHeadData {
 export class SvgHydra {
 
 	svgTree: Tree<SvgHeadData>;
-	svgGroup: svgjs.G;
+	svgGroup: SVG.G;
 
-	constructor(drawing: svgjs.Container, skeleton: HydraSkeleton) {
+	constructor(drawing: SVG.Container, skeleton: HydraSkeleton) {
 		this.svgGroup = drawing.group();
 		this.svgTree = this.createSvgHeads(skeleton.tree);
 	}

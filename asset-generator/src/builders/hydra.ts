@@ -7,6 +7,7 @@ import { Builder } from "./builder";
 // Import other libraries
 import util = require('util');
 import { CLONE_COLOR, HydraSkeleton, SvgHydra, SvgHeadData } from "../lib/hydra";
+import * as SVG from "@svgdotjs/svg.js"
 
 const ALTE_DIN = asset_utils.loadFont("alte-din-1451-mittelschrift/din1451alt.ttf");
 
@@ -43,8 +44,8 @@ builder.register("anatomy.svg", function (canvas) {
 	asset_utils.makeTextPath(canvas, ALTE_DIN, "heads", 0.75).fill(textColor).move(6, 2);
 
 	// and arrows (TODO compute the endpoints?)
-	var stroke: svgjs.StrokeData = { color: textColor, width: 0.06, linecap: 'round', linejoin: 'round' };
-	var marker = canvas.marker(5, 5, function (add) {
+	var stroke: SVG.StrokeData = { color: textColor, width: 0.06, linecap: 'round', linejoin: 'round' };
+	var marker = canvas.marker(5, 5, function (add: SVG.Marker) {
 		add.polygon("0,0 5,2.5 0,5").fill(textColor);
 	});
 
@@ -92,7 +93,7 @@ function colorNode(node: SvgHeadData) {
 	node.neck?.stroke(color);
 }
 
-function drawRedX(canvas: svgjs.Container, node: SvgHeadData) {
+function drawRedX(canvas: SVG.Container, node: SvgHeadData) {
 	var cx = node.head.cx();
 	var cy = node.head.cy();
 	var size = 0.6;
@@ -106,10 +107,10 @@ function drawRedX(canvas: svgjs.Container, node: SvgHeadData) {
 		)
 	);
 	cross.stroke({ color: "#bf0000", width: 0.1 });
-	cross.putIn(node.head.parent() as svgjs.Parent);  // use same coordinates as head
+	cross.putIn(node.head.parent()!);  // use same coordinates as head
 }
 
-function setupAttackingExample(canvas: svgjs.Container, startIdx: number, doThree: boolean = false): SvgHydra[] {
+function setupAttackingExample(canvas: SVG.Container, startIdx: number, doThree: boolean = false): SvgHydra[] {
 	var spacing = doThree ? 6 : 8;
 
 	// create first hydra
@@ -121,7 +122,7 @@ function setupAttackingExample(canvas: svgjs.Container, startIdx: number, doThre
 	hydra2.repositionNodes();
 
 	// align vertically and space horizontally
-	hydra2.svgGroup.dmove(spacing, hydra1.root().head.y() - hydra2.root().head.y());
+	hydra2.svgGroup.translate(spacing, hydra1.root().head.cy() - hydra2.root().head.cy());
 
 	if (!doThree) {
 		return [hydra1, hydra2];
@@ -132,7 +133,7 @@ function setupAttackingExample(canvas: svgjs.Container, startIdx: number, doThre
 	hydra3.repositionNodes();
 
 	// align vertically and space horizontally
-	hydra3.svgGroup.dmove(2 * spacing, hydra1.root().head.y() - hydra3.root().head.y());
+	hydra3.svgGroup.translate(2 * spacing, hydra1.root().head.cy() - hydra3.root().head.cy());
 
 	return [hydra1, hydra2, hydra3];
 }
@@ -233,13 +234,11 @@ builder.register("example-5.svg", function (canvas) {
 	drawRedX(canvas, hydraB.index(2)!);
 
 	// no coloring on C
-
-	// TODO draw dead face
-	var groupC = hydraC.root().head.parent() as svgjs.G;
-	var stroke: svgjs.StrokeData = { color: "#ffffff", width: 0.025 };
+	var groupC = hydraC.root().head.parent() as SVG.G;
+	var stroke: SVG.StrokeData = { color: "#ffffff", width: 0.025 };
 	var lefteye = groupC.path("M -1,-1 L 1,1 M 1,-1 L -1,1")
 		.size(0.1).stroke(stroke).center(-0.1, -0.06);
-	var rightEye = lefteye.clone().cx(0.1);
+	var rightEye = lefteye.clone().addTo(groupC).cx(0.1);
 	var mouth = groupC.path("M -1,1 A 1.2,1.2 0 0,1 1,1").size(0.27)
 		.stroke(stroke).fill("none").center(0, 0.1);
 

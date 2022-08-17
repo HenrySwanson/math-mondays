@@ -2,8 +2,10 @@
 
 import asset_utils = require("./utils");
 import { Builder } from "./builder";
+import * as SVG from "@svgdotjs/svg.js";
 
 // Name some colors
+const BLACK = "#000000";
 const RED = "#c91435";
 const GREEN = "#1e963e";
 const PURPLE = "#ba36ba";
@@ -80,7 +82,7 @@ function interpolate(p: Point, q: Point, t: number): Point {
 // Diagram: Tangrams
 // ---------------------------
 
-function makePiece(canvas: svgjs.Container, pts: Point[], string: string, color: string, stroke_width: number): svgjs.Polygon {
+function makePiece(canvas: SVG.Container, pts: Point[], string: string, color: string, stroke_width: number): SVG.Polygon {
 	// helper function for making tangram drawings easier
 	var myPts = [];
 	for (var i = 0; i < string.length; i++) {
@@ -96,7 +98,7 @@ function letterToPt(letter: string, pts: Point[]): Point {
 // TODO: _definitely_ get rid of this
 type PieceDef = [string, string];
 
-function makePieces(group: svgjs.G, pts: Point[], stroke_width: number, pieceDefs: PieceDef[]): svgjs.Polygon[] {
+function makePieces(group: SVG.G, pts: Point[], stroke_width: number, pieceDefs: PieceDef[]): SVG.Polygon[] {
 	var strokeStyle = { color: "#000", width: stroke_width, linejoin: "bevel" };
 	var pieces = [];
 	for (var i = 0; i < pieceDefs.length; i++) {
@@ -109,13 +111,13 @@ function makePieces(group: svgjs.G, pts: Point[], stroke_width: number, pieceDef
 }
 
 
-function moveAlong(piece: svgjs.Polygon, start: Point, end: Point): void {
+function moveAlong(piece: SVG.Polygon, start: Point, end: Point): void {
 	// moves the piece so that start ends up at end. technically neither point needs
 	// to be on the piece
 	piece.dmove(end[0] - start[0], end[1] - start[1]);
 }
 
-function verticalAlign(groups: svgjs.G[]): void {
+function verticalAlign(groups: SVG.G[]): void {
 	// Align to the center of the first box
 	var center = groups[0].rbox().cy;
 	groups.forEach(g => g.dy(center - g.rbox().cy));
@@ -148,7 +150,7 @@ builder.register("tangrams.svg", function (canvas) {
 	var leftGroup = canvas.group();
 	makePieces(leftGroup, pts, 0.06, pieceDefs);
 
-	var rightGroup = canvas.group().dx(10);
+	var rightGroup = canvas.group().translate(10, 0);
 	var tangrams = makePieces(rightGroup, pts, 0.06, pieceDefs);
 
 	// Reshuffle pieces and save again
@@ -205,7 +207,7 @@ builder.register("square-to-triangle.svg", function (canvas) {
 	var leftGroup = canvas.group();
 	makePieces(leftGroup, pts, 0.015, pieceDefs);
 
-	var rightGroup = canvas.group().dx(1.5);
+	var rightGroup = canvas.group().translate(1.5, 0);
 	var pieces = makePieces(rightGroup, pts, 0.015, pieceDefs);
 
 	// we leave piece 0 in place
@@ -282,7 +284,7 @@ builder.register("square-to-pentagon.svg", function (canvas) {
 	var leftGroup = canvas.group();
 	makePieces(leftGroup, pts, 0.03, pieceDefs);
 
-	var rightGroup = canvas.group().dx(3.5);
+	var rightGroup = canvas.group().translate(3.5, 0);
 	var pieces = makePieces(rightGroup, pts, 0.03, pieceDefs);
 
 	// we keep 5 in place
@@ -358,7 +360,7 @@ builder.register("star-to-triangle.svg", function (canvas) {
 	var leftGroup = canvas.group();
 	makePieces(leftGroup, pts, 0.03, pieceDefs);
 
-	var rightGroup = canvas.group().dx(3);
+	var rightGroup = canvas.group().translate(3, 0);
 	var pieces = makePieces(rightGroup, pts, 0.03, pieceDefs);
 
 	// we keep piece 0 in place
@@ -379,8 +381,8 @@ builder.register("star-to-triangle.svg", function (canvas) {
 // --------------------------
 // Diagrams: WBG construction
 // --------------------------
-const solidStroke = { width: 0.08 };
-const dashedStroke = { width: 0.05, dasharray: "0.2" };
+const solidStroke = { color: BLACK, width: 0.08 };
+const dashedStroke = { color: BLACK, width: 0.05, dasharray: "0.2" };
 const wbg_pts: Point[] = [
 	[0, 0], [5, 1], [8, 4], [3, 6], [1, 4], [2, 2]
 ];
@@ -394,8 +396,8 @@ builder.register("wbg-1.svg", function (canvas) {
 	leftGroup.line([wbg_pts[1], wbg_pts[4]]).stroke(dashedStroke);
 	leftGroup.line([wbg_pts[2], wbg_pts[4]]).stroke(dashedStroke);
 
-	var rightGroup = canvas.group().dx(10);
-	function makeTriangle(group: svgjs.G, pts: Point[], idxs: number[]) {
+	var rightGroup = canvas.group().translate(10, 0);
+	function makeTriangle(group: SVG.G, pts: Point[], idxs: number[]) {
 		return group.polygon(idxs.map(n => pts[n])).fill(YELLOW).stroke(solidStroke);
 	}
 	makeTriangle(rightGroup, wbg_pts, [0, 1, 5]).dmove(-0.3, -0.5);
@@ -421,7 +423,7 @@ builder.register("wbg-2.svg", function (canvas) {
 
 	var G = drop_onto(C, midline);
 	var H = drop_onto(B, midline);
-	var rightGroup = canvas.group().dx(10);
+	var rightGroup = canvas.group().translate(10, 0);
 	rightGroup.polygon([H, B, C, G]).fill(YELLOW).stroke(solidStroke);
 	rightGroup.line([B, D]).stroke(dashedStroke);
 	rightGroup.line([C, E]).stroke(dashedStroke);
@@ -432,7 +434,7 @@ builder.register("wbg-2.svg", function (canvas) {
 // -- next, rectangle -> half-rectangle
 builder.register("wbg-3.svg", function (canvas) {
 	var leftGroup = canvas.group();
-	var rightGroup = canvas.group().dmove(10, -1.5 / 2);
+	var rightGroup = canvas.group().translate(10, -1.5 / 2);
 
 	leftGroup.rect(7, 1.5).fill(YELLOW).stroke(solidStroke);
 	leftGroup.line(3.5, 0, 3.5, 1.5).stroke(dashedStroke);
@@ -446,14 +448,15 @@ builder.register("wbg-3.svg", function (canvas) {
 // -- lastly, rectangle -> rectangle with width 1 (but we'll make it 2 here
 // because units are made up)
 builder.register("wbg-4.svg", function (canvas) {
-	var leftGroup = canvas.group();
-	var rightGroup = canvas.group().dx(6);
-
 	var w = 3.5;
 	var h = 3;
 	var t = 2; // target height
 	var slideY = h - t;
 	var slideX = slideY * w / t;
+
+	var leftGroup = canvas.group();
+	var rightGroup = canvas.group();
+
 	leftGroup.rect(w, h).fill(YELLOW).stroke(solidStroke);
 	leftGroup.line(0, slideY, w, h).stroke(dashedStroke);
 	leftGroup.line(w, t, w - slideX, t).stroke(dashedStroke);
@@ -461,10 +464,6 @@ builder.register("wbg-4.svg", function (canvas) {
 	rightGroup.rect(w + slideX, t).fill(YELLOW).stroke(solidStroke);
 	rightGroup.line(0, 0, w, h - slideY).stroke(dashedStroke);
 	rightGroup.line(slideX, 0, slideX, slideY).stroke(dashedStroke);
-	rightGroup.dy(slideY / 2);
-
-	// shrink now, remember, this breaks around tex objects
-	asset_utils.shrinkCanvas(canvas, 0.1);
 
 	// make math labels
 	var u = asset_utils.makeMathSvg(canvas, "u", 0.7);
@@ -473,20 +472,23 @@ builder.register("wbg-4.svg", function (canvas) {
 	var uell = asset_utils.makeMathSvg(canvas, "u \\ell", 0.7);
 
 	// place initial copies
-	u.move(-0.6, 0.3);
-	one.move(-0.6, 1.8);
-	ell.move(1.7, -0.7);
-	uell.move(2.4, 1.3);
+	u.addTo(leftGroup).move(-0.6, 0.3);
+	one.addTo(leftGroup).move(-0.6, 1.8);
+	ell.addTo(leftGroup).move(1.7, -0.7);
+	uell.addTo(leftGroup).move(2.4, 1.3);
 
 	// go around 'stamping' text
-	u.clone().move(3.7, 2.3);
-	one.clone().move(3.7, 0.6);
+	u.clone().addTo(leftGroup).move(3.7, 2.3);
+	one.clone().addTo(leftGroup).move(3.7, 0.6);
 
 	// move everything to the other group
-	u = u.clone().addTo(rightGroup).move(2, 0.3);
-	one = one.clone().addTo(rightGroup).move(-0.7, 0.6);
-	ell = ell.clone().addTo(rightGroup).move(3.3, -0.7);
-	uell = uell.clone().addTo(rightGroup).move(0.6, -0.7);
+	u.clone().addTo(rightGroup).move(2, 0.3);
+	one.clone().addTo(rightGroup).move(-0.7, 0.6);
+	ell.clone().addTo(rightGroup).move(3.3, -0.7);
+	uell.clone().addTo(rightGroup).move(0.6, -0.7);
+
+	rightGroup.translate(6, slideY / 2);
+	asset_utils.shrinkCanvas(canvas, 0.1);
 
 	var viewbox = canvas.viewbox();
 	canvas.viewbox(viewbox.x - 1, viewbox.y - 1, viewbox.width + 2, viewbox.height + 1);
@@ -496,7 +498,7 @@ builder.register("wbg-4.svg", function (canvas) {
 // Diagrams: Edge cutting
 // ----------------------
 const cutStroke = { color: RED, width: 0.1, dasharray: "0.2" };
-const thickStroke = { width: 0.3 };
+const thickStroke = { color: BLACK, width: 0.3 };
 const edge_cut_pts: Point[] = [[2, 1], [10, 0], [5, 3], [-3, 4], [15, 5], [11, 8]];
 builder.register("edge-cut-transverse.svg", function (canvas) {
 
@@ -515,22 +517,19 @@ builder.register("edge-cut-transverse.svg", function (canvas) {
 	leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
 	leftGroup.polyline([pts[6], pts[7], pts[8]]).fill("none").stroke(cutStroke);
 
-	var rightGroup1 = canvas.group().dmove(25, 0);
+	var rightGroup1 = canvas.group().translate(25, 0);
 	makePieces(
 		rightGroup1, pts, 0.1,
 		[["GBH", LT_BLUE], ["BHIE", DK_BLUE], ["GHI", PURPLE]]
 	);
 	rightGroup1.line([pts[1], pts[7]]).stroke(thickStroke);
 
-	var rightGroup2 = canvas.group().dmove(23, 1);
+	var rightGroup2 = canvas.group().translate(23, 1);
 	makePieces(
 		rightGroup2, pts, 0.1,
 		[["AGHCD", LT_BLUE], ["HCFI", DK_BLUE], ["CDF", MED_BLUE]]
 	);
 	rightGroup2.line([pts[7], pts[2]]).stroke(thickStroke);
-
-	// before math
-	asset_utils.shrinkCanvas(canvas, 0.1);
 
 	var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 + \\ell_2", 2);
 	mathLength.move(13, -2);
@@ -538,7 +537,8 @@ builder.register("edge-cut-transverse.svg", function (canvas) {
 	var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 = \\theta_2", 2);
 	mathAngle.move(13, 8);
 
-	asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
+	// Shrink and adjust for math
+	asset_utils.shrinkCanvas(canvas, 0.1);
 });
 
 // -- edge-on cut --
@@ -557,22 +557,21 @@ builder.register("edge-cut-lengthwise.svg", function (canvas) {
 	leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
 	leftGroup.polyline([pts[1], pts[2], pts[6]]).fill("none").stroke(cutStroke);
 
-	var rightGroup1 = canvas.group().dmove(23, 0);
+	var rightGroup1 = canvas.group();
 	makePieces(
 		rightGroup1, pts, 0.1,
 		[["ABCD", LT_BLUE], ["CDG", MED_BLUE], ["BCGH", PURPLE]]
 	);
 	rightGroup1.line([pts[1], pts[2]]).stroke(thickStroke);
+	rightGroup1.dmove(23, 0);
 
-	var rightGroup2 = canvas.group().dmove(25, 1);
+	var rightGroup2 = canvas.group();
 	makePieces(
 		rightGroup2, pts, 0.1,
 		[["BCFE", DK_BLUE], ["CFG", MED_BLUE]]
 	);
 	rightGroup2.line([pts[1], pts[2]]).stroke(thickStroke);
-
-	// before math
-	asset_utils.shrinkCanvas(canvas, 0.1);
+	rightGroup2.dmove(25, 1);
 
 	var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 = \\ell_2", 2);
 	mathLength.move(13, -2);
@@ -580,5 +579,6 @@ builder.register("edge-cut-lengthwise.svg", function (canvas) {
 	var mathAngle = asset_utils.makeMathSvg(canvas, "\\theta = \\theta_1 + \\theta_2", 2);
 	mathAngle.move(13, 8);
 
-	asset_utils.adjustCanvas(canvas, 0, 0, 3, 2);
+	// Shrink and adjust for math
+	asset_utils.shrinkCanvas(canvas, 0.1);
 });

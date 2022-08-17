@@ -4,6 +4,7 @@ import { Subprocedure, SubprocedureResult } from "../fsm";
 import { zip } from "../iter";
 import { Matrix } from "../matrix";
 import { IPrisonerState, Announcement, WaxingPhase, WaningPhase } from "./common";
+import * as SVG from "@svgdotjs/svg.js";
 
 const ACTIVE_COLOR = "#ffff00";
 const WANING_COLOR = "#ffcc00";
@@ -16,6 +17,9 @@ const PRISONER_SPACING = 80;
 const COIN_DIAMETER = 10;
 const SWITCH_HEIGHT = 30;
 const SWITCH_WIDTH = 15;
+
+const LETTER_FONT = {family: "Helvetica, Arial, sans-serif", size: "16pt"};
+const NUMBER_FONT = {family: "Helvetica, Arial, sans-serif", size: "12pt"};
 
 export type State = UpperBoundPhase | FlashLightsPhase | RefinePartitionPhase1 | RefinePartitionPhase2 | FinalState;
 
@@ -355,22 +359,23 @@ class FinalState implements IPrisonerState<State> {
 }
 
 export class Graphics {
-	group: svgjs.G;
-	circle: svgjs.Circle;
-	name: svgjs.Text;
-	number: svgjs.Text;
-	candidate: svgjs.Circle;
-	switch: svgjs.Polygon;
+	group: SVG.G;
+	circle: SVG.Circle;
+	name: SVG.Text;
+	number: SVG.Text;
+	candidate: SVG.Circle;
+	switch: SVG.Polygon;
 
-	constructor(drawing: svgjs.Doc, name: string) {
+	constructor(drawing: SVG.Svg, name: string) {
 		this.group = drawing.group();
 		this.circle = this.group.circle(2 * PRISONER_RADIUS);
-		this.name = this.group.text(name);
-		this.number = this.group.text("");
+		this.name = this.group.text(name).font(LETTER_FONT);
+		this.number = this.group.text("").font(NUMBER_FONT);
 		this.candidate = this.group.circle(COIN_DIAMETER).hide();
 		this.switch = this.group.polygon([0, 0, 0, SWITCH_HEIGHT, SWITCH_WIDTH, SWITCH_HEIGHT / 2]);
 
 		// Position the elements
+		// Circle is positioned at the center
 		let cx = this.circle.cx();
 		let cy = this.circle.cy();
 		this.name.center(cx, cy);
@@ -460,7 +465,8 @@ export class Graphics {
 	}
 
 	move(x: number, y: number): void {
-		this.group.move(x, y);
+		this.group.untransform();
+		this.group.translate(x, y);
 	}
 }
 

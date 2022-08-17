@@ -1,12 +1,10 @@
 "use_strict";
 
-import type { svgjs } from "svg.js";
+import * as SVG from "@svgdotjs/svg.js"
 import type { IPrisonerState, IPrisonerGraphics } from "../lib/circular_prison/common";
 import { startState, State as SimpleState, Graphics as SimpleGraphics } from "../lib/circular_prison/simple";
 import { startState as startStateFancy, State as FancyState, Graphics as FancyGraphics } from "../lib/circular_prison/fancy";
 
-// Will be defined by the SVG.js script we pull in elsewhere in the doc
-declare global { var SVG: svgjs.Library; }
 
 // TODO: don't duplicate constants like this!
 const PRISONER_RADIUS = 20;
@@ -67,7 +65,7 @@ class Experiment<S extends IPrisonerState<S>> {
 	historyStack: [Prisoner<S>, S][][];
 	startStateFn: (captain: boolean) => S;
 
-	constructor(drawing: svgjs.Doc, numPrisoners: number, startStateFn: (captain: boolean) => S, graphicsFn: (drawing: svgjs.Doc, name: string) => IPrisonerGraphics<S>) {
+	constructor(drawing: SVG.Svg, numPrisoners: number, startStateFn: (captain: boolean) => S, graphicsFn: (drawing: SVG.Svg, name: string) => IPrisonerGraphics<S>) {
 		this.prisoners = Array.from(Array(numPrisoners).keys()).map(
 			i => {
 				let captain = i == 0;
@@ -201,9 +199,9 @@ class ExperimentApplet<S extends IPrisonerState<S>> {
 	stateText: HTMLSpanElement;
 	commonKnowledge: HTMLSpanElement;
 
-	constructor(numPrisoners: number, suffix: string, startStateFn: (captain: boolean) => S, graphicsFn: (drawing: svgjs.Doc, name: string) => IPrisonerGraphics<S>) {
+	constructor(numPrisoners: number, suffix: string, startStateFn: (captain: boolean) => S, graphicsFn: (drawing: SVG.Svg, name: string) => IPrisonerGraphics<S>) {
 		this.experiment = new Experiment(
-			SVG("prison-interactive-" + suffix),
+			SVG.SVG().addTo("#prison-interactive-" + suffix),
 			numPrisoners,
 			startStateFn,
 			graphicsFn,

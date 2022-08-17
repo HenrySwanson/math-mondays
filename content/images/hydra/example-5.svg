@@ -1,29 +1,32 @@
 
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" viewBox="-0.25 -1.25 16.5 3.55">
- <g id="g-1">
-  <line id="line-1" x1="4" y1="0" x2="2" y2="0" stroke="#000000" stroke-width="0.1"></line>
-  <line id="line-2" x1="2" y1="0" x2="0" y2="0" stroke="#000000" stroke-width="0.1"></line>
-  <circle id="circle-1" r="0.25" cx="0" cy="0"></circle>
-  <circle id="circle-2" r="0.25" cx="2" cy="0"></circle>
-  <circle id="circle-3" r="0.25" cx="4" cy="0"></circle>
-  <path id="path-1" d="M 4.3,0.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke="#bf0000" stroke-width="0.1"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="-0.25 -1.25 16.5 3.55">
+ <g>
+  <line x1="4" y1="0" x2="2" y2="0" stroke-width="0.1" stroke="#000000"></line>
+  <line x1="2" y1="0" x2="0" y2="0" stroke-width="0.1" stroke="#000000"></line>
+  <circle r="0.25" cx="0" cy="0"></circle>
+  <circle r="0.25" cx="2" cy="0"></circle>
+  <circle r="0.25" cx="4" cy="0"></circle>
+  <path d="M 4.3,0.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke-width="0.1" stroke="#bf0000"></path>
  </g>
- <g id="g-2" transform="matrix(1,0,0,1,6,-1)">
-  <line id="line-3" x1="2" y1="2" x2="0" y2="1" stroke="#422aa8" stroke-width="0.1"></line>
-  <line id="line-4" x1="2" y1="1" x2="0" y2="1" stroke="#422aa8" stroke-width="0.1"></line>
-  <line id="line-5" x1="2" y1="0" x2="0" y2="1" stroke="#422aa8" stroke-width="0.1"></line>
-  <circle id="circle-4" r="0.25" cx="0" cy="1"></circle>
-  <circle id="circle-5" r="0.25" cx="2" cy="0" fill="#422aa8"></circle>
-  <circle id="circle-6" r="0.25" cx="2" cy="1" fill="#422aa8"></circle>
-  <circle id="circle-7" r="0.25" cx="2" cy="2" fill="#422aa8"></circle>
-  <path id="path-2" d="M 2.3,0.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke="#bf0000" stroke-width="0.1"></path>
-  <path id="path-3" d="M 2.3,1.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke="#bf0000" stroke-width="0.1"></path>
-  <path id="path-4" d="M 2.3,2.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke="#bf0000" stroke-width="0.1"></path>
+ <g transform="matrix(1,0,0,1,6,-1)">
+  <line x1="2" y1="2" x2="0" y2="1" stroke-width="0.1" stroke="#422aa8"></line>
+  <line x1="2" y1="1" x2="0" y2="1" stroke-width="0.1" stroke="#422aa8"></line>
+  <line x1="2" y1="0" x2="0" y2="1" stroke-width="0.1" stroke="#422aa8"></line>
+  <circle r="0.25" cx="0" cy="1"></circle>
+  <circle r="0.25" cx="2" cy="0" fill="#422aa8"></circle>
+  <circle r="0.25" cx="2" cy="1" fill="#422aa8"></circle>
+  <circle r="0.25" cx="2" cy="2" fill="#422aa8"></circle>
+  <path d="M 2.3,0.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke-width="0.1" stroke="#bf0000"></path>
+  <path d="M 2.3,1.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke-width="0.1" stroke="#bf0000"></path>
+  <path d="M 2.3,2.3 l -0.6,-0.6 m 0,0.6 l 0.6,-0.6" stroke-width="0.1" stroke="#bf0000"></path>
  </g>
- <g id="g-3" transform="matrix(1,0,0,1,12,0)">
-  <circle id="circle-8" r="0.25" cx="0" cy="0"></circle>
-  <path id="path-5" d="M-0.15000000000000002 -0.10999999999999999L-0.050000000000000044 -0.010000000000000009M-0.050000000000000044 -0.10999999999999999L-0.15000000000000002 -0.010000000000000009 " stroke="#ffffff" stroke-width="0.025"></path>
-  <path id="path-6" d="M0.05000000000000002 -0.10999999999999999L0.15 -0.010000000000000009M0.15 -0.10999999999999999L0.05000000000000002 -0.010000000000000009 " stroke="#ffffff" stroke-width="0.025"></path>
-  <path id="path-7" d="M-0.135 0.13622556533020214A0.162 0.162 0 0 1 0.135 0.13622556533020214 " stroke="#ffffff" stroke-width="0.025" fill="none"></path>
+ <g transform="matrix(1,0,0,1,12,0)">
+  <circle r="0.25" cx="0" cy="0"></circle>
+  <path d="M-0.15000000000000002 -0.10999999999999999L-0.050000000000000044 -0.010000000000000009M-0.050000000000000044 -0.10999999999999999L-0.15000000000000002 -0.010000000000000009 " stroke-width="0.025" stroke="#ffffff"></path>
+  <path d="M0.05000000000000002 -0.10999999999999999L0.15 -0.010000000000000009M0.15 -0.10999999999999999L0.05000000000000002 -0.010000000000000009 " stroke-width="0.025" stroke="#ffffff"></path>
+  <path d="M-0.135 0.13622556533020214A0.162 0.162 0 0 1 0.135 0.13622556533020214 " stroke-width="0.025" stroke="#ffffff" fill="none"></path>
  </g>
+ <svg width="2" height="0" style="opacity: 0; position: absolute; left: -100%; top: -100%; overflow: hidden;" focusable="false" aria-hidden="true">
+  <path d="M-0.135 0.5357760887314843A0.162 0.162 0 0 1 0.135 0.5357760887314843 "></path>
+ </svg>
 </svg>
