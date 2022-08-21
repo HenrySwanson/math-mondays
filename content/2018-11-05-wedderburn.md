@@ -2,10 +2,12 @@ Title: Wedderburn's Little Theorem
 Date: 2018-11-05
 Tags: ring-theory
 
-<span class="mathdefs">
-$\newcommand{\ZZ}{\Bbb Z}
-\newcommand{\QQ}{\Bbb Q}$
-</span>
+{% import 'macros.html' as macros %}
+
+{% call macros.mathdef() %}
+\newcommand{\ZZ}{\Bbb Z}
+\newcommand{\QQ}{\Bbb Q}
+{% endcall %}
 
 Some rings are closer to being fields than others. A **domain** is a ring where we can do cancellation: if $ab = ac$ and $a \ne 0$, then $b = c$. Even closer is a **division ring**, a ring in which every non-zero element has a multiplicative inverse. The only distinction between fields and division rings is that the latter may be non-commutative. For this reason, division rings are also called **skew-fields**.
 

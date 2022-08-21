@@ -2,22 +2,26 @@ Title: Ax-Grothendieck Theorem
 Date: 2018-11-12
 Tags: model-theory
 
-<span class="mathdefs">
-$\newcommand{\CC}{\Bbb C}
+{% import 'macros.html' as macros %}
+
+{% call macros.mathdef() %}
+{% raw %}
+\newcommand{\CC}{\Bbb C}
 \newcommand{\FF}{\Bbb F}
 \newcommand{\QQ}{\Bbb Q}
 \newcommand{\FFx}[1]{\overline{\FF_{#1}}}
 \newcommand{\ACF}{\mathbf{ACF}}
 \newcommand{\cL}{\mathcal{L}}
-\newcommand{\cT}{\mathcal{T}}$
-</span>
+\newcommand{\cT}{\mathcal{T}}
+{% endraw %}
+{% endcall %}
 
 The Ax-Grothendieck theorem is the statement:
-<div class="theorem-box" markdown="1">
-<div class="theorem-title">Ax-Grothendieck Theorem</div>
+
+{% call macros.theorem_box("Ax-Grothendieck Theorem") %}
 Let $f: \CC^n \to \CC^n$ be a polynomial map; that is, each coordinate $f_i: \CC^n \to \CC$ is a polynomial in the $n$ input variables.
 Then, if $f$ is injective, it is surjective.
-</div>
+{% endcall %}
 
 This... doesn't seem like a particularly exciting theorem. But it has a really exciting proof.
 
@@ -73,12 +77,9 @@ We claim that $\ACF_0$ and $\ACF_p$ are complete theories.
 
 If that is indeed the case, then we can prove a stronger form of the Ax-Grothendieck theorem.
 
-<div class="theorem-box" markdown="1">
-
-<div class="theorem-title">Ax-Grothendieck Theorem (Stronger)</div>
-
+{% call macros.theorem_box("Ax-Grothendieck Theorem (Stronger)") %}
 Let $k$ be an algebraically closed field. If $f: k^n \to k^n$ is a polynomial map, then if $f$ is injective, it is surjective.
-</div>
+{% endcall %}
 
 *Proof*: We start by breaking our claim into a number of first-order sentences. We can't first-order define an arbitrary polynomial, so we'll work with all polynomials of bounded degree. For a fixed $d$, the sentence "for all polynomial maps $f$ of degree at most $d$, injectivity of $f$ implies surjectivity of $f$" can be expressed as a first-order sentence.
 
@@ -106,10 +107,7 @@ One is that, despite there being no homomorphisms between $\FFx{p}$ and $\CC$, w
 
 The other is that we never actually made use of $\phi_d$! All we knew is that it was a first-order sentence, and that it was true in some model of $\ACF_p$ for each $p$. Generalizing this argument, we get the following principle:
 
-<div class="theorem-box" markdown="1">
-
-<div class="theorem-title">Robinson's Principle</div>
-
+{% call macros.theorem_box("Robinson's Principle") %}
 If $\phi$ is a first-order sentence, then the following are equivalent:
 
 1. $\ACF_p$ proves $\phi$ for all but finitely many $p$</li>
@@ -121,7 +119,7 @@ Furthermore, the following are equivalent for $r$ a prime or $0$:
 1. $\ACF_r$ proves $\phi$</li>
 2. $\phi$ is true in some algebraically closed field of characteristic $r$</li>
 3. $\phi$ is true in all algebraically closed fields of characteristic $r$</li>
-</div>
+{% endcall %}
 
 For the first claim, obviously (1) implies (2). The proof that (2) implies (3) is essentially the proof we gave above: if $\phi$ can't be proved from $\ACF_0$, then $\lnot \phi$ can. This proof can only use finitely many of the $\lnot S_p$, and there's infinitely many $\ACF_p$ that prove $\phi$, so there's some $p$ we can transfer the proof to and get our contradiction. The proof that (3) implies (1) is similar: if there's a proof of $\phi$ from $\ACF_0$, it can be transferred to all but finitely many $\ACF_p$.
 
@@ -134,20 +132,20 @@ At this point, there is no more spooky magic, and the rest of the article is abo
 ---
 
 First, we'll state a popular theorem in model theory:
-<div class="theorem-box" markdown="1">
-<div class="theorem-title">Löwenheim–Skolem Theorem</div>
+
+{% call macros.theorem_box("Löwenheim–Skolem Theorem") %}
 Let $\cT$ be a countable theory. If it has an infinite model, then for any infinite cardinal $\kappa$, it has a model of size $\kappa$.
-</div>
+{% endcall %}
 
 Essentially, first-order logic is too limited to distinguish between different sizes of infinity; if there's a model of one infinite size, there's a model of all infinite sizes. The proof of this theorem is somewhat involved, and we won't cover it here, but see [here](http://modeltheory.wikia.com/wiki/L%C3%B6wenheim-Skolem_Theorem) for a proof.
 
 Using this, we can prove the Łoś–Vaught test:
-<div class="theorem-box" markdown="1">
-<div class="theorem-title">Łoś–Vaught Test</div>
+
+{% call macros.theorem_box("Łoś–Vaught Test") %}
 Let $\cT$ be a theory and $\kappa$ be some infinite cardinal. We say that $\cT$ is $\kappa$-categorical if there is exactly one model of $\cT$ of size $\kappa$, up to isomorphism.
 <br><br>
 If $\cT$ is $\kappa$-categorical for some $\kappa$, and has no finite models, then it is a complete theory.
-</div>
+{% endcall %}
 
 This is unexpected, at least in my opinion. But then again, model theory isn't my forte. Maybe there's some intution one can use here that I don't have.
 

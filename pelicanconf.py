@@ -25,6 +25,7 @@ AUTHOR_FEED_RSS = None
 
 # Plugins and other functionality
 PLUGINS = [
+    "jinja2content",
     "plugins.summary",
     "render_math",
     "simple_footnotes",

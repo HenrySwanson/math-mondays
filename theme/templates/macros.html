@@ -1,0 +1,12 @@
+{% macro theorem_box(title) %}
+<div class="theorem-box" markdown="1">
+<div class="theorem-title">{{ title }}</div>
+{{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro mathdef() %}
+<span class="mathdefs">
+${{ caller() | trim }}$
+</span>
+{% endmacro %}

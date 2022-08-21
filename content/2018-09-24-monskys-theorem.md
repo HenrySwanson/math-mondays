@@ -2,11 +2,13 @@ Title: Monsky's Theorem
 Date: 2018-09-24
 Tags: geometry
 
-<span class="mathdefs">
-$\newcommand{\RR}{\Bbb R}
+{% import 'macros.html' as macros %}
+
+{% call macros.mathdef() %}
+\newcommand{\RR}{\Bbb R}
 \newcommand{\QQ}{\Bbb Q}
-\newcommand{\ZZ}{\Bbb Z}$
-</span>
+\newcommand{\ZZ}{\Bbb Z}
+{% endcall %}
 
 For which $n$ can you cut a square into $n$ triangles of equal area?
 
@@ -24,14 +26,9 @@ If you have a napkin on hand, it should be straightforward to come up with a sol
 
 But when $n$ is odd, you will have considerably more trouble. Monsky's theorem states that such a task is, in fact, impossible.
 
-<!-- TODO make a markdown plugin to make this easier -->
-<div class="theorem-box" markdown="1">
-
-<div class="theorem-title">Monsky's Theorem</div>
-
+{% call macros.theorem_box("Monsky's Theorem") %}
 The unit square cannot be dissected into an odd number of triangles of equal area.
-
-</div>
+{% endcall %}
 
 The result clearly extends to squares of any size, and in fact, arbitrary parallelograms.
 
@@ -76,16 +73,12 @@ But these are not -- the first has lines of more than two colors, and the second
 
 In this format, Sperner's lemma can be stated as:
 
-<div class="theorem-box" markdown="1">
-
-<div class="theorem-title">Sperner's Lemma</div>
-
+{% call macros.theorem_box("Sperner's Lemma") %}
 Given a Sperner coloring of $(P, T_i)$, there is at least one trichromatic triangle.
 <br>
 <br>
 Check the examples above, both Sperner colorings have trichromatic triangles. The first non-Sperner coloring has one, but the other does not.
-
-</div>
+{% endcall %}
 
 *Proof*: First, we establish a lemma: a triangle $T$ is trichromatic iff its faces have an odd number of purple segments.
 
@@ -160,21 +153,15 @@ Given a point $(x,y)$ in the plane, we'll color it:
 
 This coloring has some interesting properties, which we'll establish quickly.
 
-<div class="theorem-box" markdown="1">
-
-<div class="theorem-title">Claim</div>
-
+{% call macros.theorem_box("Claim") %}
 If $P$ is a red point, then $Q$ and $Q-P$ have the same color.
-</div>
+{% endcall %}
 
 *Proof*: This is a good exercise for the reader. Make use of the fact that, if $\nu_2(a) > 0$ and $\nu_2(x) \le 0$, then $\nu_2(x - a) \ge \min(\nu_2(x), \nu_2(a)) = \nu_2(x)$. On the other hand, if $\nu_2(x) > 0$, then $\nu_2(x - a) > 0$ as well.
 
-<div class="theorem-box" markdown="1">
-
-<div class="theorem-title">Claim</div>
-
+{% call macros.theorem_box("Claim") %}
 If we forget the dissection for a second, and pick *any* three collinear points in the plane, they cannot all be different colors.
-</div>
+{% endcall %}
 
 *Proof*: Let $P_r$, $P_g$, and $P_b$ be three points, colored red, green, and blue, respectively. We must show they can't be collinear; equivalently, the vectors $P_g - P_r$ and $P_b - P_r$ are not parallel. This is a question about linear independence, so we'd better take a determinant. Let $P_g - P_r = (x_g, y_g)$, and $P_b - P_r = (x_b, y_b)$.
 

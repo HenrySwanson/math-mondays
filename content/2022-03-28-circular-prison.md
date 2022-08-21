@@ -2,6 +2,7 @@ Title: Circular Prison of Unknown Size
 Date: 2022-03-28
 Tags: interactive, puzzles
 
+{% import 'macros.html' as macros %}
 
 A popular kind of mathematical puzzles is "prisoner puzzles", in which a large group of cooperative players ("prisoners") play a game against an adversarial supervisor (often "the warden"), with limited communication. Some classic examples are [here](https://en.wikipedia.org/wiki/100_prisoners_problem) and [here](https://www.popularmechanics.com/science/math/a25254/riddle-of-the-week-16/) (there's frequent overlap with "hat problems").
 
@@ -49,9 +50,7 @@ At this point, the solutions take different approaches. One of the solutions, gi
 
 In order to communicate the results of these coin flips, we build an "announcement" subprocedure.
 
-<div class="theorem-box" markdown="1">
-
-<div class="theorem-title">Announcements</div>
+{% call macros.theorem_box("Announcements") %}
 For a predicate $P$, an *announcement* for $P$ is a procedure that makes it common knowledge whether there exists some prisoner satisfying $P$.
 
 <br>
@@ -61,7 +60,7 @@ The announcement period lasts $B$ days, where $B$ is an upper bound for the numb
 * Other prisoners become active when they see a light, and remain active afterwards, much like the waxing phase.
 
 At the end of the announcement period, if someone satisfied $P$, everyone is active, otherwise everyone is inactive. This makes the (non-)satisfaction of $P$ common knowledge.
-</div>
+{% endcall %}
 
 Now we can describe the strategy. The goal is to assign each prisoner a number from $1$ to $n$. At each point, the numbers $1$ through $d$ will be assigned, and $d$ is common knowledge. The captain starts out numbered $1$, and everyone else starts off unnumbered (i.e., $d = 1$).
 

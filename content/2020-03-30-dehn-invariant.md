@@ -2,11 +2,14 @@ Title: The Dehn Invariant, or, Tangrams In Space
 Date: 2020-03-30
 Tags: geometry
 
-<span class="mathdefs">
-$\newcommand{\ZZ}{\Bbb Z}
+{% import 'macros.html' as macros %}
+
+<!-- TODO: I use these 3 a lot; can i consolidate it in one place? -->
+{% call macros.mathdef() %}
+\newcommand{\ZZ}{\Bbb Z}
 \newcommand{\QQ}{\Bbb Q}
-\newcommand{\RR}{\Bbb R}$
-</span>
+\newcommand{\RR}{\Bbb R}
+{% endcall %}
 
 Fans of wooden children's toys may remember [tangrams](https://en.wikipedia.org/wiki/Tangram), a puzzle composed of 7 flat pieces that can be rearranged into numerous different configurations.
 
