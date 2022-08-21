@@ -90,29 +90,9 @@ export function makeMathSvg(canvas: SVG.Container, tex: string, fontSizePx: numb
 
 export function shrinkCanvas(canvas: SVG.Container, margin: number = 0): void {
 	// Computes bounding box over all elements in the canvas, and resizes the
-	// viewbox to fit it.
+	// viewbox to fit it, plus an additional margin.
 
-	var box: SVG.Box = new SVG.Box();
-
-	function merge(element: SVG.Element) {
-		// Explicitly exclude defs, because they're not really in the doc
-		if (element.type == 'defs') {
-			return;
-		}
-		
-		// SVG.js creates an zero-opacity SVG.js for 'parsing'; we want to omit
-		// this from our calculations.
-		// But I think it's already skipped in the `children` list :)
-		
-		if (element instanceof SVG.Shape && element.visible()) {
-			box = box.merge(element.rbox(canvas));
-		}
-		if (element instanceof SVG.Container) {
-			(element as SVG.Container).children().forEach(merge);
-		}
-	}
-
-	merge(canvas);
+	let box = canvas.bbox();
 	canvas.viewbox(
 		box.x - margin, box.y - margin, box.w + 2 * margin, box.h + 2 * margin
 	);

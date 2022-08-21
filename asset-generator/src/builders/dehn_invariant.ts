@@ -489,9 +489,6 @@ builder.register("wbg-4.svg", function (canvas) {
 
 	rightGroup.translate(6, slideY / 2);
 	asset_utils.shrinkCanvas(canvas, 0.1);
-
-	var viewbox = canvas.viewbox();
-	canvas.viewbox(viewbox.x - 1, viewbox.y - 1, viewbox.width + 2, viewbox.height + 1);
 });
 
 // ----------------------

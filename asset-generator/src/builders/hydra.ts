@@ -272,6 +272,6 @@ builder.register("ordinals.svg", function (canvas) {
 		value.dx(-value.width() / 2);
 		value.dmove(cellX + 2, cellY + 4);
 	}
-	// TODO some bug in shrinkCanvas when math is present, gotta do it manually
-	canvas.viewbox(-0.5, -2, 3 * 8 + 4 + 1, 14);
+	
+	asset_utils.shrinkCanvas(canvas);
 });
