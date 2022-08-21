@@ -18,6 +18,8 @@ FEED_ALL_ATOM = "feed.xml"
 
 DELETE_OUTPUT_DIRECTORY = True
 
+JINJA_GLOBALS["production"] = True
+
 # Following items are often useful when publishing
 
 # DISQUS_SITENAME = ""

@@ -40,6 +40,18 @@
       {{ article.locale_modified }}
     </time>
     {% endif %}
+
+    <!-- Generate the view counter -->
+    {% if production %}
+    {% set page_id = 'math-mondays-' + article.slug %}
+    {% else %}
+    {% set page_id = 'math-mondays-test-' + article.slug %}
+    {% endif %}
+    {% set visitor_badge_data = {'page_id': page_id, 'left_color': '#5c6679', 'right_color': '#e86655'} %}
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?{{ visitor_badge_data | urlencode}}" style="display:inline">
+    </div>
+
   </footer>
 
 </section>
