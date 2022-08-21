@@ -5,14 +5,37 @@ import { FILE_CONFIG } from "./config";
 import path = require('path');
 import TextToSVG = require('text-to-svg');
 import * as SVG from "@svgdotjs/svg.js";
+import { strict as assert } from 'assert';
 
 export function loadFont(fontPath: string): TextToSVG {
 	return TextToSVG.loadSync(path.join(FILE_CONFIG.FONTS, fontPath));
 }
 
+function pushdownTransformation(container: SVG.Container) {
+	/// This function removes the transformation from the container,
+	/// and pushes it down to the children.
+
+	let t = container.transform();
+
+	for (let child of container.children()) {
+	// 	const ctm = child.screenCTM();
+	// 	const pCtm = container.screenCTM().inverse();
+		
+	// 	child.untransform().transform(pCtm.multiply(ctm));
+		// child.transform(t, true);
+	}
+	container.untransform();
+
+	// const ctm = elt.screenCTM();
+	// const pCtm = parent.screenCTM().inverse();
+	
+	// elt.untransform().transform(pCtm.multiply(ctm));
+}
+
 function scaleFromOrigin(svgObj: SVG.Shape, scaleFactor: number): void {
-	// svgObj.scale(scaleFactor);
-	// TODO: what the hell is this NumberAlias thing?
+	// TODO: can this be replaced with
+	//mathSvg.scale(scaleFactor);
+	// pushdownTransformation(mathSvg);
 
 	// Oftentimes, mostly for text, we want to scale from the origin, not from
 	// the upper-left corner. So we do it here.
@@ -41,45 +64,52 @@ export function makeMathSvg(canvas: SVG.Container, tex: string, fontSizePx: numb
 	// Returns some math text with the baseline at the origin.
 	const adaptor = MathJax.startup.adaptor;
 	const node = MathJax.tex2svg(tex, { display: true });
-	var svgText = adaptor.outerHTML(node.children[0]);
-	canvas.svg(svgText);  // add inner SVG element to the canvas
 
-	// get the last element, which is our svg object
-	var mathSvg = canvas.last();
+	assert.equal(node.children.length, 1);
+	let svgText = adaptor.outerHTML(node.children[0]);
 
-	// Unfortunately, MathJax outputs units of ex, but that's not compatible
-	// with svg.js. Fortunately, we can ask it for its context.
-	var metrics = MathJax.getMetricsFor(node, true);
-	var exToPx = metrics.ex / metrics.scale;
+	// Import new nested SVG element to the canvas. The svg() method returns
+	// the parent object, so we fetch the new object by the last element.
+	let mathSvg = canvas.svg(svgText).last() as SVG.Svg;
 
-	// Note: despite the typestub, in this case mathSvg.height() returns a string
-	// like 20.5ex. So we have to strip off the unit ourselves, eluding the typechecker.
-	// @ts-ignore
-	var widthEx = +mathSvg.width().slice(0, -2);
-	// @ts-ignore
-	var heightEx = +mathSvg.height().slice(0, -2);
+	// Unfortunately, MathJax outputs units of ex, but we'd rather use non-relative
+	// units. Fortunately, MathJaX will give us the conversion factor.
+	let metrics = MathJax.getMetricsFor(node, true);
+
+	function convertExToPx(length: SVG.NumberAlias): number {
+		// @ts-ignore: This should work but I think it's a TS bug
+		let lengthEx = new SVG.Number(length);
+		if (lengthEx.value !== 0) {
+			assert.equal(lengthEx.unit, "ex", lengthEx.toString());
+		}
+		return lengthEx.value * metrics.ex / metrics.scale;
+	}
 
 	// Now we change the units to px (this should not change the visual size).
-	mathSvg.size(widthEx * exToPx, heightEx * exToPx);
+	let widthPx = convertExToPx(mathSvg.width());
+	let heightPx = convertExToPx(mathSvg.height());
+	mathSvg.size(widthPx, heightPx);
 
-	// Next, we shift it so that the baseline is at zero. To do this, we have to
-	// inspect the "style" property of the object; specifically, the property
-	// vertical-align. Fortunately, that should be the only thing in there.
-	var regex = /vertical-align: *(-?\d*\.?\d*)(ex)?/
-	var verticalAlignEx = +regex.exec(mathSvg.attr("style"))![1];
+	// Currently, the origin is at the upper-left corner, but we want to put it at
+	// the left-most edge of the baseline.
+	// So we want to raise it by the height, and then by vertical-align (which is
+	// usually negative). And this must be done in pixels.
 
-	// Currently the upper-left corner is at the origin, so we want to raise it
-	// by the height, and then by vertical-align. But this all has to be done
-	// in units of px, not ex.
-	mathSvg.dy(-exToPx * (heightEx + verticalAlignEx));
+	// To get the vertical-align, we extract it from the style property.
+	// @ts-ignore: If I passed `verticalAlign` it'd typecheck, but not work...
+	let verticalAlignEx: string = mathSvg.css("vertical-align").toString();
+	let verticalAlignPx = convertExToPx(verticalAlignEx);
 
-	// Now the baseline is at the origin, so let's scale from the origin. The font
-	// is, by default, 1 em tall, so that's what we put in our denominator.
-	var scaleFactor = fontSizePx / metrics.em * metrics.scale;
+	// Then we move it to the right position.
+	mathSvg.dy(- heightPx - verticalAlignPx);
+
+	// Now we scale it to the desired height. The font size is always 1em,
+	// by definition, so we convert it to pixels and put it in the denominator.
+	let scaleFactor = fontSizePx / (metrics.em / metrics.scale);
 	scaleFromOrigin(mathSvg, scaleFactor);
 
 	// Lastly, clear the style element so it can't interfere with us
-	mathSvg.attr("style", "");
+	mathSvg.attr("style", null);
 
 	return mathSvg;
 }

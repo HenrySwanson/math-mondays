@@ -272,6 +272,6 @@ builder.register("ordinals.svg", function (canvas) {
 		value.dx(-value.width() / 2);
 		value.dmove(cellX + 2, cellY + 4);
 	}
-	
+
 	asset_utils.shrinkCanvas(canvas);
 });
