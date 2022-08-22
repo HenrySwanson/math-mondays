@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc",
-    "generate": "rm -Rf ../content/images && tsc && node dist/index.js && webpack --mode production && cp -r static/. ../content/images && cp -r web-bundles/. ../content/js/",
-    "test": "jest"
-  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
