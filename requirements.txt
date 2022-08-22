@@ -1,4 +1,5 @@
 pelican[markdown]==4.7.1
+pelican-jinja2content==1.0.1
 pelican-render-math==1.0.3
 pelican-webassets==2.0.0
 pelican-sitemap==1.0.2
