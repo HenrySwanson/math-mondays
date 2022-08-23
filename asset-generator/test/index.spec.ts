@@ -1,6 +1,7 @@
-import { Tree } from "../src/lib/tree"
-import { TreeLayout } from "../src/lib/hydra";
+import { Tree } from "../src/assets/lib/tree"
+import { TreeLayout } from "../src/assets/hydra/lib";
 
+// TODO: can i put tests into the library folders?
 test("tree layout", () => {
   let root = new Tree([0, 0], []);
   root.appendChild([-0.5, 1]);

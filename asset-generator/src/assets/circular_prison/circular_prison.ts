@@ -258,7 +258,7 @@ class ExperimentApplet<S extends IPrisonerState<S>> {
 
 // Create experiments and link them to the HTML visuals
 let experiment1 = new ExperimentApplet<SimpleState>(5, "1", startState, (drawing, name) => new SimpleGraphics(drawing, name));
-let experiment2 = new ExperimentApplet(5, "2", startStateFancy, (drawing, name) => new FancyGraphics(drawing, name));
+let experiment2 = new ExperimentApplet<FancyState>(5, "2", startStateFancy, (drawing, name) => new FancyGraphics(drawing, name));
 
 experiment1.drawEverything();
 experiment2.drawEverything();
