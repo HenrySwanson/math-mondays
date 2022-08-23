@@ -2,7 +2,179 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 536:
+/***/ 604:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+"use_strict";
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+exports.__esModule = true;
+var lib_1 = __webpack_require__(43);
+var SVG = __webpack_require__(500);
+var V_PADDING = 0.7;
+var H_PADDING = 0.5;
+var DIE_DURATION = 500;
+var MOVE_DURATION = 700;
+var CLONE_DURATION = 200;
+var resetButton = document.getElementById("reset-button");
+var clickCounter = document.getElementById("click-counter");
+var drawing = SVG.SVG().addTo("#hydra-interactive");
+// Keeps track of number of clicks
+var numClicks = 0;
+function updateCounter() {
+    clickCounter.textContent = "Clicks: " + numClicks;
+    numClicks += 1;
+}
+// Recreates and redraws the hydra
+function resetHydra() {
+    // Clear existing state
+    drawing.clear();
+    numClicks = 0;
+    updateCounter();
+    // Create the original hydra
+    var hydra = new lib_1.HydraSkeleton([]);
+    var child = hydra.tree.appendChild(null);
+    var gchild = child.appendChild(null);
+    gchild.appendChild(null);
+    gchild.appendChild(null);
+    // Then draw it
+    var svgHydra = new lib_1.SvgHydra(drawing, hydra);
+    svgHydra.repositionNodes();
+    resizeViewbox(drawing, lib_1.TreeLayout.fromTree(svgHydra.svgTree));
+    // Lastly, hook up the listeners
+    setListeners(drawing, svgHydra, svgHydra.svgTree, updateCounter);
+}
+function resizeViewbox(drawing, layout) {
+    var boxWidth = 3 * lib_1.LEVEL_SPACING;
+    var boxHeight = layout.getWidth() * lib_1.NODE_SPACING;
+    drawing.viewbox(-(H_PADDING + lib_1.NODE_DIAM / 2), -(V_PADDING + lib_1.NODE_DIAM / 2), boxWidth + 2 * H_PADDING + lib_1.NODE_DIAM, boxHeight + 2 * V_PADDING + lib_1.NODE_DIAM);
+}
+function setListeners(drawing, hydra, node, clickCallback) {
+    // Data passed between callbacks
+    var wasClicked = false;
+    var opacityGroup;
+    var svgHead = node.payload;
+    // We've got a sequence of animation callbacks
+    function cut() {
+        // Return immediately if we should ignore the click
+        if (node.parent === null || node.children.length !== 0) {
+            return;
+        }
+        // Increment counter
+        wasClicked = true;
+        clickCallback();
+        // Opacity has to be controlled as a group or else the overlap causes
+        // problems. But make sure to kill the group later.
+        opacityGroup = drawing.group().add(svgHead.neck).add(svgHead.head);
+        opacityGroup.animate(DIE_DURATION, 0, "now").ease(">").attr({ opacity: 0 }).after(cut2);
+    }
+    function cut2() {
+        var parent = node.parent;
+        // Delete the head that is killed
+        opacityGroup.remove();
+        node.remove();
+        // Our parent should clone itself, unless it's root
+        var grandparent = parent.parent;
+        if (grandparent === null) {
+            cut3(); // call immediately
+            return;
+        }
+        // Generate the new uncles and cousins
+        var parentIdx = grandparent.children.indexOf(parent);
+        var copies = [];
+        for (var i = 0; i < 2; i++) {
+            // Make a copy of the parent (nulling out the payloads),
+            // and use it to create new svg data.
+            // TODO: since that tree doesn't have a parent yet, I have to
+            // manually create the line. That seems dumb.
+            var copy = hydra.createSvgHeads(parent.map(function (_) { return null; }));
+            copy.payload.neck = hydra.svgGroup.line([0, 0, 0, 0]).stroke({ width: lib_1.NECK_WIDTH });
+            copy.payload.neck.back();
+            grandparent.insertSubtree(parentIdx + 1, copy);
+            // Attach listeners to the new SVG elements
+            setListeners(drawing, hydra, copy, clickCallback);
+            // Lastly, position the copy on top of the parent
+            parent.zip(copy).forEachPreorder(function (_a) {
+                var _b;
+                var _c = __read(_a, 2), data1 = _c[0], data2 = _c[1];
+                data2.head.move(data1.head.x(), data1.head.y());
+                (_b = data2.neck) === null || _b === void 0 ? void 0 : _b.plot(data1.neck.array());
+            });
+            copies.push(copy);
+        }
+        // Lastly, make everyone involved blue.
+        copies.forEach(function (copy) { return makeBlue(copy); });
+        makeBlue(parent).after(cut3);
+    }
+    function cut3() {
+        // Layout the tree again, and move everything to its final position
+        var layout = lib_1.TreeLayout.fromTree(hydra.svgTree);
+        layout.shift(-layout.getMinX(), 0);
+        hydra.svgTree.zip(layout.tree).forEachPreorderX(function (node) {
+            var _a;
+            var svgHead = node.payload[0];
+            var position = node.payload[1];
+            svgHead
+                .head
+                .animate(MOVE_DURATION, 0, "now")
+                .ease("<")
+                .center(position.y * lib_1.LEVEL_SPACING, position.x * lib_1.NODE_SPACING)
+                .attr({ fill: "#000" });
+            if (node.parent !== null) {
+                var prevPosition = node.parent.payload[1];
+                (_a = svgHead
+                    .neck) === null || _a === void 0 ? void 0 : _a.animate(MOVE_DURATION, 0, "now").ease("<").plot(position.y * lib_1.LEVEL_SPACING, position.x * lib_1.NODE_SPACING, prevPosition.y * lib_1.LEVEL_SPACING, prevPosition.x * lib_1.NODE_SPACING).attr({ stroke: "#000" });
+            }
+        });
+        resizeViewbox(drawing.animate(MOVE_DURATION, 0, "now").ease("<"), layout);
+        cut4();
+    }
+    function cut4() {
+        if (hydra.svgTree.children.length === 0) {
+            alert("Wow... I can't believe you actually did it!\n" +
+                "Sorry I didn't write anything cool for you yet. " +
+                "Perhaps I'll add something later.");
+        }
+    }
+    // helper function
+    // this needs to do the recursion manually for now, so that we return the final animation
+    // and use it for afterAll callbacks
+    function makeBlue(h) {
+        // Recurse
+        h.children.forEach(function (child) { return makeBlue(child); });
+        var svgHead = h.payload;
+        if (svgHead.neck !== null) {
+            svgHead.neck.animate(CLONE_DURATION, 0, "now").ease("<").attr({ stroke: lib_1.CLONE_COLOR });
+        }
+        return svgHead.head.animate(CLONE_DURATION, 0).ease("<").attr({ fill: lib_1.CLONE_COLOR });
+    }
+    // Finally, now that everything's defined, assign the click handler
+    // to self, and recurse to children.
+    svgHead.head.click(cut);
+    node.children.forEach(function (child) { return setListeners(drawing, hydra, child, clickCallback); });
+}
+resetHydra(); // init hydra
+resetButton.addEventListener("click", resetHydra);
+//# sourceMappingURL=hydra.js.map
+
+/***/ }),
+
+/***/ 43:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -39,7 +211,7 @@ exports.NODE_SPACING = 1;
 exports.LEVEL_SPACING = 2;
 exports.NECK_WIDTH = 0.1;
 exports.CLONE_COLOR = "#422aa8";
-var tree_1 = __webpack_require__(347);
+var tree_1 = __webpack_require__(57);
 /* Hydra Structure */
 var HydraSkeleton = /** @class */ (function () {
     function HydraSkeleton(children) {
@@ -194,11 +366,11 @@ var SvgHydra = /** @class */ (function () {
     return SvgHydra;
 }());
 exports.SvgHydra = SvgHydra;
-//# sourceMappingURL=hydra.js.map
+//# sourceMappingURL=lib.js.map
 
 /***/ }),
 
-/***/ 347:
+/***/ 57:
 /***/ (function(__unused_webpack_module, exports) {
 
 
@@ -314,178 +486,6 @@ var Tree = /** @class */ (function () {
 }());
 exports.Tree = Tree;
 //# sourceMappingURL=tree.js.map
-
-/***/ }),
-
-/***/ 130:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-"use_strict";
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-exports.__esModule = true;
-var hydra_1 = __webpack_require__(536);
-var SVG = __webpack_require__(500);
-var V_PADDING = 0.7;
-var H_PADDING = 0.5;
-var DIE_DURATION = 500;
-var MOVE_DURATION = 700;
-var CLONE_DURATION = 200;
-var resetButton = document.getElementById("reset-button");
-var clickCounter = document.getElementById("click-counter");
-var drawing = SVG.SVG().addTo("#hydra-interactive");
-// Keeps track of number of clicks
-var numClicks = 0;
-function updateCounter() {
-    clickCounter.textContent = "Clicks: " + numClicks;
-    numClicks += 1;
-}
-// Recreates and redraws the hydra
-function resetHydra() {
-    // Clear existing state
-    drawing.clear();
-    numClicks = 0;
-    updateCounter();
-    // Create the original hydra
-    var hydra = new hydra_1.HydraSkeleton([]);
-    var child = hydra.tree.appendChild(null);
-    var gchild = child.appendChild(null);
-    gchild.appendChild(null);
-    gchild.appendChild(null);
-    // Then draw it
-    var svgHydra = new hydra_1.SvgHydra(drawing, hydra);
-    svgHydra.repositionNodes();
-    resizeViewbox(drawing, hydra_1.TreeLayout.fromTree(svgHydra.svgTree));
-    // Lastly, hook up the listeners
-    setListeners(drawing, svgHydra, svgHydra.svgTree, updateCounter);
-}
-function resizeViewbox(drawing, layout) {
-    var boxWidth = 3 * hydra_1.LEVEL_SPACING;
-    var boxHeight = layout.getWidth() * hydra_1.NODE_SPACING;
-    drawing.viewbox(-(H_PADDING + hydra_1.NODE_DIAM / 2), -(V_PADDING + hydra_1.NODE_DIAM / 2), boxWidth + 2 * H_PADDING + hydra_1.NODE_DIAM, boxHeight + 2 * V_PADDING + hydra_1.NODE_DIAM);
-}
-function setListeners(drawing, hydra, node, clickCallback) {
-    // Data passed between callbacks
-    var wasClicked = false;
-    var opacityGroup;
-    var svgHead = node.payload;
-    // We've got a sequence of animation callbacks
-    function cut() {
-        // Return immediately if we should ignore the click
-        if (node.parent === null || node.children.length !== 0) {
-            return;
-        }
-        // Increment counter
-        wasClicked = true;
-        clickCallback();
-        // Opacity has to be controlled as a group or else the overlap causes
-        // problems. But make sure to kill the group later.
-        opacityGroup = drawing.group().add(svgHead.neck).add(svgHead.head);
-        opacityGroup.animate(DIE_DURATION, 0, "now").ease(">").attr({ opacity: 0 }).after(cut2);
-    }
-    function cut2() {
-        var parent = node.parent;
-        // Delete the head that is killed
-        opacityGroup.remove();
-        node.remove();
-        // Our parent should clone itself, unless it's root
-        var grandparent = parent.parent;
-        if (grandparent === null) {
-            cut3(); // call immediately
-            return;
-        }
-        // Generate the new uncles and cousins
-        var parentIdx = grandparent.children.indexOf(parent);
-        var copies = [];
-        for (var i = 0; i < 2; i++) {
-            // Make a copy of the parent (nulling out the payloads),
-            // and use it to create new svg data.
-            // TODO: since that tree doesn't have a parent yet, I have to
-            // manually create the line. That seems dumb.
-            var copy = hydra.createSvgHeads(parent.map(function (_) { return null; }));
-            copy.payload.neck = hydra.svgGroup.line([0, 0, 0, 0]).stroke({ width: hydra_1.NECK_WIDTH });
-            copy.payload.neck.back();
-            grandparent.insertSubtree(parentIdx + 1, copy);
-            // Attach listeners to the new SVG elements
-            setListeners(drawing, hydra, copy, clickCallback);
-            // Lastly, position the copy on top of the parent
-            parent.zip(copy).forEachPreorder(function (_a) {
-                var _b;
-                var _c = __read(_a, 2), data1 = _c[0], data2 = _c[1];
-                data2.head.move(data1.head.x(), data1.head.y());
-                (_b = data2.neck) === null || _b === void 0 ? void 0 : _b.plot(data1.neck.array());
-            });
-            copies.push(copy);
-        }
-        // Lastly, make everyone involved blue.
-        copies.forEach(function (copy) { return makeBlue(copy); });
-        makeBlue(parent).after(cut3);
-    }
-    function cut3() {
-        // Layout the tree again, and move everything to its final position
-        var layout = hydra_1.TreeLayout.fromTree(hydra.svgTree);
-        layout.shift(-layout.getMinX(), 0);
-        hydra.svgTree.zip(layout.tree).forEachPreorderX(function (node) {
-            var _a;
-            var svgHead = node.payload[0];
-            var position = node.payload[1];
-            svgHead
-                .head
-                .animate(MOVE_DURATION, 0, "now")
-                .ease("<")
-                .center(position.y * hydra_1.LEVEL_SPACING, position.x * hydra_1.NODE_SPACING)
-                .attr({ fill: "#000" });
-            if (node.parent !== null) {
-                var prevPosition = node.parent.payload[1];
-                (_a = svgHead
-                    .neck) === null || _a === void 0 ? void 0 : _a.animate(MOVE_DURATION, 0, "now").ease("<").plot(position.y * hydra_1.LEVEL_SPACING, position.x * hydra_1.NODE_SPACING, prevPosition.y * hydra_1.LEVEL_SPACING, prevPosition.x * hydra_1.NODE_SPACING).attr({ stroke: "#000" });
-            }
-        });
-        resizeViewbox(drawing.animate(MOVE_DURATION, 0, "now").ease("<"), layout);
-        cut4();
-    }
-    function cut4() {
-        if (hydra.svgTree.children.length === 0) {
-            alert("Wow... I can't believe you actually did it!\n" +
-                "Sorry I didn't write anything cool for you yet. " +
-                "Perhaps I'll add something later.");
-        }
-    }
-    // helper function
-    // this needs to do the recursion manually for now, so that we return the final animation
-    // and use it for afterAll callbacks
-    function makeBlue(h) {
-        // Recurse
-        h.children.forEach(function (child) { return makeBlue(child); });
-        var svgHead = h.payload;
-        if (svgHead.neck !== null) {
-            svgHead.neck.animate(CLONE_DURATION, 0, "now").ease("<").attr({ stroke: hydra_1.CLONE_COLOR });
-        }
-        return svgHead.head.animate(CLONE_DURATION, 0).ease("<").attr({ fill: hydra_1.CLONE_COLOR });
-    }
-    // Finally, now that everything's defined, assign the click handler
-    // to self, and recurse to children.
-    svgHead.head.click(cut);
-    node.children.forEach(function (child) { return setListeners(drawing, hydra, child, clickCallback); });
-}
-resetHydra(); // init hydra
-resetButton.addEventListener("click", resetHydra);
-//# sourceMappingURL=hydra.js.map
 
 /***/ }),
 
@@ -7712,7 +7712,7 @@ makeMorphable();
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(130);
+/******/ 	var __webpack_exports__ = __webpack_require__(604);
 /******/ 	
 /******/ })()
 ;

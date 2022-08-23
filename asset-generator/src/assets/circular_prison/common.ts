@@ -1,6 +1,6 @@
 "use strict";
 
-import type { FiniteStateMachine, Subprocedure, SubprocedureResult } from "../fsm";
+import type { FiniteStateMachine, Subprocedure, SubprocedureResult } from "../lib/fsm";
 
 export interface IPrisonerState<S> extends FiniteStateMachine<boolean, S> {
 	willFlip(): boolean;

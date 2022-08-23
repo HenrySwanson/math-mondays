@@ -1,12 +1,12 @@
 "use strict";
 
 // Import our utils library and initialize mathjax+svg
-import asset_utils = require("./utils");
-import { Builder } from "./builder";
+import asset_utils = require("../../builder/utils");
+import { Builder } from "../../builder/builder";
 
 // Import other libraries
 import util = require('util');
-import { CLONE_COLOR, HydraSkeleton, SvgHydra, SvgHeadData } from "../lib/hydra";
+import { CLONE_COLOR, HydraSkeleton, SvgHydra, SvgHeadData } from "./lib";
 import * as SVG from "@svgdotjs/svg.js"
 
 const ALTE_DIN = asset_utils.loadFont("alte-din-1451-mittelschrift/din1451alt.ttf");

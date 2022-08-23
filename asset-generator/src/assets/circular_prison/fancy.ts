@@ -1,8 +1,8 @@
 "use strict";
 
-import { Subprocedure, SubprocedureResult } from "../fsm";
-import { zip } from "../iter";
-import { Matrix } from "../matrix";
+import { Subprocedure, SubprocedureResult } from "../lib/fsm";
+import { zip } from "../lib/iter";
+import { Matrix } from "../lib/matrix";
 import { IPrisonerState, Announcement, WaxingPhase, WaningPhase } from "./common";
 import * as SVG from "@svgdotjs/svg.js";
 

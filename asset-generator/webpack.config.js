@@ -2,8 +2,9 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    hydra: "./dist/website/hydra.js",
-    circular_prison: "./dist/website/circular_prison.js"
+    // TODO: rename files
+    hydra: "./dist/assets/hydra/hydra.js",
+    circular_prison: "./dist/assets/circular_prison/circular_prison.js"
   },
   output: {
     path: path.join(__dirname, 'web-bundles'),

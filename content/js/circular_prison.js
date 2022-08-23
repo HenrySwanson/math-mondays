@@ -2,7 +2,229 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 353:
+/***/ 270:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+"use_strict";
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+exports.__esModule = true;
+var SVG = __webpack_require__(500);
+var simple_1 = __webpack_require__(28);
+var fancy_1 = __webpack_require__(122);
+// TODO: don't duplicate constants like this!
+var PRISONER_RADIUS = 20;
+var PRISONER_SPACING = 80;
+var SCENE_PADDING = 10;
+// TODO: now what? I have to figure out how to visually show this!
+// okay, here's the way i see it
+// - then add the ability to click and drag people into different slots
+//   (w/ optional checkbox for random)
+// - then add fancier visuals
+// - start over button
+var Prisoner = /** @class */ (function () {
+    function Prisoner(state, graphics, name) {
+        this.graphics = graphics;
+        this.state = state;
+        this.name = name;
+    }
+    Prisoner.prototype.draw = function (light) {
+        this.graphics.drawState(this.state, light);
+        this.graphics.drawSwitch(this.state.willFlip());
+    };
+    return Prisoner;
+}());
+function shuffleArray(array) {
+    var _a;
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        _a = __read([array[j], array[i]], 2), array[i] = _a[0], array[j] = _a[1];
+    }
+}
+var Experiment = /** @class */ (function () {
+    function Experiment(drawing, numPrisoners, startStateFn, graphicsFn) {
+        this.prisoners = Array.from(Array(numPrisoners).keys()).map(function (i) {
+            var captain = i == 0;
+            var name = String.fromCharCode(65 + i);
+            return new Prisoner(startStateFn(captain), graphicsFn(drawing, name), name);
+        });
+        this.state = { state: "A" };
+        this.numDays = 1;
+        this.historyStack = [];
+        this.startStateFn = startStateFn;
+        drawing.viewbox(0, 0, numPrisoners * PRISONER_SPACING + SCENE_PADDING, 2 * PRISONER_RADIUS + 2 * SCENE_PADDING);
+    }
+    Experiment.prototype.advance = function () {
+        var _this = this;
+        var numPrisoners = this.prisoners.length;
+        switch (this.state.state) {
+            case "A": {
+                // Prisoners have already decided whether to flip the switch, based on what they saw yesterday.
+                var lights = new Map(this.prisoners.map(function (p, idx) {
+                    // A prisoner will see a light if the prisoner before them flipped the switch.
+                    var prev = _this.prisoners[(idx + numPrisoners - 1) % numPrisoners];
+                    var seesLight = prev.state.willFlip();
+                    return [p, seesLight];
+                }));
+                this.state = { state: "B", lights: lights };
+                break;
+            }
+            case "B": {
+                // Nighttime, time to scramble the prisoners and update
+                // their states. But first, save the state.
+                var history_1 = this.prisoners.map(function (p) { return [p, p.state]; });
+                this.historyStack.push(history_1);
+                shuffleArray(this.prisoners);
+                var lights_1 = this.state.lights;
+                this.prisoners.forEach(function (p) { return p.state = p.state.next(lights_1.get(p)); });
+                this.state = { state: "A" };
+                this.numDays += 1;
+                break;
+            }
+            case "C": {
+                // do nothing
+                break;
+            }
+        }
+    };
+    Experiment.prototype.undo = function () {
+        switch (this.state.state) {
+            case "A": {
+                var history_2 = this.historyStack.pop();
+                if (history_2 === undefined) {
+                    return;
+                }
+                this.prisoners = history_2.map(function (h) {
+                    var _a = __read(h, 2), p = _a[0], state = _a[1];
+                    p.state = state;
+                    return p;
+                });
+                this.numDays -= 1;
+                this.advance();
+                break;
+            }
+            case "B": {
+                // Drop the extra data
+                this.state = { state: "A" };
+                break;
+            }
+            case "C": {
+                // do nothing
+                break;
+            }
+        }
+    };
+    Experiment.prototype.startOver = function () {
+        var _this = this;
+        this.prisoners.sort(function (a, b) { return a.name.localeCompare(b.name); });
+        this.prisoners.forEach(function (p, i) { return p.state = _this.startStateFn(i == 0); });
+        this.state = { state: "A" };
+        this.numDays = 1;
+        this.historyStack = [];
+    };
+    Experiment.prototype.draw = function () {
+        // Move prisoner graphics
+        this.prisoners.forEach(function (p, i) {
+            p.graphics.move(SCENE_PADDING + PRISONER_SPACING * i, SCENE_PADDING);
+        });
+        switch (this.state.state) {
+            case "A": {
+                this.prisoners.forEach(function (p) { return p.draw(null); });
+                break;
+            }
+            case "B": {
+                var lights_2 = this.state.lights;
+                this.prisoners.forEach(function (p) { return p.draw(lights_2.get(p)); });
+                break;
+            }
+            case "C": {
+                // do nothing
+                break;
+            }
+        }
+    };
+    Experiment.prototype.currentState = function () {
+        var state = this.prisoners[0].state;
+        return state.description();
+    };
+    Experiment.prototype.commonKnowledge = function () {
+        var state = this.prisoners[0].state;
+        return "<ul>" + state.commonKnowledge().map(function (x) { return "<li>" + x + "</li>"; }).join("\n") + "</ul>";
+    };
+    return Experiment;
+}());
+var ExperimentApplet = /** @class */ (function () {
+    function ExperimentApplet(numPrisoners, suffix, startStateFn, graphicsFn) {
+        var _this = this;
+        this.experiment = new Experiment(SVG.SVG().addTo("#prison-interactive-" + suffix), numPrisoners, startStateFn, graphicsFn);
+        this.nextButton = document.getElementById("next-button-" + suffix);
+        this.undoButton = document.getElementById("undo-button-" + suffix);
+        this.finishPhaseButton = document.getElementById("finish-phase-button-" + suffix);
+        this.startOverButton = document.getElementById("start-over-button-" + suffix);
+        this.dayCounter = document.getElementById("day-counter-" + suffix);
+        this.stateText = document.getElementById("state-description-" + suffix);
+        this.commonKnowledge = document.getElementById("common-knowledge-" + suffix);
+        this.nextButton.addEventListener("click", function (event) {
+            var currentPhase = _this.experiment.prisoners[0].state.phase;
+            if (currentPhase == "final") {
+                return;
+            }
+            _this.experiment.advance();
+            _this.drawEverything();
+        });
+        this.finishPhaseButton.addEventListener("click", function (event) {
+            var currentPhase = _this.experiment.prisoners[0].state.phase;
+            if (currentPhase == "final") {
+                return;
+            }
+            while (_this.experiment.prisoners[0].state.phase == currentPhase) {
+                _this.experiment.advance();
+                _this.drawEverything();
+            }
+        });
+        this.undoButton.addEventListener("click", function (event) {
+            _this.experiment.undo();
+            _this.drawEverything();
+        });
+        this.startOverButton.addEventListener("click", function (event) {
+            _this.experiment.startOver();
+            _this.drawEverything();
+        });
+    }
+    ExperimentApplet.prototype.drawEverything = function () {
+        this.experiment.draw();
+        var time = this.experiment.state.state == "A" ? "Day" : "Night";
+        this.dayCounter.textContent = "".concat(time, " ").concat(this.experiment.numDays);
+        this.stateText.textContent = this.experiment.currentState();
+        this.commonKnowledge.innerHTML = this.experiment.commonKnowledge();
+    };
+    return ExperimentApplet;
+}());
+// Create experiments and link them to the HTML visuals
+var experiment1 = new ExperimentApplet(5, "1", simple_1.startState, function (drawing, name) { return new simple_1.Graphics(drawing, name); });
+var experiment2 = new ExperimentApplet(5, "2", fancy_1.startState, function (drawing, name) { return new fancy_1.Graphics(drawing, name); });
+experiment1.drawEverything();
+experiment2.drawEverything();
+//# sourceMappingURL=circular_prison.js.map
+
+/***/ }),
+
+/***/ 574:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -74,7 +296,7 @@ exports.Announcement = Announcement;
 
 /***/ }),
 
-/***/ 77:
+/***/ 122:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -107,9 +329,9 @@ var __values = (this && this.__values) || function(o) {
 };
 exports.__esModule = true;
 exports.Graphics = exports.startState = void 0;
-var iter_1 = __webpack_require__(857);
-var matrix_1 = __webpack_require__(825);
-var common_1 = __webpack_require__(353);
+var iter_1 = __webpack_require__(81);
+var matrix_1 = __webpack_require__(589);
+var common_1 = __webpack_require__(574);
 var ACTIVE_COLOR = "#ffff00";
 var WANING_COLOR = "#ffcc00";
 var INACTIVE_COLOR = "#808080";
@@ -561,13 +783,13 @@ function trySolveEquations(numVariables, equations) {
 
 /***/ }),
 
-/***/ 31:
+/***/ 28:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 exports.__esModule = true;
 exports.Graphics = exports.startState = void 0;
-var common_1 = __webpack_require__(353);
+var common_1 = __webpack_require__(574);
 var ACTIVE_COLOR = "#ffff00";
 var WANING_COLOR = "#ffcc00";
 var INACTIVE_COLOR = "#808080";
@@ -905,7 +1127,7 @@ exports.Graphics = Graphics;
 
 /***/ }),
 
-/***/ 857:
+/***/ 81:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -935,7 +1157,7 @@ exports.zip = zip;
 
 /***/ }),
 
-/***/ 825:
+/***/ 589:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -957,7 +1179,7 @@ var __read = (this && this.__read) || function (o, n) {
 };
 exports.__esModule = true;
 exports.Matrix = void 0;
-var iter_1 = __webpack_require__(857);
+var iter_1 = __webpack_require__(81);
 var Matrix = /** @class */ (function () {
     function Matrix(rows, nRows, nCols) {
         this.rows = rows;
@@ -1020,228 +1242,6 @@ var Matrix = /** @class */ (function () {
 }());
 exports.Matrix = Matrix;
 //# sourceMappingURL=matrix.js.map
-
-/***/ }),
-
-/***/ 557:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-"use_strict";
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-exports.__esModule = true;
-var SVG = __webpack_require__(500);
-var simple_1 = __webpack_require__(31);
-var fancy_1 = __webpack_require__(77);
-// TODO: don't duplicate constants like this!
-var PRISONER_RADIUS = 20;
-var PRISONER_SPACING = 80;
-var SCENE_PADDING = 10;
-// TODO: now what? I have to figure out how to visually show this!
-// okay, here's the way i see it
-// - then add the ability to click and drag people into different slots
-//   (w/ optional checkbox for random)
-// - then add fancier visuals
-// - start over button
-var Prisoner = /** @class */ (function () {
-    function Prisoner(state, graphics, name) {
-        this.graphics = graphics;
-        this.state = state;
-        this.name = name;
-    }
-    Prisoner.prototype.draw = function (light) {
-        this.graphics.drawState(this.state, light);
-        this.graphics.drawSwitch(this.state.willFlip());
-    };
-    return Prisoner;
-}());
-function shuffleArray(array) {
-    var _a;
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        _a = __read([array[j], array[i]], 2), array[i] = _a[0], array[j] = _a[1];
-    }
-}
-var Experiment = /** @class */ (function () {
-    function Experiment(drawing, numPrisoners, startStateFn, graphicsFn) {
-        this.prisoners = Array.from(Array(numPrisoners).keys()).map(function (i) {
-            var captain = i == 0;
-            var name = String.fromCharCode(65 + i);
-            return new Prisoner(startStateFn(captain), graphicsFn(drawing, name), name);
-        });
-        this.state = { state: "A" };
-        this.numDays = 1;
-        this.historyStack = [];
-        this.startStateFn = startStateFn;
-        drawing.viewbox(0, 0, numPrisoners * PRISONER_SPACING + SCENE_PADDING, 2 * PRISONER_RADIUS + 2 * SCENE_PADDING);
-    }
-    Experiment.prototype.advance = function () {
-        var _this = this;
-        var numPrisoners = this.prisoners.length;
-        switch (this.state.state) {
-            case "A": {
-                // Prisoners have already decided whether to flip the switch, based on what they saw yesterday.
-                var lights = new Map(this.prisoners.map(function (p, idx) {
-                    // A prisoner will see a light if the prisoner before them flipped the switch.
-                    var prev = _this.prisoners[(idx + numPrisoners - 1) % numPrisoners];
-                    var seesLight = prev.state.willFlip();
-                    return [p, seesLight];
-                }));
-                this.state = { state: "B", lights: lights };
-                break;
-            }
-            case "B": {
-                // Nighttime, time to scramble the prisoners and update
-                // their states. But first, save the state.
-                var history_1 = this.prisoners.map(function (p) { return [p, p.state]; });
-                this.historyStack.push(history_1);
-                shuffleArray(this.prisoners);
-                var lights_1 = this.state.lights;
-                this.prisoners.forEach(function (p) { return p.state = p.state.next(lights_1.get(p)); });
-                this.state = { state: "A" };
-                this.numDays += 1;
-                break;
-            }
-            case "C": {
-                // do nothing
-                break;
-            }
-        }
-    };
-    Experiment.prototype.undo = function () {
-        switch (this.state.state) {
-            case "A": {
-                var history_2 = this.historyStack.pop();
-                if (history_2 === undefined) {
-                    return;
-                }
-                this.prisoners = history_2.map(function (h) {
-                    var _a = __read(h, 2), p = _a[0], state = _a[1];
-                    p.state = state;
-                    return p;
-                });
-                this.numDays -= 1;
-                this.advance();
-                break;
-            }
-            case "B": {
-                // Drop the extra data
-                this.state = { state: "A" };
-                break;
-            }
-            case "C": {
-                // do nothing
-                break;
-            }
-        }
-    };
-    Experiment.prototype.startOver = function () {
-        var _this = this;
-        this.prisoners.sort(function (a, b) { return a.name.localeCompare(b.name); });
-        this.prisoners.forEach(function (p, i) { return p.state = _this.startStateFn(i == 0); });
-        this.state = { state: "A" };
-        this.numDays = 1;
-        this.historyStack = [];
-    };
-    Experiment.prototype.draw = function () {
-        // Move prisoner graphics
-        this.prisoners.forEach(function (p, i) {
-            p.graphics.move(SCENE_PADDING + PRISONER_SPACING * i, SCENE_PADDING);
-        });
-        switch (this.state.state) {
-            case "A": {
-                this.prisoners.forEach(function (p) { return p.draw(null); });
-                break;
-            }
-            case "B": {
-                var lights_2 = this.state.lights;
-                this.prisoners.forEach(function (p) { return p.draw(lights_2.get(p)); });
-                break;
-            }
-            case "C": {
-                // do nothing
-                break;
-            }
-        }
-    };
-    Experiment.prototype.currentState = function () {
-        var state = this.prisoners[0].state;
-        return state.description();
-    };
-    Experiment.prototype.commonKnowledge = function () {
-        var state = this.prisoners[0].state;
-        return "<ul>" + state.commonKnowledge().map(function (x) { return "<li>" + x + "</li>"; }).join("\n") + "</ul>";
-    };
-    return Experiment;
-}());
-var ExperimentApplet = /** @class */ (function () {
-    function ExperimentApplet(numPrisoners, suffix, startStateFn, graphicsFn) {
-        var _this = this;
-        this.experiment = new Experiment(SVG.SVG().addTo("#prison-interactive-" + suffix), numPrisoners, startStateFn, graphicsFn);
-        this.nextButton = document.getElementById("next-button-" + suffix);
-        this.undoButton = document.getElementById("undo-button-" + suffix);
-        this.finishPhaseButton = document.getElementById("finish-phase-button-" + suffix);
-        this.startOverButton = document.getElementById("start-over-button-" + suffix);
-        this.dayCounter = document.getElementById("day-counter-" + suffix);
-        this.stateText = document.getElementById("state-description-" + suffix);
-        this.commonKnowledge = document.getElementById("common-knowledge-" + suffix);
-        this.nextButton.addEventListener("click", function (event) {
-            var currentPhase = _this.experiment.prisoners[0].state.phase;
-            if (currentPhase == "final") {
-                return;
-            }
-            _this.experiment.advance();
-            _this.drawEverything();
-        });
-        this.finishPhaseButton.addEventListener("click", function (event) {
-            var currentPhase = _this.experiment.prisoners[0].state.phase;
-            if (currentPhase == "final") {
-                return;
-            }
-            while (_this.experiment.prisoners[0].state.phase == currentPhase) {
-                _this.experiment.advance();
-                _this.drawEverything();
-            }
-        });
-        this.undoButton.addEventListener("click", function (event) {
-            _this.experiment.undo();
-            _this.drawEverything();
-        });
-        this.startOverButton.addEventListener("click", function (event) {
-            _this.experiment.startOver();
-            _this.drawEverything();
-        });
-    }
-    ExperimentApplet.prototype.drawEverything = function () {
-        this.experiment.draw();
-        var time = this.experiment.state.state == "A" ? "Day" : "Night";
-        this.dayCounter.textContent = "".concat(time, " ").concat(this.experiment.numDays);
-        this.stateText.textContent = this.experiment.currentState();
-        this.commonKnowledge.innerHTML = this.experiment.commonKnowledge();
-    };
-    return ExperimentApplet;
-}());
-// Create experiments and link them to the HTML visuals
-var experiment1 = new ExperimentApplet(5, "1", simple_1.startState, function (drawing, name) { return new simple_1.Graphics(drawing, name); });
-var experiment2 = new ExperimentApplet(5, "2", fancy_1.startState, function (drawing, name) { return new fancy_1.Graphics(drawing, name); });
-experiment1.drawEverything();
-experiment2.drawEverything();
-//# sourceMappingURL=circular_prison.js.map
 
 /***/ }),
 
@@ -8468,7 +8468,7 @@ makeMorphable();
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(557);
+/******/ 	var __webpack_exports__ = __webpack_require__(270);
 /******/ 	
 /******/ })()
 ;

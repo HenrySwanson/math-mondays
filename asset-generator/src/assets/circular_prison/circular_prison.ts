@@ -1,9 +1,9 @@
 "use_strict";
 
 import * as SVG from "@svgdotjs/svg.js"
-import type { IPrisonerState, IPrisonerGraphics } from "../lib/circular_prison/common";
-import { startState, State as SimpleState, Graphics as SimpleGraphics } from "../lib/circular_prison/simple";
-import { startState as startStateFancy, State as FancyState, Graphics as FancyGraphics } from "../lib/circular_prison/fancy";
+import type { IPrisonerState, IPrisonerGraphics } from "./common";
+import { startState, State as SimpleState, Graphics as SimpleGraphics } from "./simple";
+import { startState as startStateFancy, State as FancyState, Graphics as FancyGraphics } from "./fancy";
 
 
 // TODO: don't duplicate constants like this!

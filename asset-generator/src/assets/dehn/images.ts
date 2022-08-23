@@ -1,7 +1,7 @@
 "use strict";
 
-import asset_utils = require("./utils");
-import { Builder } from "./builder";
+import asset_utils = require("../../builder/utils");
+import { Builder } from "../../builder/builder";
 import * as SVG from "@svgdotjs/svg.js";
 
 // Name some colors

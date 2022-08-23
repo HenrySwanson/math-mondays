@@ -1,7 +1,7 @@
 "use_strict";
 
 import type { Tree } from "../lib/tree";
-import { HydraSkeleton, TreeLayout, SvgHeadData, SvgHydra, LEVEL_SPACING, NODE_SPACING, NODE_DIAM, NECK_WIDTH, CLONE_COLOR } from "../lib/hydra";
+import { HydraSkeleton, TreeLayout, SvgHeadData, SvgHydra, LEVEL_SPACING, NODE_SPACING, NODE_DIAM, NECK_WIDTH, CLONE_COLOR } from "./lib";
 import * as SVG from "@svgdotjs/svg.js"
 
 var V_PADDING = 0.7;

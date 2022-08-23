@@ -9,7 +9,7 @@ export const LEVEL_SPACING = 2;
 export const NECK_WIDTH = 0.1;
 export const CLONE_COLOR = "#422aa8";
 
-import { Tree } from "./tree";
+import { Tree } from "../lib/tree";
 
 /* Hydra Structure */
 
