@@ -2,7 +2,7 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 270:
+/***/ 345:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -220,7 +220,7 @@ var experiment1 = new ExperimentApplet(5, "1", simple_1.startState, function (dr
 var experiment2 = new ExperimentApplet(5, "2", fancy_1.startState, function (drawing, name) { return new fancy_1.Graphics(drawing, name); });
 experiment1.drawEverything();
 experiment2.drawEverything();
-//# sourceMappingURL=circular_prison.js.map
+//# sourceMappingURL=circular_prison.webpack.js.map
 
 /***/ }),
 
@@ -8468,7 +8468,7 @@ makeMorphable();
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(270);
+/******/ 	var __webpack_exports__ = __webpack_require__(345);
 /******/ 	
 /******/ })()
 ;
