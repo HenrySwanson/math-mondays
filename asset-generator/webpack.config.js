@@ -18,7 +18,7 @@ module.exports = {
       let entry_name = core.split("/").join("_");
       let entry = {
         import: file,
-        filename: core.split("/").slice(1) + ".js"
+        filename: core + ".js"
       };
 
       entries[entry_name] = entry;
