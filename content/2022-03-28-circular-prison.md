@@ -182,5 +182,4 @@ But I haven't yet added the ability to drag-and-drop prisoners around, so you ha
 
 <div><span id="common-knowledge-2"></span></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
 <script src="/js/circular_prison/main.js"></script>
