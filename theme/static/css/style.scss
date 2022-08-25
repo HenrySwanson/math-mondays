@@ -166,3 +166,17 @@ table, th, td {
 .mathdefs {
   display: none;
 }
+
+blockquote {
+  background-color: $COLOR_BLOCKQUOTE;
+  padding: 1em;
+  border-left: solid $COLOR_PRIMARY 5px;
+}
+
+blockquote > :first-child {
+  margin-top: 0;
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
