@@ -1,11 +1,11 @@
-pelican[markdown]==4.7.1
+pelican[markdown]==4.8.0
 pelican-jinja2content==1.0.1
 pelican-render-math==1.0.3
 pelican-webassets==2.0.0
 pelican-sitemap==1.0.2
 pelican-simple-footnotes==1.0.2
-beautifulsoup4==4.10.0
+beautifulsoup4==4.11.1
 cssmin==0.2.0
 libsass==0.21.0
-ghp-import==2.0.2
-markdown==3.3.6
+ghp-import==2.1.0
+markdown==3.4.1
