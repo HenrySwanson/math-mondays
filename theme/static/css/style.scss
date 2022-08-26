@@ -5,22 +5,27 @@
 
 // GENERAL
 
+.width-wrapper {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
 body {
   background-color: $COLOR_BACKGROUND;
-  margin: 0 auto;
-  padding: 0 10px;
-  max-width: 850px;
 
   color: $COLOR_TEXT;
   font-family: $FONT_BODY;
   font-size: 16pt;
   font-variant-numeric: lining-nums;  // makes numbers not look awful
+
+  margin: 0;
 }
 
 h1, h2, h3 {
   text-align: center;
   color: $COLOR_PRIMARY;
   font-family: $FONT_TITLE;
+  margin: 0;
 }
 
 a {
@@ -36,17 +41,16 @@ hr {
   border-top: 1px solid $COLOR_PRIMARY;
 }
 
-
 // HEADER
 
 .site-header {
   background-color: $COLOR_PRIMARY;
   border-radius: 0px 0px $ROUNDING_HEADER $ROUNDING_HEADER;
-  padding: 10px 30px 10px;
+  padding: 30px 10px;
   margin-bottom: 20px;
 
   // Font
-  h1, h2, a:link, a:visited {
+  h1, a:link, a:visited {
     color: $COLOR_BACKGROUND;
     font-family: $FONT_TITLE;
   }
@@ -56,13 +60,9 @@ hr {
     font-weight: normal;
     text-align: left;
     text-transform: uppercase;
+    float: left;
   }
-  
-  h2 {
-    font-weight: normal;
-    text-align: left;
-  }
-  
+
   nav {
     float: right;
   }
@@ -80,10 +80,17 @@ hr {
   }
 }
 
+// MAIN CONTENT
+
+.site-body {
+  padding: 0 10px;
+}
+
 // FOOTER
 
 .site-footer {
-  border-top: 4px solid $COLOR_PRIMARY;
+  background-color: $COLOR_PRIMARY;
+  border-radius: $ROUNDING_HEADER $ROUNDING_HEADER 0px 0px;
   padding-top: 6px;
   text-align: right;
 }
@@ -91,10 +98,13 @@ hr {
 // ARTICLE TITLES + CONTAINERS
 
 .article-container {
-  border: 4px solid $COLOR_PRIMARY;
-  border-radius: $ROUNDING_HEADER;
   padding: 5px 20px;
   margin: 20px 0;
+}
+
+.article-container + .article-container {
+  border-top: 2px $COLOR_SECONDARY dotted;
+  padding-top: 1em;
 }
 
 .article-title {
@@ -116,6 +126,15 @@ hr {
   text-align: right;
   color: $COLOR_SECONDARY;
   font-size: 1em;
+}
+
+.read-more {
+  background-color: $COLOR_LINK_VISITED;
+  padding: 0 1em;
+  color: $COLOR_BACKGROUND !important;
+  border-radius: 3px;
+  font-family: $FONT_TITLE;
+  text-decoration: none;
 }
 
 

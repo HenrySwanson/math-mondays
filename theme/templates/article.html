@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ SITENAME }} - {{ article.title  }}{% endblock %}
+{% block title %}{{ SITENAME }} - {{ article.title }}{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -15,7 +15,8 @@
 {% endblock %}
 
 {% block content %}
-<section>
+<article>
+  
   <header>
     <h1 class="article-title">
       <a href="{{ SITEURL }}/{{ article.url }}" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a>
@@ -54,5 +55,5 @@
 
   </footer>
 
-</section>
+</article>
 {% endblock %}

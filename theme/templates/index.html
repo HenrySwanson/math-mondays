@@ -4,7 +4,7 @@
 <section>
 
 {% block content_title %}
-<h2>Posts</h2>
+<h2>All Posts</h2>
 {% endblock %}
 
 {% for article in articles_page.object_list %}
@@ -27,6 +27,8 @@
 
   <!-- get summaries working again -->
   <section>{{ article.summary }}</section>
+
+  <a href="{{ SITEURL }}/{{article.url}}" class="read-more">Read more</a>
 </div>
 {% endfor %}
 

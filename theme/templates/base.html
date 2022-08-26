@@ -13,7 +13,7 @@
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
-  {% assets filters="libsass,cssmin", output="css/style.min.css", "css/style.scss" %}
+  {% assets filters="libsass,cssmin", output="css/style.min.css", "css/style.scss", depends="css/*.scss" %}
   <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/{{ ASSET_URL }}" />
   {% endassets %}
 
@@ -27,19 +27,25 @@
 
 <body>
   <header class="site-header">
-  	<nav>
-      <ul>
-        <li><a href="{{ SITEURL }}/">home</a></li>
-        <li><a href="{{ SITEURL }}/about">about</a></li>
-        <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source</a></li>
-      </ul>
-    </nav>
-    <h1>{{ SITENAME }}</h1>
-    <h2>A work in progress.</h2>
+    <div class="width-wrapper">
+      <h1>{{ SITENAME }}</h1>
+
+      <nav>
+        <ul>
+          <li><a href="{{ SITEURL }}/">home</a></li>
+          <li><a href="{{ SITEURL }}/about">about</a></li>
+          <li><a href="{{ SITEURL }}/archives">archives</a></li>
+          <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source</a></li>
+        </ul>
+      </nav>
+  
+      <div style="clear: both;"></div>
+    </div>
   </header>
 
+  <div class="width-wrapper">
   {% block content %}{% endblock %}
-  <!-- TODO make sure filtering on tags and stuff works -->
+  </div>
 
   <footer class="site-footer">
   	<!-- TODO apparently this background color is in a few of the icons -->
@@ -47,7 +53,7 @@
   	<a href="{{ link }}"><i class="svg-icon {{icon_name}}"></i></a>
   	{% endfor %}
   </footer>
-  <!-- TODO powered by pelican -->
+  <!-- TODO powered by pelican, move the icons to the top -->
 
   </body>
 </html>
