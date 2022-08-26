@@ -33,7 +33,11 @@ What pairs of polygons can we design tangram sets for? One way to reframe this p
 
 ---
 
-Given two polygons, how can we tell if they're scissors-congruent? One thing we can do is check their areas, since, if they have different areas, there's no way they can be scissors-congruent. It turns out that this is the _only_ obstacle -- if two polygons have the same area, they _must_ be scissors-congruent! This surprising result is known as the Wallace–Bolyai–Gerwien theorem, and was proven in the 1830s. We'll walk through a proof.
+Given two polygons, how can we tell if they're scissors-congruent?
+
+One thing we can do is check their areas, since, if they have different areas, there's no way they can be scissors-congruent. It turns out that this is the _only_ obstacle -- **if two polygons have the same area, they must be scissors-congruent**!
+
+This surprising result is known as the Wallace–Bolyai–Gerwien theorem, and was proven in the 1830s. We'll walk through a proof.
 
 It suffices to show that any polygon of area $A$ is scissors-congruent to an $A \times 1$ rectangle. This is because, if $P_1$ and $P_2$ are scissors-congruent to some third shape $Q$, then we can rearrange $P_1$ into $P_2$ by going through $Q$ as an intermediate step. We start by breaking our polygon into triangles:
 
@@ -65,11 +69,11 @@ Unlike area and volume, the Dehn invariant isn't as simple as a real number, and
 * cut it at a point
 * split it along its entire length
 
-By looking at what these operations do to edges, we can cobble together a quantity that stays invariant. The properties of an edge that we care about are its length and its dihedral angle.[ref]The dihedral angle of an edge is the angle between the two faces adjacent to it. You can think of it as a measure of the 'sharpness' of an edge; a 90° edge is like the edge of a countertop, but a 15° edge will cut like a knife.[/ref]
+By looking at what these operations do to edges, we can cobble together a quantity that stays invariant.
 
 In the first situation, the edge stays unchanged. That one's easy.
 
-In the second situation, one edge is turned into two edges. The new edges have the same dihedral angle as the original, and their lengths sum to the original length.
+In the second situation, one edge is turned into two edges. The new edges have the same dihedral angle[ref]The dihedral angle of an edge is the angle between the two faces adjacent to it. You can think of it as a measure of the 'sharpness' of an edge; a 90° edge is like the edge of a countertop, but a 15° edge will cut like a knife.[/ref] as the original, and their lengths sum to the original length.
 
 ![Cutting an edge transversely](/images/dehn/edge-cut-transverse.svg)
 

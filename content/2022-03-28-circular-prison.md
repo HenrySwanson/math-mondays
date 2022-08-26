@@ -27,6 +27,7 @@ The StackExchange link above describes a few solutions, and there are two in par
 
 For both strategies, the first step is to establish an upper bound, which can be done as follows:
 
+{% call macros.theorem_box("Finding an Upper Bound") %}
 * We perform a sequence of *rounds*, i.e., Round 1, Round 2, etc., consisting of a *waxing phase* and a *waning phase*.
 * Within each round, prisoners are either "active" (will flip their switch today) or "inactive" (will not).
 * The waxing phase of round $k$ lasts for $k$ days:
@@ -35,6 +36,7 @@ For both strategies, the first step is to establish an upper bound, which can be
 * The waning phase of round $k$ lasts for $2^k$ days:
     * At the start of this phase, prisoners carry over their active status from the end of the waxing phase.
     * If a prisoner does not see a light, they immediately become inactive and remain that way for the rest of the phase.
+{% endcall %}
 
 We claim that, at the end of a round, either everyone is active or everyone is inactive. If no one does, we move on to the next round, otherwise, we stop, and claim that $n \le 2^k$.
 
@@ -53,7 +55,6 @@ In order to communicate the results of these coin flips, we build an "announceme
 {% call macros.theorem_box("Announcements") %}
 For a predicate $P$, an *announcement* for $P$ is a procedure that makes it common knowledge whether there exists some prisoner satisfying $P$.
 
-<br>
 The announcement period lasts $B$ days, where $B$ is an upper bound for the number of prisoners.
 
 * Every prisoner satisfying $P$ is always active (and always flips the switch).
@@ -66,6 +67,7 @@ Now we can describe the strategy. The goal is to assign each prisoner a number f
 
 Then, they repeat the following procedure:
 
+{% call macros.theorem_box("Strategy") %}
 * ($B$ Days) Perform an announcement for "is unnumbered".
     * If we get a negative result, then everyone is numbered, and everyone knows $n$.
     * Otherwise, proceed.
@@ -78,6 +80,7 @@ Then, they repeat the following procedure:
     * After this, everyone knows exactly how many heads were flipped, i.e., how many candidates there are.
 * ($B$ Days) Finally, an announcement is made for "is unnumbered candidate".
     * If this announcement is positive, and exactly one head was flipped, then there is a unique unnumbered candidate, and so they should assign themselves the number $d+1$, and everyone increments $d$.
+{% endcall %}
 
 Repeated enough times, this procedure will eventually[ref]As in, [almost surely](https://en.wikipedia.org/wiki/Almost_surely).[/ref] complete. Imagine that we've numbered all but one prisoner. In order to number the last prisoner, every numbered prisoner needs to flip tails, except the one adjacent to the unnumbered one. This is unlikely to happen, but it will eventually occur. The same is also true of all prior attempts to number a prisoner.
 
@@ -119,6 +122,7 @@ At each point, there will be a partition of prisoners into subsets $S_1, \ldots,
 
 To refine this partition further, they attempt the following procedure repeatedly:
 
+{% call macros.theorem_box("Strategy") %}
 * For each subset $I \subseteq \{1, 2, \ldots, k\}$, other than the empty set and the whole set,
     * ($1$ Day) All prisoners in $\bigcup_{i \in I} S_i$ flash their lights today. Let $T$ be the set of prisoners that see lights today.
     * For each individual $j = 1, 2, \ldots, k$, check how $T$ and $S_j$ overlap:
@@ -127,6 +131,7 @@ To refine this partition further, they attempt the following procedure repeatedl
         * If both announcements were positive, replace $S_j$ with $S_j \cap T$, and add $S_j \setminus T$ as a new set, incrementing $k$. Then, abort this procedure and try again.
     * Basically, $T$ is used to "cut" an $S_j$ into two smaller subsets, if possible.
 * If we get to this point, stop. We claim it is now possible to announce the correct number of mathematicians.
+{% endcall %}
 
 The loop must eventually stop, because in the worst case, $k = n$ and all subsets are size one. We can even put an upper bound on how long it will take. We can run the procedure at most $n-2$ times before all our subsets are size one. If we delay the splitting as long as possible, we'll have to go through $2^n$-ish subsets, each of which takes $2B+1$ days. Since the worst case for our upper bound is $B = 2^n$, this gives $(n-2)2^n(2\cdot 2^n+1) \approx 2n^2 \cdot 4^n$ days.
 

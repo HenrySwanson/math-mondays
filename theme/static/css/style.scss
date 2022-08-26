@@ -129,10 +129,14 @@ hr {
   border: 1px solid $COLOR_PRIMARY;
   // allows title color to fill up the top completely
   overflow: hidden;
+}
 
-  p {
-    margin: 0
-  }
+.theorem-title + * {
+  margin-top: 0;
+}
+
+.theorem-box > :last-child {
+  margin-bottom: 0;
 }
 
 .theorem-title {
