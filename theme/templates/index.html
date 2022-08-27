@@ -38,8 +38,8 @@
 
 </section>
 
-<!-- TODO make this on-demand. you probably always need it, but still... -->
-<script type='text/javascript'
-	src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<!-- TODO this will maybe load the script twice, because it's auto-included by the render_math plugin -->
+<script type='text/javascript' async="true"
+	src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 {% endblock content %}
