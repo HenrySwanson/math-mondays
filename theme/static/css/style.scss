@@ -1,5 +1,4 @@
 @import "fonts";
-@import "svg-icons";
 @import "variables";
 
 
@@ -41,30 +40,47 @@ hr {
   border-top: 1px solid $COLOR_PRIMARY;
 }
 
-// HEADER
+// HEADER + FOOTER
+
+.site-header, .site-footer {
+  background-color: $COLOR_PRIMARY;
+  font-family: $FONT_TITLE;
+  color: $COLOR_BACKGROUND;
+
+  // Even links should be recolored
+  a:link, a:visited {
+    color: $COLOR_BACKGROUND;
+  }
+}
 
 .site-header {
-  background-color: $COLOR_PRIMARY;
   border-radius: 0px 0px $ROUNDING_HEADER $ROUNDING_HEADER;
   padding: 30px 10px;
   margin-bottom: 20px;
 
-  // Font
-  h1, a:link, a:visited {
-    color: $COLOR_BACKGROUND;
-    font-family: $FONT_TITLE;
+  // Evenly divide elements
+  .width-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 
+  .header-left {
+    margin: 0 auto;
+  }
+
+  .header-right {
+    margin-left: auto;
+  }
+
+  // H element look different in header vs body
   h1 {
+    color: $COLOR_BACKGROUND;
     font-size: 2.5em;
     font-weight: normal;
     text-align: left;
     text-transform: uppercase;
     float: left;
-  }
-
-  nav {
-    float: right;
   }
   
   ul {
@@ -78,20 +94,29 @@ hr {
     display: inline;
     margin: 0 5px;
   }
+
+  .social-icons {
+    text-align: right;
+    margin-top: 12px;
+    display: flex;
+    justify-content: right;
+    gap: 10px;
+  }
+
+  .svg-icon-box {
+    width: 1em;
+    height: 1em;
+
+    * {
+      fill: $COLOR_BACKGROUND;
+    }
+  }
 }
-
-// MAIN CONTENT
-
-.site-body {
-  padding: 0 10px;
-}
-
-// FOOTER
 
 .site-footer {
   background-color: $COLOR_PRIMARY;
   border-radius: $ROUNDING_HEADER $ROUNDING_HEADER 0px 0px;
-  padding-top: 6px;
+  padding: 6px 12px;
   text-align: right;
 }
 

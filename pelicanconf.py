@@ -70,11 +70,11 @@ PAGINATION_PATTERNS = (
 )
 
 # Other
-FOOTER_LINKS = {
+SOCIAL_LINKS = {
     "email": "mailto:henryswanson94@gmail.com",
     "github": "https://github.com/HenrySwanson",
     "rss": "feed.xml",
-    "stackoverflow": "https://stackexchange.com/users/2216552/henry-swanson",
+    "stack-exchange": "https://stackexchange.com/users/2216552/henry-swanson",
 }
 FILENAME_METADATA = r"(?P<date>\d{4}-\d{2}-\d{2})-(?P<slug>.*)"
 SUMMARY_END_MARKER = "<!-- more -->"

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
- 
+
 <head>
   <title>{% block title %}{{ SITENAME }}{% endblock title %}</title>
 
@@ -22,38 +22,50 @@
   <link href="{{ FEED_DOMAIN }}/{% if FEED_ALL_RSS_URL %}{{ FEED_ALL_RSS_URL }}{% else %}{{ FEED_ALL_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
   <link href="{{ FEED_DOMAIN }}/{%if FEED_ATOM_URL %}{{ FEED_ATOM_URL }}{% else %}{{ FEED_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
   <link href="{{ FEED_DOMAIN }}/{% if FEED_RSS_URL %}{{ FEED_RSS_URL }}{% else %}{{ FEED_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" /> -->
-        
+
 </head>
 
 <body>
   <header class="site-header">
     <div class="width-wrapper">
-      <h1>{{ SITENAME }}</h1>
+      <h1 class="header-left">{{ SITENAME }}</h1>
 
-      <nav>
-        <ul>
-          <li><a href="{{ SITEURL }}/">home</a></li>
-          <li><a href="{{ SITEURL }}/about">about</a></li>
-          <li><a href="{{ SITEURL }}/archives">archives</a></li>
-          <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source</a></li>
-        </ul>
-      </nav>
-  
-      <div style="clear: both;"></div>
+      <div class="header-right">
+        <nav>
+          <ul>
+            <li><a href="{{ SITEURL }}/">home</a></li>
+            <li><a href="{{ SITEURL }}/about">about</a></li>
+            <li><a href="{{ SITEURL }}/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div class="social-icons">
+          {% for icon_name, link in SOCIAL_LINKS.items() %}
+          <a href="{{ link }}" style="text-decoration: none;" title="{{ icon_name }}">
+            <!-- TODO How can I stop the icon from loading humongous at first? -->
+            <div class="svg-icon-box">
+              {% include "social-icons/" + icon_name + ".svg" %}
+            </div>
+          </a>
+          {% endfor %}
+
+        </div>
+
+      </div>
     </div>
   </header>
 
   <div class="width-wrapper">
-  {% block content %}{% endblock %}
+    {% block content %}{% endblock %}
   </div>
 
   <footer class="site-footer">
-  	<!-- TODO apparently this background color is in a few of the icons -->
-  	{% for icon_name, link in FOOTER_LINKS.items() %}
-  	<a href="{{ link }}"><i class="svg-icon {{icon_name}}"></i></a>
-  	{% endfor %}
+    <div class="width-wrapper">
+      powered by <a href="https://getpelican.com">Pelican</a> · <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a>
+    </div>
   </footer>
-  <!-- TODO powered by pelican, move the icons to the top -->
 
-  </body>
+</body>
+
 </html>
