@@ -21,11 +21,39 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      # Set up Node
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install Node packages
+        run: |
+          cd asset-generator && npm install --save-dev
+
+      - name: Clear asset directory
+        run: |
+          rm -Rf content/images
+          rm -Rf content/js
+
+      - name: Generate dynamic assets
+        run: |
+          cd asset-generator
+          rm -Rf dist web-bundles
+          tsc
+          node dist/index.js
+          webpack --mode production
+
+      - name: Copy dynamic assets into the site directory
+        run: |
+          cp -r asset-generator/static/. content/images
+          cp -r asset-generator/web-bundles/. content/js
 
       # Set up Python
       - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9
       
