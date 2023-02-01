@@ -36,3 +36,17 @@ $GARAMOND_DIR: $FONT_PARENT_DIR + 'eb-garamond/static/';
     font-weight: normal;
     font-style: italic;
 }
+
+// Titillium Web
+$TITILLIUM_DIR: $FONT_PARENT_DIR + 'titillium-web/';
+
+@font-face {
+    font-family: 'Titillium Web';
+    src: url($TITILLIUM_DIR + 'TitilliumWeb-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Titillium Web';
+    src: url($TITILLIUM_DIR + 'TitilliumWeb-Italic.ttf') format('truetype');
+    font-style: italic;
+}
