@@ -121,7 +121,7 @@ class PartitionContext implements Subprocedure<number[], PartitionContext, Equat
 
 	next(t: number[]): SubprocedureResult<PartitionContext, Equation[]> {
 		if (this.enumerationPosition == this.enumerationOrder.length) {
-			throw "Internal error, should not have called PartitionContext.next() that many times";
+			throw new Error("Internal error, should not have called PartitionContext.next() that many times");
 		}
 
 		// Add the new equation
@@ -514,7 +514,7 @@ function trySolveEquations(numVariables: number, equations: Equation[]): number[
 	for (let i = numVariables; i < m.nRows; i++) {
 		for (let j = 0; j < m.nCols; j++) {
 			if (rows[i][j] != 0) {
-				throw "RREF failure!" + rows.toString();
+				throw new Error("RREF failure!\n" + rows.toString());
 			}
 		}
 	}
