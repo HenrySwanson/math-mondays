@@ -28,7 +28,9 @@
   <!-- get summaries working again -->
   <section>{{ article.summary }}</section>
 
-  <a href="{{ SITEURL }}/{{article.url}}" class="read-more">Read more</a>
+  <div class="read-more-wrapper">
+    <a href="{{ SITEURL }}/{{article.url}}" class="read-more">Read more</a>
+  </div>
 </div>
 {% endfor %}
 

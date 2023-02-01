@@ -15,7 +15,7 @@ body {
 
   color: $COLOR_TEXT;
   font-family: $FONT_BODY;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.5;
 
   margin: 0;
@@ -150,14 +150,10 @@ hr {
 
 // ARTICLE TITLES + CONTAINERS
 
-.article-container {
-  padding: 5px 20px;
-  margin: 20px 0;
-}
-
 .article-container + .article-container {
   border-top: 2px $COLOR_SECONDARY dotted;
   padding-top: 1em;
+  margin-top: 1em;
 }
 
 .article-title {
@@ -179,6 +175,10 @@ hr {
   text-align: right;
   color: $COLOR_SECONDARY;
   font-size: 1em;
+}
+
+.read-more-wrapper {
+  text-align: center;
 }
 
 .read-more {
@@ -251,7 +251,8 @@ td {
 
 blockquote {
   background-color: $COLOR_BLOCKQUOTE;
-  padding: 1em;
+  padding: calc(min(1em, 5%));
+  margin: 1em calc(min(1em, 5%));
   border-left: solid $COLOR_PRIMARY 5px;
 }
 
