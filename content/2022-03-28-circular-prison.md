@@ -4,7 +4,7 @@ Tags: interactive, puzzles
 
 {% import 'macros.html' as macros %}
 
-A popular kind of mathematical puzzles is "prisoner puzzles", in which a large group of cooperative players ("prisoners") play a game against an adversarial supervisor (often "the warden"), with limited communication. Some classic examples are [here](https://en.wikipedia.org/wiki/100_prisoners_problem) and [here](https://www.popularmechanics.com/science/math/a25254/riddle-of-the-week-16/) (there's frequent overlap with "hat problems").
+"Prisoner puzzles" are a popular kind of mathematical puzzle, in which a large group of cooperative players ("prisoners") play a game against an adversarial supervisor (often "the warden"), with limited communication. Some classic examples are [here](https://en.wikipedia.org/wiki/100_prisoners_problem) and [here](https://www.popularmechanics.com/science/math/a25254/riddle-of-the-week-16/) (there's frequent overlap with "hat problems").
 
 Recently, I ran across a [very difficult prisoner puzzle](https://puzzling.stackexchange.com/questions/16168/the-circular-prison-of-unknown-size), which required an intricate solution from the prisoners to win. I've rephrased the problem and a few solutions below, along with an interactive demonstration of the strategies.
 
