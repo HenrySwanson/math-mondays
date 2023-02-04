@@ -230,6 +230,7 @@ hr {
 .image-container {
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 table {
@@ -262,4 +263,20 @@ blockquote > :first-child {
 
 blockquote > :last-child {
   margin-bottom: 0;
+}
+
+.video-wrapper {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  // 16x9
+  padding-bottom: 56.25%;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }

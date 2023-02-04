@@ -201,7 +201,7 @@ var PartitionContext = /** @class */ (function () {
     };
     PartitionContext.prototype.next = function (t) {
         if (this.enumerationPosition == this.enumerationOrder.length) {
-            throw "Internal error, should not have called PartitionContext.next() that many times";
+            throw new Error("Internal error, should not have called PartitionContext.next() that many times");
         }
         // Add the new equation
         var copy = new PartitionContext(this.upperBound, this.numPartitions, this.myPartition, this.enumerationOrder, this.enumerationPosition, this.intersectionHistory);
@@ -550,7 +550,7 @@ function trySolveEquations(numVariables, equations) {
     for (var i = numVariables; i < m.nRows; i++) {
         for (var j = 0; j < m.nCols; j++) {
             if (rows[i][j] != 0) {
-                throw "RREF failure!" + rows.toString();
+                throw new Error("RREF failure!\n" + rows.toString());
             }
         }
     }

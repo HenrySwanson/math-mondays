@@ -1,0 +1,91 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="-0.15000000000000002 -6.1499999999999995 6.3 6.3">
+ <circle r="0.05" cx="0" cy="0"></circle>
+ <circle r="0.05" cx="0" cy="-1"></circle>
+ <circle r="0.05" cx="0" cy="-2"></circle>
+ <circle r="0.05" cx="0" cy="-3"></circle>
+ <circle r="0.05" cx="0" cy="-4"></circle>
+ <circle r="0.05" cx="0" cy="-5"></circle>
+ <circle r="0.05" cx="0" cy="-6"></circle>
+ <circle r="0.05" cx="1" cy="0"></circle>
+ <circle r="0.05" cx="1" cy="-1"></circle>
+ <circle r="0.05" cx="1" cy="-2"></circle>
+ <circle r="0.05" cx="1" cy="-3"></circle>
+ <circle r="0.05" cx="1" cy="-4"></circle>
+ <circle r="0.05" cx="1" cy="-5"></circle>
+ <circle r="0.05" cx="1" cy="-6"></circle>
+ <circle r="0.05" cx="2" cy="0"></circle>
+ <circle r="0.05" cx="2" cy="-1"></circle>
+ <circle r="0.05" cx="2" cy="-2"></circle>
+ <circle r="0.05" cx="2" cy="-3"></circle>
+ <circle r="0.05" cx="2" cy="-4"></circle>
+ <circle r="0.05" cx="2" cy="-5"></circle>
+ <circle r="0.05" cx="2" cy="-6"></circle>
+ <circle r="0.05" cx="3" cy="0"></circle>
+ <circle r="0.05" cx="3" cy="-1"></circle>
+ <circle r="0.05" cx="3" cy="-2"></circle>
+ <circle r="0.05" cx="3" cy="-3"></circle>
+ <circle r="0.05" cx="3" cy="-4"></circle>
+ <circle r="0.05" cx="3" cy="-5"></circle>
+ <circle r="0.05" cx="3" cy="-6"></circle>
+ <circle r="0.05" cx="4" cy="0"></circle>
+ <circle r="0.05" cx="4" cy="-1"></circle>
+ <circle r="0.05" cx="4" cy="-2"></circle>
+ <circle r="0.05" cx="4" cy="-3"></circle>
+ <circle r="0.05" cx="4" cy="-4"></circle>
+ <circle r="0.05" cx="4" cy="-5"></circle>
+ <circle r="0.05" cx="4" cy="-6"></circle>
+ <circle r="0.05" cx="5" cy="0"></circle>
+ <circle r="0.05" cx="5" cy="-1"></circle>
+ <circle r="0.05" cx="5" cy="-2"></circle>
+ <circle r="0.05" cx="5" cy="-3"></circle>
+ <circle r="0.05" cx="5" cy="-4"></circle>
+ <circle r="0.05" cx="5" cy="-5"></circle>
+ <circle r="0.05" cx="5" cy="-6"></circle>
+ <circle r="0.05" cx="6" cy="0"></circle>
+ <circle r="0.05" cx="6" cy="-1"></circle>
+ <circle r="0.05" cx="6" cy="-2"></circle>
+ <circle r="0.05" cx="6" cy="-3"></circle>
+ <circle r="0.05" cx="6" cy="-4"></circle>
+ <circle r="0.05" cx="6" cy="-5"></circle>
+ <circle r="0.05" cx="6" cy="-6"></circle>
+ <line x1="0" y1="0" x2="6" y2="0" stroke-width="0.04" stroke="#000000"></line>
+ <line x1="0" y1="0" x2="0" y2="-6" stroke-width="0.04" stroke="#000000"></line>
+ <line x1="0" y1="0" x2="6" y2="-6" stroke-width="0.02" stroke="#000000"></line>
+ <defs>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1008">
+   <polygon points="0,0 5,2.5 0,5" fill="#00ff00"></polygon>
+  </marker>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1009">
+   <polygon points="0,0 5,2.5 0,5" fill="#ff0000"></polygon>
+  </marker>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1010">
+   <polygon points="0,0 5,2.5 0,5" fill="#00ff00"></polygon>
+  </marker>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1011">
+   <polygon points="0,0 5,2.5 0,5" fill="#00ff00"></polygon>
+  </marker>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1012">
+   <polygon points="0,0 5,2.5 0,5" fill="#ff0000"></polygon>
+  </marker>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1013">
+   <polygon points="0,0 5,2.5 0,5" fill="#00ff00"></polygon>
+  </marker>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1014">
+   <polygon points="0,0 5,2.5 0,5" fill="#ff0000"></polygon>
+  </marker>
+ </defs>
+ <line x1="2" y1="-0.1" x2="2" y2="-0.8" stroke-width="0.05" stroke="#00ff00" marker-end="url(#SvgjsMarker1008)"></line>
+ <line x1="2.1" y1="-0.9" x2="2.8" y2="-0.2" stroke-width="0.05" stroke="#ff0000" marker-end="url(#SvgjsMarker1009)"></line>
+ <line x1="3" y1="-0.1" x2="3" y2="-0.8" stroke-width="0.05" stroke="#00ff00" marker-end="url(#SvgjsMarker1010)"></line>
+ <line x1="3" y1="-1.1" x2="3" y2="-1.8" stroke-width="0.05" stroke="#00ff00" marker-end="url(#SvgjsMarker1011)"></line>
+ <line x1="3.1" y1="-1.9" x2="4.8" y2="-0.2" stroke-width="0.05" stroke="#ff0000" marker-end="url(#SvgjsMarker1012)"></line>
+ <line x1="5" y1="-0.1" x2="5" y2="-0.8" stroke-width="0.05" stroke="#00ff00" marker-end="url(#SvgjsMarker1013)"></line>
+ <line x1="5.1" y1="-0.9" x2="5.8" y2="-0.2" stroke-width="0.05" stroke="#ff0000" marker-end="url(#SvgjsMarker1014)"></line>
+ <text fill="#00ff00" font-family="sans-serif" font-size="0.5" x="1.3155517578125" y="-0.3060302734375" svgjs:data="{&quot;leading&quot;:&quot;1.3&quot;}">
+  <tspan dy="0" x="1.3155517578125" svgjs:data="{&quot;newLined&quot;:true}">
+   H</tspan></text>
+   <text fill="#ff0000" font-family="sans-serif" font-size="0.5" x="2.3616943359375" y="-0.8060302734375" svgjs:data="{&quot;leading&quot;:&quot;1.3&quot;}">
+    <tspan dy="0" x="2.3616943359375" svgjs:data="{&quot;newLined&quot;:true}">
+     T</tspan></text>
+    </svg>
