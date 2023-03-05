@@ -23,8 +23,10 @@
   <link href="{{ FEED_DOMAIN }}/{%if FEED_ATOM_URL %}{{ FEED_ATOM_URL }}{% else %}{{ FEED_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
   <link href="{{ FEED_DOMAIN }}/{% if FEED_RSS_URL %}{{ FEED_RSS_URL }}{% else %}{{ FEED_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" /> -->
 
+  {% if production %}
   <!-- Plausible analytics script -->
   <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+  {% endif %}
 
 </head>
 
