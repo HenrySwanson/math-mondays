@@ -29,3 +29,6 @@ examine-diff:
 
 clean:
   git -C output reset --hard HEAD
+
+venv-activate:
+  source ./.venv/Scripts/activate
