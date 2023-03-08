@@ -27,7 +27,7 @@ It's your turn, and on your side of the board, you have some infinite source of 
 ![Leonin Elder](/images/wirefly/leonin-elder.jpg){:height="350px"}
 </div>
 
-Basically, what this means is that, due the effect of **Filigree Sages**, you can activate **Wirefly Hive** as many times as you want this turn. Each time you do so, you flip a coin.
+Basically, what this means is that, due to the effect of **Filigree Sages**, you can activate **Wirefly Hive** as many times as you want this turn. Each time you do so, you flip a coin.
 
 - If it comes up heads, you get a **Wirefly** with 2 power (i.e attack strength), and your opponent gains 1 life from the effect of **Leonin Elder**.
 - However, if it's tails, all your Wireflies are destroyed. Plus, your opponent keeps their increased life!
