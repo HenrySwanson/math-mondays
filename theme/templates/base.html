@@ -40,9 +40,9 @@
         </nav>
 
         <div class="social-icons">
-          {% for icon_name, link in SOCIAL_LINKS.items() %}
+            <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+            {% for icon_name, link in SOCIAL_LINKS.items() %}
           <a href="{{ link }}" style="text-decoration: none;" title="{{ icon_name }}">
-            <!-- TODO How can I stop the icon from loading humongous at first? -->
             <div class="svg-icon-box">
               {% include "social-icons/" + icon_name + ".svg" %}
             </div>
