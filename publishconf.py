@@ -10,17 +10,11 @@ import sys
 sys.path.append(os.curdir)
 from pelicanconf import *
 
-# If your site is available via HTTPS, make sure SITEURL begins with https://
-SITEURL = "https://mathmondays.com"
+# Generate absolute URLs across the site
 RELATIVE_URLS = False
 
-FEED_ALL_ATOM = "feed.xml"
-
+# Clear the output directory so that we don't get leftovers
 DELETE_OUTPUT_DIRECTORY = True
 
+# Set a few other production things
 JINJA_GLOBALS["production"] = True
-
-# Following items are often useful when publishing
-
-# DISQUS_SITENAME = ""
-# GOOGLE_ANALYTICS = ""

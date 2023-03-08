@@ -4,7 +4,7 @@
 # Basics
 AUTHOR = "Henry Swanson"
 SITENAME = "Math Mondays"
-SITEURL = ""
+SITEURL = "https://mathmondays.com"
 
 PATH = "content"
 THEME = "theme"
@@ -13,15 +13,16 @@ TIMEZONE = "America/Los_Angeles"
 DEFAULT_LANG = "en"
 DEFAULT_DATE_FORMAT = "%B %-d, %Y"
 
-# Feed generation is usually not desired when developing
-FEED_ALL_ATOM = None
+# RSS Feed settings
+FEED_ALL_ATOM = "feed.xml"
+# Do not need author, language, category, etc. specific feeds
 CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Uncomment following line if you want document-relative URLs when developing
-# RELATIVE_URLS = True
+RELATIVE_URLS = True
 
 # Plugins and other functionality
 PLUGINS = [
