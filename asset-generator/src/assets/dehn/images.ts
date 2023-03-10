@@ -3,6 +3,7 @@
 import asset_utils = require("../../builder/utils");
 import { Builder } from "../../builder/builder";
 import * as SVG from "@svgdotjs/svg.js";
+import { drop_onto, get_midpoint, interpolate, intersect_lines, Line, make_line, parallel_to, Point, polar } from "../lib/geom";
 
 // Name some colors
 const BLACK = "#000000";
@@ -15,84 +16,28 @@ const DK_BLUE = "#4287f5";
 const LT_BLUE = "#5db3e8";
 const MED_BLUE = "#5fbff9";
 
-// Some helpers for geometry
-
-// TODO: remove these types eventually. they're just hacky typedefs
-type Point = [number, number];
-type Line = [number, number, number];
-
-// we store a line as (A, B, C) where Ax + By = C
-function make_line(p: Point, q: Point): Line {
-	// slope = -A/B = (y2-y1)/(x2-x1), so we can say A = y2 - y1 and -B = x2 - x1
-	// that leaves C solvable
-	var a = q[1] - p[1];
-	var b = -(q[0] - p[0]);
-	var c = a * p[0] + b * p[1];
-	return [a, b, c];
+// TODO pull into geom library?
+function pointsToTuples(pts: Point[]): SVG.ArrayXY[] {
+	return pts.map(pt => pt.toTuple());
 }
 
-function get_midpoint(p: Point, q: Point): Point {
-	return [0.5 * (p[0] + q[0]), 0.5 * (p[1] + q[1])];
+function tuplesToPoints(tups: SVG.ArrayXY[]): Point[] {
+	return tups.map(tup => new Point(tup[0], tup[1]));
 }
 
-function intersect_lines(line_1: Line, line_2: Line): Point {
-	// if the lines are Ax + By = E and Cx + Dy = F, then we're trying to solve
-	// the usual matrix equation: ABCD * [x, y] = [E, F]
-	var [A, B, E] = line_1;
-	var [C, D, F] = line_2;
-
-	// solution is 1/det [[D, -B], [-C, A]] [E, F]
-	var det = A * D - B * C;
-	var x = (D * E - B * F) / det;
-	var y = (-C * E + A * F) / det;
-
-	return [x, y];
-}
-
-function parallel_to(p: Point, line: Line): Line {
-	// point (x, y) and line Ax + By = C
-	// slope doesn't change, so we just evaluate C
-	var [A, B, C] = line;
-	var C_prime = A * p[0] + B * p[1];
-	return [A, B, C_prime];
-}
-
-function perp_to(p: Point, line: Line): Line {
-	// point (x, y) and line Ax + By = C
-	// slope changes by 90, so (A, B) -> (-B, A), then we evaluate C
-	var [A, B, C] = line;
-	var C_prime = -B * p[0] + A * p[1];
-	return [-B, A, C_prime];
-}
-
-function drop_onto(p: Point, line: Line): Point {
-	// return p dropped perpendicularly onto the line
-	return intersect_lines(line, perp_to(p, line));
-}
-
-function polar(radius: number, angle: number): Point {
-	return [radius * Math.cos(angle), radius * Math.sin(angle)];
-}
-
-function interpolate(p: Point, q: Point, t: number): Point {
-	return [p[0] * (1 - t) + q[0] * t, p[1] * (1 - t) + q[1] * t];
+// Takes the given points from the list and turns them into SVG pointarrays.
+// This is super handy for drawing multiple SVG things on the same set of points.
+function tupleByIndex(pts: Point[], idxs: number[]): SVG.ArrayXY[] {
+	return idxs.map(n => pts[n].toTuple());
 }
 
 // ---------------------------
 // Diagram: Tangrams
 // ---------------------------
 
-function makePiece(canvas: SVG.Container, pts: Point[], string: string, color: string, stroke_width: number): SVG.Polygon {
-	// helper function for making tangram drawings easier
-	var myPts = [];
-	for (var i = 0; i < string.length; i++) {
-		myPts.push(letterToPt(string[i], pts));
-	}
-	return canvas.polygon(myPts).fill(color).stroke({ color: "#000", width: stroke_width, linejoin: "bevel" });
-}
-
-function letterToPt(letter: string, pts: Point[]): Point {
-	return pts[letter.charCodeAt(0) - 0x41];
+function letterToPt(letter: string, pts: Point[]): [number, number] {
+	let pt = pts[letter.charCodeAt(0) - 0x41];
+	return [pt.x, pt.y];
 }
 
 // TODO: _definitely_ get rid of this
@@ -114,7 +59,7 @@ function makePieces(group: SVG.G, pts: Point[], stroke_width: number, pieceDefs:
 function moveAlong(piece: SVG.Polygon, start: Point, end: Point): void {
 	// moves the piece so that start ends up at end. technically neither point needs
 	// to be on the piece
-	piece.dmove(end[0] - start[0], end[1] - start[1]);
+	piece.dmove(end.x - start.x, end.y - start.y);
 }
 
 function verticalAlign(groups: SVG.G[]): void {
@@ -144,7 +89,10 @@ export let builder = new Builder("dehn");
 // |/D     G/     C|
 // +---------------+
 builder.register("tangrams.svg", function (canvas) {
-	var pts: Point[] = [[0, 0], [4, 0], [4, 4], [0, 4], [2, 2], [4, 2], [2, 4], [3, 1], [3, 3], [1, 3]];
+	var pts: Point[] = tuplesToPoints([
+		[0, 0], [4, 0], [4, 4], [0, 4], [2, 2], [4, 2], [2, 4], [3, 1], [3, 3], [1, 3]
+	]);
+
 	var pieceDefs: PieceDef[] = [["ABE", RED], ["ADE", GREEN], ["BFH", PURPLE],
 	["EHFI", YELLOW], ["EIJ", BROWN], ["DGIJ", DK_BLUE], ["CFG", LT_BLUE]];
 	var leftGroup = canvas.group();
@@ -174,22 +122,33 @@ builder.register("tangrams.svg", function (canvas) {
 // -------------------------------------
 // Diagram: Square <-> Triangle Tangrams
 // -------------------------------------
+//           /\
+//          /C \
+//         /    \
+//        /      \
+//       /D  0   E\
+//      /\       - \
+//     /  \    -    \
+//    /    \H- \     \
+//   /  1  -    \  2  \
+//  /A   -F  3  G\    B\
+// +--------------------+
 builder.register("square-to-triangle.svg", function (canvas) {
 	function makeTrianglePoints() {
 		var sqrt3 = Math.sqrt(3);
 
 		// corners of the triangle are A B C, with C as the apex.
-		var A: Point = [0, 0];
-		var B: Point = [1, 0];
-		var C: Point = [0.5, sqrt3 / 2];
+		var A = new Point(0, 0);
+		var B = new Point(1, 0);
+		var C = new Point(0.5, sqrt3 / 2);
 
 		// D and E bisect AC and BC, respectively.
 		var D = get_midpoint(A, C);
 		var E = get_midpoint(B, C);
 
 		// F and G are the points on AB
-		var F: Point = [0.2455, 0];
-		var G: Point = [0.7455, 0];
+		var F = new Point(0.2455, 0);
+		var G = new Point(0.7455, 0);
 
 		// H and I are the interior points
 		var midline = make_line(E, F);
@@ -199,7 +158,7 @@ builder.register("square-to-triangle.svg", function (canvas) {
 		return [A, B, C, D, E, F, G, H, I];
 	}
 	// flip y-coords so it's right side up
-	var pts = makeTrianglePoints().map(pt => [pt[0], -pt[1]] as Point);
+	var pts = makeTrianglePoints().map(pt => new Point(pt.x, -pt.y));
 
 	var pieceDefs: PieceDef[] = [["DCEH", RED], ["ADHF", GREEN], ["BEIG", DK_BLUE], ["FGI", YELLOW]];
 	var strokeWidth = 0.015;
@@ -213,11 +172,11 @@ builder.register("square-to-triangle.svg", function (canvas) {
 	// we leave piece 0 in place
 
 	// rotate the 'wings' up
-	pieces[1].rotate(180, pts[3][0], pts[3][1]);
-	pieces[2].rotate(180, pts[4][0], pts[4][1]);
+	pieces[1].rotate(180, pts[3].x, pts[3].y);
+	pieces[2].rotate(180, pts[4].x, pts[4].y);
 
 	// move the tip so F sits on top of (F rotated around D)
-	var F_: Point = [2 * pts[3][0] - pts[5][0], 2 * pts[3][1] - pts[5][1]];
+	var F_ = new Point(2 * pts[3].x - pts[5].x, 2 * pts[3].y - pts[5].y);
 	moveAlong(pieces[3], pts[5], F_);
 
 	verticalAlign([leftGroup, rightGroup]);
@@ -256,8 +215,8 @@ builder.register("square-to-pentagon.svg", function (canvas) {
 		var F = intersect_lines(AD, BE);
 
 		// GH is parallel to BE, and they're separated by (height / 2)
-		var height = A[1] - C[1];
-		var horizontal: Line = [0, 1, B[1] - height / 2];
+		var height = A.y - C.y;
+		var horizontal = Line.horizontal(B.y - height / 2);
 		var G = intersect_lines(horizontal, make_line(B, C));
 		var H = intersect_lines(horizontal, make_line(D, E));
 
@@ -269,7 +228,7 @@ builder.register("square-to-pentagon.svg", function (canvas) {
 		var J = drop_onto(G, HI);
 
 		// KI is a parallel transport of HG
-		var K: Point = [I[0] + H[0] - G[0], I[1]];
+		var K: Point = new Point(I.x + H.x - G.x, I.y);
 
 		// L is K dropped perpendicularly onto HI
 		var L = drop_onto(K, HI);
@@ -277,7 +236,7 @@ builder.register("square-to-pentagon.svg", function (canvas) {
 		return [A, B, C, D, E, F, G, H, I, J, K, L];
 	}
 	// flip y-coords so it's right side up
-	var pts = makePentagonPoints().map(pt => [pt[0], -pt[1]] as Point);
+	var pts = makePentagonPoints().map(pt => new Point(pt.x, -pt.y));
 	var pieceDefs: PieceDef[] = [["AEF", GREEN], ["ABF", YELLOW], ["EKLH", LT_BLUE],
 	["ILK", RED], ["BIJG", PURPLE], ["GCDHJ", BROWN]];
 
@@ -294,15 +253,15 @@ builder.register("square-to-pentagon.svg", function (canvas) {
 
 	// to position 1, move A to D, then rotate around D
 	moveAlong(pieces[1], pts[0], pts[3]);
-	pieces[1].rotate(-36, pts[3][0], pts[3][1]);
+	pieces[1].rotate(-36, pts[3].x, pts[3].y);
 
 	// for 2 and 4 just rotate around H and G, respectively
-	pieces[2].rotate(180, pts[7][0], pts[7][1]);
-	pieces[4].rotate(180, pts[6][0], pts[6][1]);
+	pieces[2].rotate(180, pts[7].x, pts[7].y);
+	pieces[4].rotate(180, pts[6].x, pts[6].y);
 
 	// for 3, we need to compute where K ended up. it was rotated 180 around H,
 	// so K' = 2H - K
-	var K_: Point = [2 * pts[7][0] - pts[10][0], 2 * pts[7][1] - pts[10][1]];
+	var K_ = new Point(2 * pts[7].x - pts[10].x, 2 * pts[7].y - pts[10].y);
 	moveAlong(pieces[3], pts[10], K_);
 
 	verticalAlign([leftGroup, rightGroup]);
@@ -353,7 +312,7 @@ builder.register("star-to-triangle.svg", function (canvas) {
 		return [A, B, C, D, E, F, G, H, I, J, K, L, M, N];
 	}
 	// flip y-coords so it's right side up
-	let pts = makeStarPoints().map(pt => [pt[0], -pt[1]] as Point);
+	let pts = makeStarPoints().map(pt => new Point(pt.x, -pt.y));
 	var pieceDefs: PieceDef[] = [["BCDEFJ", GREEN], ["BJKLM", RED], ["FNHIJ", LT_BLUE],
 	["ABM", PURPLE], ["FNG", YELLOW]];
 
@@ -366,12 +325,12 @@ builder.register("star-to-triangle.svg", function (canvas) {
 	// we keep piece 0 in place
 
 	moveAlong(pieces[1], pts[10], pts[3]);
-	pieces[1].rotate(-60, pts[3][0], pts[3][1]);
+	pieces[1].rotate(-60, pts[3].x, pts[3].y);
 	moveAlong(pieces[2], pts[8], pts[3]);
-	pieces[2].rotate(60, pts[3][0], pts[3][1]);
+	pieces[2].rotate(60, pts[3].x, pts[3].y);
 
-	pieces[3].rotate(120, pts[1][0], pts[1][1]);
-	pieces[4].rotate(-120, pts[5][0], pts[5][1]);
+	pieces[3].rotate(120, pts[1].x, pts[1].y);
+	pieces[4].rotate(-120, pts[5].x, pts[5].y);
 
 	// Shrink and save
 	asset_utils.shrinkCanvas(canvas, 0.1);
@@ -383,22 +342,22 @@ builder.register("star-to-triangle.svg", function (canvas) {
 // --------------------------
 const solidStroke = { color: BLACK, width: 0.08 };
 const dashedStroke = { color: BLACK, width: 0.05, dasharray: "0.2" };
-const wbg_pts: Point[] = [
+const wbg_pts: Point[] = tuplesToPoints([
 	[0, 0], [5, 1], [8, 4], [3, 6], [1, 4], [2, 2]
-];
+]);
 
 builder.register("wbg-1.svg", function (canvas) {
 	// -- first, triangulation
 
 	var leftGroup = canvas.group();
-	leftGroup.polygon(wbg_pts).fill(YELLOW).stroke(solidStroke);
-	leftGroup.line([wbg_pts[1], wbg_pts[5]]).stroke(dashedStroke);
-	leftGroup.line([wbg_pts[1], wbg_pts[4]]).stroke(dashedStroke);
-	leftGroup.line([wbg_pts[2], wbg_pts[4]]).stroke(dashedStroke);
+	leftGroup.polygon(pointsToTuples(wbg_pts)).fill(YELLOW).stroke(solidStroke);
+	leftGroup.line(tupleByIndex(wbg_pts, [1, 5])).stroke(dashedStroke);
+	leftGroup.line(tupleByIndex(wbg_pts, [1, 4])).stroke(dashedStroke);
+	leftGroup.line(tupleByIndex(wbg_pts, [2, 4])).stroke(dashedStroke);
 
 	var rightGroup = canvas.group().translate(10, 0);
 	function makeTriangle(group: SVG.G, pts: Point[], idxs: number[]) {
-		return group.polygon(idxs.map(n => pts[n])).fill(YELLOW).stroke(solidStroke);
+		return group.polygon(tupleByIndex(pts, idxs)).fill(YELLOW).stroke(solidStroke);
 	}
 	makeTriangle(rightGroup, wbg_pts, [0, 1, 5]).dmove(-0.3, -0.5);
 	makeTriangle(rightGroup, wbg_pts, [1, 4, 5]).dmove(-0.2, -0.1);
@@ -417,16 +376,16 @@ builder.register("wbg-2.svg", function (canvas) {
 	var F = drop_onto(A, midline);
 
 	var leftGroup = canvas.group();
-	leftGroup.polygon([A, B, C]).fill(YELLOW).stroke(solidStroke);
-	leftGroup.line([D, E]).stroke(dashedStroke);
-	leftGroup.line([A, F]).stroke(dashedStroke);
+	leftGroup.polygon(pointsToTuples([A, B, C])).fill(YELLOW).stroke(solidStroke);
+	leftGroup.line(pointsToTuples([D, E])).stroke(dashedStroke);
+	leftGroup.line(pointsToTuples([A, F])).stroke(dashedStroke);
 
 	var G = drop_onto(C, midline);
 	var H = drop_onto(B, midline);
 	var rightGroup = canvas.group().translate(10, 0);
-	rightGroup.polygon([H, B, C, G]).fill(YELLOW).stroke(solidStroke);
-	rightGroup.line([B, D]).stroke(dashedStroke);
-	rightGroup.line([C, E]).stroke(dashedStroke);
+	rightGroup.polygon(pointsToTuples([H, B, C, G])).fill(YELLOW).stroke(solidStroke);
+	rightGroup.line(pointsToTuples([B, D])).stroke(dashedStroke);
+	rightGroup.line(pointsToTuples([C, E])).stroke(dashedStroke);
 
 	asset_utils.shrinkCanvas(canvas, 0.1);
 });
@@ -496,7 +455,7 @@ builder.register("wbg-4.svg", function (canvas) {
 // ----------------------
 const cutStroke = { color: RED, width: 0.1, dasharray: "0.2" };
 const thickStroke = { color: BLACK, width: 0.3 };
-const edge_cut_pts: Point[] = [[2, 1], [10, 0], [5, 3], [-3, 4], [15, 5], [11, 8]];
+const edge_cut_pts: Point[] = tuplesToPoints([[2, 1], [10, 0], [5, 3], [-3, 4], [15, 5], [11, 8]]);
 builder.register("edge-cut-transverse.svg", function (canvas) {
 
 	var pts = edge_cut_pts;
@@ -511,22 +470,22 @@ builder.register("edge-cut-transverse.svg", function (canvas) {
 		leftGroup, pts, 0.1,
 		[["ABCD", LT_BLUE], ["BCFE", DK_BLUE], ["CDF", MED_BLUE]]
 	);
-	leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
-	leftGroup.polyline([pts[6], pts[7], pts[8]]).fill("none").stroke(cutStroke);
+	leftGroup.line(tupleByIndex(pts, [1, 2])).stroke(thickStroke);
+	leftGroup.polyline(tupleByIndex(pts, [6, 7, 8])).fill("none").stroke(cutStroke);
 
 	var rightGroup1 = canvas.group().translate(25, 0);
 	makePieces(
 		rightGroup1, pts, 0.1,
 		[["GBH", LT_BLUE], ["BHIE", DK_BLUE], ["GHI", PURPLE]]
 	);
-	rightGroup1.line([pts[1], pts[7]]).stroke(thickStroke);
+	rightGroup1.line(tupleByIndex(pts, [1, 7])).stroke(thickStroke);
 
 	var rightGroup2 = canvas.group().translate(23, 1);
 	makePieces(
 		rightGroup2, pts, 0.1,
 		[["AGHCD", LT_BLUE], ["HCFI", DK_BLUE], ["CDF", MED_BLUE]]
 	);
-	rightGroup2.line([pts[7], pts[2]]).stroke(thickStroke);
+	rightGroup2.line(tupleByIndex(pts, [7, 2])).stroke(thickStroke);
 
 	var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 + \\ell_2", 2);
 	mathLength.move(13, -2);
@@ -544,22 +503,22 @@ builder.register("edge-cut-lengthwise.svg", function (canvas) {
 
 	// add points on lines
 	pts.push(interpolate(pts[3], pts[5], 2 / 3));
-	pts.push([12, 3]); // off in the distance a bit
+	pts.push(new Point(12, 3)); // off in the distance a bit
 
 	var leftGroup = canvas.group();
 	makePieces(
 		leftGroup, pts, 0.1,
 		[["ABCD", LT_BLUE], ["BCFE", DK_BLUE], ["CDF", MED_BLUE]]
 	);
-	leftGroup.line([pts[1], pts[2]]).stroke(thickStroke);
-	leftGroup.polyline([pts[1], pts[2], pts[6]]).fill("none").stroke(cutStroke);
+	leftGroup.line(tupleByIndex(pts, [1, 2])).stroke(thickStroke);
+	leftGroup.polyline(tupleByIndex(pts, [1, 2, 6])).fill("none").stroke(cutStroke);
 
 	var rightGroup1 = canvas.group();
 	makePieces(
 		rightGroup1, pts, 0.1,
 		[["ABCD", LT_BLUE], ["CDG", MED_BLUE], ["BCGH", PURPLE]]
 	);
-	rightGroup1.line([pts[1], pts[2]]).stroke(thickStroke);
+	rightGroup1.line(tupleByIndex(pts, [1, 2])).stroke(thickStroke);
 	rightGroup1.dmove(23, 0);
 
 	var rightGroup2 = canvas.group();
@@ -567,7 +526,7 @@ builder.register("edge-cut-lengthwise.svg", function (canvas) {
 		rightGroup2, pts, 0.1,
 		[["BCFE", DK_BLUE], ["CFG", MED_BLUE]]
 	);
-	rightGroup2.line([pts[1], pts[2]]).stroke(thickStroke);
+	rightGroup2.line(tupleByIndex(pts, [1, 2])).stroke(thickStroke);
 	rightGroup2.dmove(25, 1);
 
 	var mathLength = asset_utils.makeMathSvg(canvas, "\\ell = \\ell_1 = \\ell_2", 2);
