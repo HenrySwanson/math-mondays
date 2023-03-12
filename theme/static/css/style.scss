@@ -2,23 +2,12 @@
 @import "variables";
 
 
-// GENERAL
+/* GENERAL */
 
 .width-wrapper {
   max-width: 850px;
   margin: 0 auto;
   padding: 0 10px;
-}
-
-body {
-  background-color: $COLOR_BACKGROUND;
-
-  color: $COLOR_TEXT;
-  font-family: $FONT_BODY;
-  font-size: 18px;
-  line-height: 1.5;
-
-  margin: 0;
 }
 
 h1 {
@@ -33,13 +22,32 @@ h3 {
   font-size: 1.17;
 }
 
-h1,
-h2,
-h3 {
-  text-align: center;
-  color: $COLOR_PRIMARY;
-  font-family: $FONT_TITLE;
+/* BODY */
+
+body {
+  background-color: $COLOR_BACKGROUND;
+
+  color: $COLOR_TEXT;
+  font-family: $FONT_BODY;
+  font-size: 18px;
+  line-height: 1.5;
+
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+
+  h1,
+  h2,
+  h3 {
+    text-align: center;
+    color: $COLOR_PRIMARY;
+    font-family: $FONT_TITLE;
+    margin: 0;
+  }
 }
 
 // Within an article, headers should get additional spacing
@@ -62,10 +70,9 @@ hr {
   border-bottom: 0;
 }
 
-// HEADER + FOOTER
+/*  HEADER + FOOTER */
 
-.site-header,
-.site-footer {
+.color-bar {
   background-color: $COLOR_PRIMARY;
   font-family: $FONT_TITLE;
   color: $COLOR_BACKGROUND;
@@ -80,18 +87,18 @@ hr {
   }
 }
 
-.site-header {
+#site-header-bar {
   border-radius: 0px 0px $ROUNDING_HEADER $ROUNDING_HEADER;
   padding: 30px 10px;
   margin-bottom: 20px;
   line-height: normal;
+}
 
+#site-header {
   // Evenly divide elements
-  .width-wrapper {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 
   ul {
     list-style-type: none;
@@ -106,23 +113,20 @@ hr {
   }
 }
 
-.header-sitename {
+#header-sitename {
   margin: 0 auto;
-  color: $COLOR_BACKGROUND;
   font-size: 54px;
   font-weight: normal;
   text-align: left;
   text-transform: uppercase;
-  float: left;
 }
 
-
-.header-navbar {
+#header-navbar {
   margin-left: auto;
   font-size: 22px;
 }
 
-.social-icons {
+#social-icons-container {
   text-align: right;
   margin-top: 12px;
   display: flex;
@@ -141,14 +145,20 @@ hr {
   }
 }
 
-.site-footer {
-  background-color: $COLOR_PRIMARY;
+#site-footer-bar {
   border-radius: $ROUNDING_HEADER $ROUNDING_HEADER 0px 0px;
   padding: 6px 12px;
   text-align: right;
+
+  // Makes sure the footer sticks to the bottom even on short pages
+  margin-top: auto;
+
+  span {
+    display: inline-block;
+  }
 }
 
-// ARTICLE TITLES + CONTAINERS
+/* ARTICLE TITLES + CONTAINERS */
 
 .article-container + .article-container {
   border-top: 2px $COLOR_SECONDARY dotted;
@@ -195,7 +205,7 @@ hr {
 }
 
 
-// THEOREM BOXES
+/* THEOREM BOXES */
 
 .theorem-box {
   background-color: $COLOR_TBOX_INNER;
@@ -225,7 +235,7 @@ hr {
 }
 
 
-// OTHER
+/* OTHER */
 
 .image-container {
   display: flex;
