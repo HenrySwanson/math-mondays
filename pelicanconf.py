@@ -44,10 +44,7 @@ MARKDOWN = {
 
 # Path inputs
 STATIC_PATHS = ["extra", "images", "js"]
-EXTRA_PATH_METADATA = {
-    f"extra/{filename}": {"path": filename}
-    for filename in ["CNAME", ".nojekyll", "robots.txt"]
-}
+EXTRA_PATH_METADATA = {f"extra": {"path": ""}}
 
 # Path and URL outputs
 ARTICLE_URL = "{slug}"
