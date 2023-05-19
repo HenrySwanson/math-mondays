@@ -14,7 +14,7 @@ For which $n$ can you cut a square into $n$ triangles of equal area?
 
 This question appears quite simple; it could have been posed to the Ancient Greeks. But like many good puzzles, it is a remarkably stubborn one.
 
-It was first solved in 1970, by Paul Monsky. Despite the completely geometric nature of the question, his proof relies primarily on number theory and combinatorics! Despite the level of machinery involved, his proof is quite accessible, and we will describe it below.
+It was first solved in 1970, by Paul Monsky. Despite the completely geometric nature of the question, his proof relies primarily on number theory and combinatorics! There is a small amount of algebraic machinery involved, but his proof is quite accessible, and we will describe it below.
 
 <!-- more -->
 
