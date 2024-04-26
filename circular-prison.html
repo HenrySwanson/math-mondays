@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Circular Prison of Unknown Size</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/circular-prison" title="Permalink to Circular Prison of Unknown Size">Circular Prison of Unknown Size</a>
+    </h1>
+    <div class="article-date">March 28, 2022</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/interactive">interactive</a>
+      <a href="https://mathmondays.com/tag/puzzles">puzzles</a>
+    </div>
+  </header>
+
+  <section><p>“Prisoner puzzles” are a popular kind of mathematical puzzle, in which a large group of cooperative players (“prisoners”) play a game against an adversarial supervisor (often “the warden”), with limited communication. Some classic examples are <a href="https://en.wikipedia.org/wiki/100_prisoners_problem">here</a> and <a href="https://www.popularmechanics.com/science/math/a25254/riddle-of-the-week-16/">here</a> (there’s frequent overlap with “hat problems”).</p>
+<p>Recently, I ran across a <a href="https://puzzling.stackexchange.com/questions/16168/the-circular-prison-of-unknown-size">very difficult prisoner puzzle</a>, which required an intricate solution from the prisoners to win. I’ve rephrased the problem and a few solutions below, along with an interactive demonstration of the strategies.</p>
+<blockquote>
+<p>The inevitable has happened – all the mathematicians in the world have been gathered up and arrested for being huge nerds.</p>
+<p>The mathematicians are housed in a custom prison, which has <span class="math">\(n\)</span> identical, isolated cells, arranged in a large circle, each containing a single occupant (no empty cells). Inside each cell is a light switch and a light bulb, but the electrical wiring is unusual. If the light switch in a cell is on at noon, the bulb in the <em>adjacent</em> cell will briefly flash. Otherwise, and at all other times, the light bulb is off<sup id="sf-circular-prison-1-back"><a href="#sf-circular-prison-1" class="simple-footnote" title="Essentially, every prisoner gets to send a bit to the cell next door. The noon thing is just to rule out prisoners trying to send multiple signals.">1</a></sup>.</p>
+<p>In order to prevent communication, every midnight, the warden fills the cells with knockout gas, flips all the switches to “off”, and rearranges the prisoners however he wants. (Still only one prisoner per cell though.)</p>
+<p>One day, the warden enters your cell and issues you a challenge to win your freedom, and that of your colleagues. At any point, any one of the prisoners can announce “There are <span class="math">\(n\)</span> prisoners!”. If they are correct, then everyone is free. Otherwise, everyone will be executed. He allows you to send a message to all of your colleagues, describing the game and the plan, to which they are not allowed to reply. The warden, of course, will read your message, and shuffle everyone to thwart your strategy.</p>
+<p>What plan would you devise?</p>
+</blockquote>
+
+<hr>
+<p>The StackExchange link above describes a few solutions, and there are two in particular that I think are particularly interesting. In all cases, it’s important that you are singled out by the warden, because this breaks the symmetry between you and everyone else, and allows you to act as the <em>captain</em> for the group.</p>
+<h1>Upper Bound</h1>
+<p>For both strategies, the first step is to establish an upper bound, which can be done as follows:</p>
+<div class="theorem-box">
+<div class="theorem-title">Finding an Upper Bound</div>
+<ul>
+<li>We perform a sequence of <em>rounds</em>, i.e., Round 1, Round 2, etc., consisting of a <em>waxing phase</em> and a <em>waning phase</em>.</li>
+<li>Within each round, prisoners are either “active” (will flip their switch today) or “inactive” (will not).</li>
+<li>The waxing phase of round <span class="math">\(k\)</span> lasts for <span class="math">\(k\)</span> days:<ul>
+<li>At the start of this round, the captain starts off active, and everyone else starts inactive.</li>
+<li>During this phase, anyone who sees a light becomes active, and stays that way for the rest of the phase.</li>
+</ul>
+</li>
+<li>The waning phase of round <span class="math">\(k\)</span> lasts for <span class="math">\(2^k\)</span> days:<ul>
+<li>At the start of this phase, prisoners carry over their active status from the end of the waxing phase.</li>
+<li>If a prisoner does not see a light, they immediately become inactive and remain that way for the rest of the phase.</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>We claim that, at the end of a round, either everyone is active or everyone is inactive. If no one does, we move on to the next round, otherwise, we stop, and claim that <span class="math">\(n \le 2^k\)</span>.</p>
+<p>Consider the number of active prisoners at the end of the waxing phase. Because each prisoner can activate only one other prisoner per day, the number of active prisoners can at most double each day. This means that, at the end of the waxing phase, there are at most <span class="math">\(2^k\)</span> active prisoners.</p>
+<p>Now, if everyone is active, the waning phase consists of everyone flipping the switch every day, and the round ends with everyone still active. Otherwise, some inactive prisoner border some active prisoner, and the number of active prisoners decreases by at least one per day. Since we started the phase with at most <span class="math">\(2^k\)</span> active prisoners, after <span class="math">\(2^k\)</span> days, everyone will be inactive.</p>
+<p>Note: this process must eventually terminate, because during the <span class="math">\(k\)</span>th round, there are at least <span class="math">\(k\)</span> active prisoners at the end of the waxing phase, and so, worst case scenario, we’ll finish at round <span class="math">\(n\)</span>.</p>
+<h1>Solution by Flipping Coins</h1>
+<p>At this point, the solutions take different approaches. One of the solutions, given in <a href="https://puzzling.stackexchange.com/a/16206/78405">this answer</a>, relies on giving the prisoners the ability to flip coins, allowing them to make decisions that the warden can’t predict ahead of time.</p>
+<p>In order to communicate the results of these coin flips, we build an “announcement” subprocedure.</p>
+<div class="theorem-box">
+<div class="theorem-title">Announcements</div>
+<p>For a predicate <span class="math">\(P\)</span>, an <em>announcement</em> for <span class="math">\(P\)</span> is a procedure that makes it common knowledge whether there exists some prisoner satisfying <span class="math">\(P\)</span>.</p>
+<p>The announcement period lasts <span class="math">\(B\)</span> days, where <span class="math">\(B\)</span> is an upper bound for the number of prisoners.</p>
+<ul>
+<li>Every prisoner satisfying <span class="math">\(P\)</span> is always active (and always flips the switch).</li>
+<li>Other prisoners become active when they see a light, and remain active afterwards, much like the waxing phase.</li>
+</ul>
+<p>At the end of the announcement period, if someone satisfied <span class="math">\(P\)</span>, everyone is active, otherwise everyone is inactive. This makes the (non-)satisfaction of <span class="math">\(P\)</span> common knowledge.</p>
+</div>
+<p>Now we can describe the strategy. The goal is to assign each prisoner a number from <span class="math">\(1\)</span> to <span class="math">\(n\)</span>. At each point, the numbers <span class="math">\(1\)</span> through <span class="math">\(d\)</span> will be assigned, and <span class="math">\(d\)</span> is common knowledge. The captain starts out numbered <span class="math">\(1\)</span>, and everyone else starts off unnumbered (i.e., <span class="math">\(d = 1\)</span>).</p>
+<p>Then, they repeat the following procedure:</p>
+<div class="theorem-box">
+<div class="theorem-title">Strategy</div>
+<ul>
+<li>(<span class="math">\(B\)</span> Days) Perform an announcement for “is unnumbered”.<ul>
+<li>If we get a negative result, then everyone is numbered, and everyone knows <span class="math">\(n\)</span>.</li>
+<li>Otherwise, proceed.</li>
+</ul>
+</li>
+<li>(<span class="math">\(1\)</span> Day) Candidate Selection Day<ul>
+<li>This day is the crucial day of the strategy.</li>
+<li>Every numbered prisoner simultaneously flips a coin. If they flip heads, they flip the switch today, otherwise they don’t.</li>
+<li>Unnumbered prisoners do not flip the switch today.</li>
+<li>Prisoners who see a light today are called <em>candidates</em>.</li>
+</ul>
+</li>
+<li>(<span class="math">\(d \cdot B\)</span> Days) For each <span class="math">\(i\)</span> from <span class="math">\(1\)</span> to <span class="math">\(d\)</span>, the prisoner numbered <span class="math">\(i\)</span> makes an announcement for “flipped heads”.<ul>
+<li>After this, everyone knows exactly how many heads were flipped, i.e., how many candidates there are.</li>
+</ul>
+</li>
+<li>(<span class="math">\(B\)</span> Days) Finally, an announcement is made for “is unnumbered candidate”.<ul>
+<li>If this announcement is positive, and exactly one head was flipped, then there is a unique unnumbered candidate, and so they should assign themselves the number <span class="math">\(d+1\)</span>, and everyone increments <span class="math">\(d\)</span>.</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Repeated enough times, this procedure will eventually<sup id="sf-circular-prison-2-back"><a href="#sf-circular-prison-2" class="simple-footnote" title="As in, almost surely.">2</a></sup> complete. Imagine that we’ve numbered all but one prisoner. In order to number the last prisoner, every numbered prisoner needs to flip tails, except the one adjacent to the unnumbered one. This is unlikely to happen, but it will eventually occur. The same is also true of all prior attempts to number a prisoner.</p>
+<p>Also, the warden can rearrange the prisoners how he wishes, but because every numbered prisoner is equally capable of nominating a candidate, his efforts cannot actually impede the procedure.</p>
+<hr>
+<p>To see how this algorithm plays out in practice, here is an interactive simulation. The coins are weighted to come up heads <span class="math">\(1/d\)</span> of the time, which I think is optimal.</p>
+<p>The prisoners are named <span class="math">\(A\)</span> through <span class="math">\(E\)</span>, but this is just so that you can track their identities between shuffles. Their numbered labels are in the lower left, the coins they flip are in the lower right, and their candidacy status is in the upper right.</p>
+<!-- TODO: generate prisoner graphics legend automatically -->
+
+<div>
+<span id="day-counter-1"></span>
+  <div style="float: right;">
+    <button id="start-over-button-1" type="button">Start Over</button>
+    <button id="undo-button-1" type="button">Undo</button>
+    <button id="next-button-1" type="button">Next</button>
+    <button id="finish-phase-button-1" type="button">Finish Phase</button>
+  </div>
+</div>
+
+<div><span id="state-description-1"></span></div>
+
+<div id="prison-interactive-1" style="border-style: solid;border-width: 3px;border-radius: 5px;background-color: #fff"></div>
+
+<div><span id="common-knowledge-1"></span></div>
+
+<h1>Solution by Linear Algebra</h1>
+<p>The other approach (described <a href="https://puzzling.stackexchange.com/a/24791/78405">here</a> and <a href="https://puzzling.stackexchange.com/a/24734/78405">here</a>) is more complicated, but does not use randomness, and is guaranteed to finish in a certain number of days. It also leverages some linear algebra, so it’s a good thing our prisoners are mathematicians!</p>
+<p>It begins the same way as the first solution, by establishing an upper bound <span class="math">\(B\)</span>, and it uses the same announcement procedure. But instead of numbering individual prisoners, the goal is to partition them into subsets, and, after a certain point, deduce the size of these subsets.</p>
+<p>Confused? Me too. It only really clicked for me after writing out this section.</p>
+<p>At each point, there will be a partition of prisoners into subsets <span class="math">\(S_1, \ldots, S_k\)</span>; the prisoners will all know <span class="math">\(k\)</span>, and which subset they themselves are in. The sets are initialized with you, the captain, in <span class="math">\(S_1\)</span>, and everyone else in <span class="math">\(S_2\)</span>.</p>
+<p>To refine this partition further, they attempt the following procedure repeatedly:</p>
+<div class="theorem-box">
+<div class="theorem-title">Strategy</div>
+<ul>
+<li>For each subset <span class="math">\(I \subseteq \{1, 2, \ldots, k\}\)</span>, other than the empty set and the whole set,<ul>
+<li>(<span class="math">\(1\)</span> Day) All prisoners in <span class="math">\(\bigcup_{i \in I} S_i\)</span> flash their lights today. Let <span class="math">\(T\)</span> be the set of prisoners that see lights today.</li>
+<li>For each individual <span class="math">\(j = 1, 2, \ldots, k\)</span>, check how <span class="math">\(T\)</span> and <span class="math">\(S_j\)</span> overlap:<ul>
+<li>(<span class="math">\(B\)</span> Days) Perform an announcement for prisoners in <span class="math">\(S_j \cap T\)</span></li>
+<li>(<span class="math">\(B\)</span> Days) Perform an announcement for prisoners in <span class="math">\(S_j \setminus T\)</span></li>
+<li>If both announcements were positive, replace <span class="math">\(S_j\)</span> with <span class="math">\(S_j \cap T\)</span>, and add <span class="math">\(S_j \setminus T\)</span> as a new set, incrementing <span class="math">\(k\)</span>. Then, abort this procedure and try again.</li>
+</ul>
+</li>
+<li>Basically, <span class="math">\(T\)</span> is used to “cut” an <span class="math">\(S_j\)</span> into two smaller subsets, if possible.</li>
+</ul>
+</li>
+<li>If we get to this point, stop. We claim it is now possible to announce the correct number of mathematicians.</li>
+</ul>
+</div>
+<p>The loop must eventually stop, because in the worst case, <span class="math">\(k = n\)</span> and all subsets are size one. We can even put an upper bound on how long it will take. We can run the procedure at most <span class="math">\(n-2\)</span> times before all our subsets are size one. If we delay the splitting as long as possible, we’ll have to go through <span class="math">\(2^n\)</span>-ish subsets, each of which takes <span class="math">\(2B+1\)</span> days. Since the worst case for our upper bound is <span class="math">\(B = 2^n\)</span>, this gives <span class="math">\((n-2)2^n(2\cdot 2^n+1) \approx 2n^2 \cdot 4^n\)</span> days.</p>
+<hr>
+<p>But how does this help them calculate <span class="math">\(n\)</span>?</p>
+<p>Fix one of the subsets <span class="math">\(I\)</span>. Because <span class="math">\(k\)</span> did not increase on the final attempt, we know <span class="math">\(T\)</span> was not able to cut any of the <span class="math">\(S_j\)</span> this time. In other words, for all <span class="math">\(j\)</span>, either every prisoner in <span class="math">\(S_j\)</span> saw a light, or none of them did. Let <span class="math">\(I'\)</span> be the set of <span class="math">\(j\)</span> such that prisoners in <span class="math">\(S_j\)</span> saw lights. Since the number of prisoners seeing a light must equal the number of prisoners flipping a switch, this gives us an equation:</p>
+<div class="math">$$ \sum_{i \in I} |S_i| = \sum_{j \in I'} |S_j| $$</div>
+<p>Note that <span class="math">\(I'\)</span> cannot be a subset of <span class="math">\(I\)</span>. The circular nature of the prison means that, unless <span class="math">\(I\)</span> is the whole set or the empty set, there must be someone outside of <span class="math">\(I\)</span> that saw a light, and we excluded those subsets from the procedure.</p>
+<p>So, letting <span class="math">\(x_i\)</span> be the size of <span class="math">\(S_i\)</span>, we now have a system of equations about the variables <span class="math">\(x_1, \ldots, x_k\)</span>. Importantly, the prisoners know these equations as well! Because of the announcements made when attempting to cut with <span class="math">\(T\)</span>, the prisoners know whether <span class="math">\(S_j \cap T\)</span> or <span class="math">\(S_j \setminus T\)</span> is empty or not, and this tells them the contents of <span class="math">\(I'\)</span>. (They already know <span class="math">\(I\)</span> because they agree on the order of iteration.) Lastly, they know that <span class="math">\(S_1\)</span> is just the captain, and so <span class="math">\(x_1 = 1\)</span>.</p>
+<p>We claim that, under these constraints, there is exactly one possible solution, and once the prisoners find it, they know the size of every subset exactly. They can win by simply guessing that <span class="math">\(n = \sum x_i\)</span>.</p>
+<p><em>Proof</em>:</p>
+<p>Let <span class="math">\(x_1, \ldots, x_k\)</span> and <span class="math">\(y_1, \ldots, y_k\)</span> be two such solutions. Let <span class="math">\(r\)</span> be the minimum value of <span class="math">\(y_i/x_i\)</span> over all <span class="math">\(i\)</span>, and let <span class="math">\(z_i = y_i - r x_i\)</span>. We note three things:</p>
+<ul>
+<li>Each <span class="math">\(z_i \ge 0\)</span>, because <span class="math">\(r \le y_i/x_i\)</span></li>
+<li>At least one <span class="math">\(z_i = 0\)</span>, because there is some <span class="math">\(i\)</span> for which <span class="math">\(r = y_i/x_i\)</span></li>
+<li>As a linear combination of solutions, the <span class="math">\(z_i\)</span> are also a solution</li>
+</ul>
+<p>Assume for the sake of contradiction that some of the <span class="math">\(z_i\)</span> are non-zero. Let <span class="math">\(Z\)</span> be the set of <span class="math">\(i\)</span> for which <span class="math">\(z_i = 0\)</span>, which is by our assumption, not the whole set. Consider the equation corresponding to that subset; there is some subset <span class="math">\(Z' \not\subseteq Z\)</span> such that:</p>
+<div class="math">$$ \sum_{i \in Z} z_i = \sum_{j \in Z'} z_j $$</div>
+<p>The left hand side must be zero, by definition, but because <span class="math">\(Z' \setminus Z\)</span> is non-empty, there is some non-zero <span class="math">\(z_j\)</span> on the right hand side. All the <span class="math">\(z_j\)</span>s are non-negative, so we have reached a contradiction. Thus, all <span class="math">\(z_i\)</span> are zero, meaning that <span class="math">\(y_i = r x_i\)</span>. And because <span class="math">\(x_1 = y_1 = 1\)</span>, this forces <span class="math">\(r\)</span> to be <span class="math">\(1\)</span>, and so the two solutions are identical.</p>
+<hr>
+<p>This approach is simulated below, but with one minor caveat. Once the system of equations has a unique solution, the mathematicians will just blurt it out immediately, instead of waiting for all <span class="math">\(2^n - 2\)</span> equations to come in.</p>
+<p>Note: Experimentally, it seems that it’s extremely common for the prisoners to all get partitioned into sets of size <span class="math">\(1\)</span>, but that’s not necessarily the case every time. If you were able to rearrange the prisoners as you wished, you could set up such a situation: once you have <span class="math">\(4\)</span> partitions, you can ensure that partition <span class="math">\(4\)</span> is never split up.</p>
+<p>But I haven’t yet added the ability to drag-and-drop prisoners around, so you have to approximate this by just hitting “Undo” and “Next” until you get the result you want. Maybe I’ll add that once I stop seething at JavaScript.</p>
+<div>
+<span id="day-counter-2"></span>
+  <div style="float: right;">
+    <button id="start-over-button-2" type="button">Start Over</button>
+    <button id="undo-button-2" type="button">Undo</button>
+    <button id="next-button-2" type="button">Next</button>
+    <button id="finish-phase-button-2" type="button">Finish Phase</button>
+  </div>
+</div>
+
+<div><span id="state-description-2"></span></div>
+
+<div id="prison-interactive-2" style="border-style: solid;border-width: 3px;border-radius: 5px;background-color: #fff"></div>
+
+<div><span id="common-knowledge-2"></span></div>
+
+<script src="/js/circular_prison/main.js"></script>
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script><ol class="simple-footnotes"><li id="sf-circular-prison-1">Essentially, every prisoner gets to send a bit to the cell next door. The noon thing is just to rule out prisoners trying to send multiple signals. <a href="#sf-circular-prison-1-back" class="simple-footnote-back">↩</a></li><li id="sf-circular-prison-2">As in, <a href="https://en.wikipedia.org/wiki/Almost_surely">almost surely</a>. <a href="#sf-circular-prison-2-back" class="simple-footnote-back">↩</a></li></ol></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-circular-prison&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

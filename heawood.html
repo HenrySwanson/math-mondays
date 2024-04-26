@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - The Heawood Number</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/heawood" title="Permalink to The Heawood Number">The Heawood Number</a>
+    </h1>
+    <div class="article-date">October 22, 2018</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/graph-theory">graph-theory</a>
+      <a href="https://mathmondays.com/tag/topology">topology</a>
+    </div>
+  </header>
+
+  <section><p>The <a href="https://en.wikipedia.org/wiki/Four_color_theorem">four-color theorem</a> tells us that we can color any map using only four colors, such that no adjacent regions have the same color.</p>
+<p>This is true for any map of the world, whether it&rsquo;s on a globe or laid out flat. But what about maps on other surfaces?</p>
+
+
+<hr>
+<p>The mathematical formalization of the four-color theorem is: &ldquo;any planar graph is 4-colorable&rdquo;. Let&rsquo;s break down what that means.</p>
+<p>Graph here refers to a collection of vertices and edges, not a plot or a chart. For our purposes, we&rsquo;ll only consider <strong>simple</strong> graphs, that is, graphs where a) there is no edge from a point to itself and b) for any pair of points, there&rsquo;s at most one edge between them. A graph is <strong>planar</strong> if we can embed it in the plane (i.e., draw it on a sheet of paper) without any of the edges crossing.</p>
+<p>A <em>coloring</em> of a graph is a way of coloring the vertices of the graph such that no two vertices of the same color are connected. Note that self-loops make a graph impossible to color, and multiple edges between vertices don&rsquo;t matter. This is why we concentrate only on simple graphs.</p>
+<p>We say a map is <span class="math">\(k\)</span>-colorable if there exists a coloring with <span class="math">\(k\)</span> colors. </p>
+<p><img alt="TODO tooltip here" height="auto" src="/images/heawood/1.png" width="100%"></p>
+<p>So what does this have to do with maps? The problem of coloring a map can be rephrased as a problem about coloring graphs. And since the field is called &ldquo;graph theory&rdquo;, and not &ldquo;map theory&rdquo;, that&rsquo;s what we&rsquo;ll do. Put a vertex for each country, and connect two vertices if the corresponding countries are adjacent. If you can color the map, then the corresponding graph can be colored in the same way. Likewise, if you can color the graph, you can use the same color assignment to color the map.</p>
+<p><img alt="TODO tooltip here" height="auto" src="/images/heawood/2.png" width="100%"></p>
+<p>We&rsquo;re looking to answer the question: for a surface <span class="math">\(S\)</span>, how many colors do we need to guarantee we can color any graph embedded in <span class="math">\(S\)</span>? To do this, we&rsquo;ll need to make use of an invariant called the &ldquo;Euler characteristic&rdquo;.</p>
+<h1>Euler Characteristic</h1>
+<p>Euler&rsquo;s formula for planar graphs says that for any planar graph, <span class="math">\(V - E + F = 2\)</span>, where <span class="math">\(V\)</span> is the number of vertices, <span class="math">\(E\)</span> is the number of edges, and <span class="math">\(F\)</span> is the number of faces (including the outside face).</p>
+<p>This also applies to graphs embedded on the sphere. Imagine taking a pin and poking a hole in the middle of one of the faces. Stretch this hole out until it is wide enough that you can flatten the entire sphere into a disk. Now you have a graph embedded in the plane. (This explains why we like to consider the outside face a legitimate face.)</p>
+<p>But this does not apply to graphs embedded on other surfaces! Consider the following graph on the torus:</p>
+<p><img alt="TODO tooltip here" height="auto" src="/images/heawood/3.png" width="100%"></p>
+<p>This has 16 vertices, 32 edges, and 16 faces (count carefully, not all of them are obvious). This has <span class="math">\(V - E + F = 0\)</span>! Euler&rsquo;s formula doesn&rsquo;t work on the torus, but maybe we can salvage it?</p>
+<p>Let&rsquo;s try some examples:</p>
+<p><img alt="TODO tooltip here" height="auto" src="/images/heawood/4.png" width="100%"></p>
+<p>It seems we <em>usually</em> get <span class="math">\(0\)</span>, but sometimes we do get a <span class="math">\(2\)</span>, like before. To resolve this, note that in all the examples where we don&rsquo;t get <span class="math">\(0\)</span>, some of the faces have &ldquo;holes&rdquo;. If you took the face in the <span class="math">\(3 - 3 + 1\)</span> example and laid it out flat, it&rsquo;d look like a ring, not a disk.</p>
+<p>So we&rsquo;ll equip ourselves with another definition: if a graph is embedded in a surface, and none of the resulting faces have holes, we call that embedding <em>honest</em>. (This isn&rsquo;t standard terminology, but you can&rsquo;t stop me from naming things whatever I want. Try me.) It turns out that if you honestly embed a graph into the torus, you&rsquo;ll always get <span class="math">\(V - E + F = 0\)</span>, no matter which graph you use, or how it&rsquo;s embedded.</p>
+<p>In fact, for any surface <span class="math">\(S\)</span>, we have a similar result: there&rsquo;s a fixed integer <span class="math">\(\chi(S)\)</span> such that <span class="math">\(V - E + F = \chi(S)\)</span>, for any honest embedding of any graph. We call this number the <em>Euler characteristic</em> for the surface. For the plane and the sphere, <span class="math">\(\chi = 2\)</span>. For the torus, <span class="math">\(\chi = 0\)</span>. Here&rsquo;s some other examples of surfaces and their Euler characteristics:</p>
+<p><img alt="TODO tooltip here" height="auto" src="/images/heawood/5.png" width="100%"></p>
+<h1>The Heawood Number</h1>
+<p>Now we can approach the generalized four-color theorem. Armed with the Euler characteristic, we define the <strong>Heawood number</strong> of a surface with Euler characteristic <span class="math">\(\chi\)</span> as:</p>
+<div class="theorem-box">
+<div class="theorem-title">Heawood Number</div>
+<p>
+<div class="math">$$ H(\chi) = \left\lfloor \frac{7 + \sqrt{49 - 24 \chi}}{2} \right\rfloor $$</div>
+</p>
+</div>
+<p>Yeah. That&rsquo;s&hellip; unmotivated.</p>
+<p>We claim that any graph that can be embedded on a surface with characteristic <span class="math">\(\chi\)</span>, honestly or otherwise, can be colored with at most <span class="math">\(H(\chi)\)</span> colors. For the sphere, <span class="math">\(H(2) = 4\)</span>, so our claim becomes the famous Four-Color Theorem, which is Very Hard To Prove (TM). We&rsquo;ll deliberately exclude that case, like the cowards we are.</p>
+<hr>
+<p>The first step is to prove a lemma about the minimum degree of the graph. That&rsquo;ll get us most of the way there.</p>
+<p>Let <span class="math">\(S\)</span> be a surface that isn&rsquo;t the sphere, and embed a graph <span class="math">\(G\)</span> on it, honestly or not. Let <span class="math">\(V\)</span>, <span class="math">\(E\)</span>, and <span class="math">\(F\)</span> be the usual, and let <span class="math">\(\delta\)</span> be the minimum degree of a vertex in <span class="math">\(G\)</span>. We claim that <span class="math">\(\delta \le H(\chi) - 1\)</span>.</p>
+<p>Proof: First, we can extend this embedding to an honest embedding, by adding extra edges to cut up the faces. This can only make <span class="math">\(\delta\)</span> bigger, so if we can prove <span class="math">\(\delta \le H(\chi) - 1\)</span> for this new graph, it was also true for the old graph.</p>
+<p>Next, consider the following inequalities, the motivations for which are pulled directly from my ass.</p>
+<ul>
+<li>Since each face has at least three edges, we know that <span class="math">\(2E \ge 3F\)</span>.</li>
+<li>The sum of the degrees for all vertices is <span class="math">\(2E\)</span>. Thus, <span class="math">\(2E \ge \delta V\)</span>.</li>
+<li>A vertex cannot be connected to more than <span class="math">\(V - 1\)</span> other vertices, so <span class="math">\(\delta + 1 \le V\)</span>.</li>
+</ul>
+<p>Now, from the definition of Euler characteristic, we have:
+</p>
+<div class="math">$$
+\begin{align*}
+\chi &amp;= V - E + F \\
+6\chi &amp;= 6V - 6E + 6F \\
+6\chi &amp;\le 6V - 2E \\
+6\chi &amp;\le 6V - \delta V = (6 - \delta) V \\
+\end{align*}
+$$</div>
+<p>Here we must split into cases, depending on the sign of <span class="math">\(\chi\)</span>.</p>
+<p>If <span class="math">\(\chi \le 0\)</span>, then we make both sides positive before making use of our last inequality:
+</p>
+<div class="math">$$ -6\chi \ge (\delta - 6)V \ge (\delta - 6)(\delta + 1) = \delta^2 - 5 \delta - 6 $$</div>
+<p>Now use the handy-dandy quadratic formula; we get that <span class="math">\(\delta\)</span> is at most <span class="math">\(\frac{5 + \sqrt{49 - 24 \chi}}{2} = H(\chi) - 1\)</span>. Boom.</p>
+<p>Otherwise, <span class="math">\(\chi &gt; 0\)</span>, and by the <a href="https://en.wikipedia.org/wiki/Surface_%28topology%29#Classification_of_closed_surfaces">classification of compact surfaces</a>, we know <span class="math">\(S\)</span> must be the sphere or the projective plane. We&rsquo;re explicitly excluding the sphere, so <span class="math">\(S\)</span> must be the projective plane, which has Euler characteristic 1. Plugging that in, we get that <span class="math">\(6 \le (6 - \delta) V\)</span>. Since the right side is positive, we must have <span class="math">\(\delta &lt; 6\)</span>. Because <span class="math">\(H(1) = 6\)</span>, we can still guarantee that <span class="math">\(\delta \le H(\chi) - 1\)</span>.</p>
+<p>So for any graph <span class="math">\(G\)</span> embedded in <span class="math">\(S\)</span>, honestly or otherwise, there is a vertex with degree at most <span class="math">\(H(\chi) - 1\)</span>.</p>
+<hr>
+<p>We&rsquo;re basically done! We&rsquo;ll describe an explicit procedure to color graphs on <span class="math">\(S\)</span> with <span class="math">\(H(\chi)\)</span> colors.</p>
+<p>Let <span class="math">\(G\)</span> be a graph embedded on <span class="math">\(S\)</span>. Our base case is the graph with one vertex; it can trivially be colored. Otherwise, consider <span class="math">\(G\)</span> with <span class="math">\(n \ge 2\)</span> vertices. By our lemma, it has some vertex <span class="math">\(v\)</span> with degree at most <span class="math">\(H(\chi) - 1\)</span>. Apply our procedure to the subgraph <span class="math">\(G - v\)</span>, coloring it with <span class="math">\(H(\chi)\)</span> colors. Since <span class="math">\(v\)</span> has strictly less than <span class="math">\(H(\chi)\)</span> neighbors, there will be at least one color available for us to color <span class="math">\(v\)</span> with, and so we can color all of <span class="math">\(G\)</span>.</p>
+<h1>Conclusions</h1>
+<p>We showed that any graph <span class="math">\(G\)</span> embedded in <span class="math">\(S\)</span>, honestly or otherwise, can be colored with <span class="math">\(H(\chi) = \left\lfloor \frac{7 + \sqrt{49 - 24 \chi}}{2} \right\rfloor\)</span> colors. The only case we decided not to handle was when <span class="math">\(S\)</span> is the sphere. Unfortunately, that case is much harder. The proof above was discovered in 1890 by Percy John Heawood, after whom the number is named. The Four-Color Theorem wasn&rsquo;t proven until much later, in 1976, by Kenneth Appel and Wolfgang Haken. And what a controversial proof it was! They managed to reduce the problem to checking a particular property of 1,936 graphs. This wasn&rsquo;t feasible to do by hand, so they used a computer to check those cases. This was the first computer-aided proof, and it ruffled quite a few feathers.</p>
+<p>Secondly, we only established an upper bound on the number of colors we need in our palette. Is there a graph that requires all <span class="math">\(H(\chi)\)</span> colors? Or can we lower the bound a bit? The Heawood conjecture is the claim that we can&rsquo;t; i.e., that this bound is sharp. And it&rsquo;s mostly true. In 1968, Gerhard Ringel and Ted Youngs showed that, on almost any surface, you can embed the complete graph on <span class="math">\(H(\chi)\)</span> vertices. Since that graph requires all <span class="math">\(H(\chi)\)</span> colors, that shows the bound is sharp. The only exception is the Klein bottle, where the conjecture predicts <span class="math">\(H(0)=7\)</span> colors are needed, but in fact, <span class="math">\(6\)</span> colors suffice to color any graph.</p>
+<p>A maximal coloring of the Klein bottle is shown below:</p>
+<div class="image-container">
+<p><img alt="A maximal coloring of the Klein bottle" height="250px" src="/images/heawood/6.png"></p>
+</div>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-heawood&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

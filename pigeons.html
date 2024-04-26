@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Expected Density of Pigeons</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/pigeons" title="Permalink to Expected Density of Pigeons">Expected Density of Pigeons</a>
+    </h1>
+    <div class="article-date">October 8, 2018</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/puzzles">puzzles</a>
+      <a href="https://mathmondays.com/tag/generating-functions">generating-functions</a>
+    </div>
+  </header>
+
+  <section><p><span class="mathdefs">
+<span class="math">\(\DeclareMathOperator{\res}{Res}\)</span>
+</span></p>
+<p>This one&rsquo;s another puzzle from work:</p>
+<blockquote>
+<p>Consider a pigeon coop with <span class="math">\(n\)</span> pigeonholes, arranged in a straight line. When a pigeon arrives at the coop, it will roost in a pigeonhole only if it is empty, and both neighboring pigeonholes are also empty. It selects such a pigeonhole uniformly at random, enters the pigeonhole, and does not leave. At some point, the coop will fill up, but not every pigeonhole will be occupied. What is the expected density of pigeons in the coop, as <span class="math">\(n\)</span> grows large?</p>
+</blockquote>
+<p>If you run a few simulations, you get that it&rsquo;s about <span class="math">\(0.432332\ldots\)</span>. But this isn&rsquo;t any easily recognizable number. What is it in closed form?</p>
+
+
+<hr>
+<p>This problem illustrates one of the things I find really cool about math: the boundaries between different disciplines are essentially fictitious. This is a combinatorics problem, and so we might expect to be using arguments involving counting, bijections, and other finite tools. But instead we&rsquo;ll sprint as fast as we can into the realm of analysis and solve the problem there.</p>
+<p>Let <span class="math">\(a_n\)</span> be the expected number of pigeons for a coop with <span class="math">\(n\)</span> holes. Then we can come up with a recurrence relation for <span class="math">\(a_n\)</span>.</p>
+<p>Consider what happens when the first pigeon arrives in an unoccupied coop. If it arrives in the first hole, then we can imagine deleting the first hole and its neighbor from the coop, leaving us with an unoccupied coop of size <span class="math">\(n - 2\)</span>. If it lands in the last hole, we have the same situation. Otherwise, it lands somewhere in the middle; when a pigeon comes to rest in the <span class="math">\(k\)</span>th hole (I&rsquo;m going to <span class="math">\(1\)</span>-index, by the way), it splits the coop into two smaller coops, one with <span class="math">\(k - 2\)</span> holes, and the other with <span class="math">\(n - k - 1\)</span> holes. Since each hole is equally likely, we can average over all values of <span class="math">\(k\)</span> to get a first draft of our recurrence relation:
+</p>
+<div class="math">$$ a_n = 1 + \frac{1}{n} \left( a_{n-2} + a_{n-2} + \sum_{k=2}^{n-1} (a_{k-2} + a_{n-k-1}) \right) $$</div>
+<p>This can be prettied up with some mild re-indexing:
+</p>
+<div class="math">$$ a_n = 1 + \frac{2}{n} \sum_{k=0}^{n-2} a_k $$</div>
+<p>We can do even better though! If we consider <span class="math">\(n a_n - (n-1) a_{n-1}\)</span>, we can collapse most of our terms:
+</p>
+<div class="math">$$
+\begin{align*}
+n a_n - (n-1) a_{n-1} &amp;= \left( n + 2 \sum_{k=0}^{n-2} a_k \right) - \left( n-1 + 2 \sum_{k=0}^{n-1} a_k \right) \\
+n a_n - (n-1) a_{n-1} &amp;= 1 + 2 a_{n-2} \\
+a_n &amp;= \frac{1}{n} ( 1 + (n-1) a_{n-1} + 2 a_{n-2} )
+\end{align*}
+$$</div>
+<hr>
+<p>This isn&rsquo;t a linear recurrence relation, so we can&rsquo;t apply linear algebra tricks to it. So we fall back on the Swiss Army knife of recurrence relations: the generating function.</p>
+<p>Let <span class="math">\(G(z) = a_0 + a_1 z + a_2 z^2 + a_3 z^3 + \cdots\)</span>. We don&rsquo;t know what this function is yet, but we can use the recurrence relation to pin down what it is.
+</p>
+<div class="math">\begin{align*}
+G(z) &amp;= \sum_{n=0}^\infty a_n z^n \\
+G'(z) &amp;= \sum_{n=1}^\infty n a_n z^{n-1} \\
+&amp;= a_1 + \sum_{n=2}^\infty n a_n z^{n-1} \\
+&amp;= a_1 + \sum_{n=2}^\infty \left( 1 + (n-1) a_{n-1} + 2 a_{n-2} \right) z^{n-1}
+\end{align*}</div>
+<p>Dealing with the three pieces separately makes this much easier to read (and also to write *wink*):
+</p>
+<div class="math">$$ \sum_{n=2}^\infty z^{n-1} = \frac{z}{1 - z} $$</div>
+<div class="math">$$ \sum_{n=2}^\infty (n-1) a_{n-1} z^{n-1} = \sum_{n=1}^\infty n a_n z^n = z G'(z) $$</div>
+<div class="math">$$ \sum_{n=2}^\infty 2 a_{n-2} z^{n-1} = 2 \sum_{n=0}^\infty a_n z^{n+1} = 2z G(z) $$</div>
+<p>Putting it all together, we get a differential equation for <span class="math">\(G(z)\)</span>:
+</p>
+<div class="math">$$ G'(z) = 1 + \frac{z}{1 - z} + z G'(z) + 2z G(z) $$</div>
+<p>Cleaning it up a little, we see that it&rsquo;s first order and linear, so we can put those diff eq skills to use:
+</p>
+<div class="math">$$ G'(z) = \frac{2z}{1 - z} G(z) + \frac{1}{(1 - z)^2} $$</div>
+<p>The details aren&rsquo;t super important, but basically you use an <a href="https://en.wikipedia.org/wiki/Integrating_factor">integrating factor</a> and get:
+</p>
+<div class="math">$$ G(z) = \frac{1 + C e^{-2z}}{2(z-1)^2} $$</div>
+<p>What should <span class="math">\(C\)</span> be? We&rsquo;ll have to use our initial conditions, and one of them is particularly straightforward: <span class="math">\(G(0) = a_0\)</span>, which we know is <span class="math">\(0\)</span>, and so <span class="math">\(C = -1\)</span>.</p>
+<hr>
+<p>At this point, let&rsquo;s stop and recollect our thoughts. We&rsquo;ve defined a function <span class="math">\(G(z)\)</span> whose power series coefficients are <span class="math">\(a_n\)</span>, the average number of pigeons in a coop of size <span class="math">\(n\)</span>. Our solution is now encoded in quite a peculiar way: how fast do the coefficients of <span class="math">\(G(z)\)</span> grow?</p>
+<!-- TODO smart quotes -->
+<p>To figure this out, let&rsquo;s put the &ldquo;analytic&rdquo; in &ldquo;analytic combinatorics&rdquo;, and consider some contour integrals. Fix some <span class="math">\(R &gt; 1\)</span>, and define <span class="math">\(I_n\)</span> to be the integral of <span class="math">\(G(z)/z^{n+1}\)</span> around the circle of radius <span class="math">\(R\)</span> at the origin (taken counter-clockwise).</p>
+<p>What is <span class="math">\(I_n\)</span>? We can evaluate it using the <a href="https://mathmondays.com/residues">residue theorem</a>. There are two poles, one at <span class="math">\(z = 0\)</span>, and the other at <span class="math">\(z = 1\)</span>. The former is easy to compute; the residue is the coefficient on the <span class="math">\(z^{-1}\)</span> term, which is exactly <span class="math">\(a_n\)</span>. The second does not admit such a nice description, and so we compute it the usual way:
+</p>
+<div class="math">\begin{align*}
+\res\left( \frac{G(z)}{z^{n+1}}, 1\right) &amp;= \lim_{z \to 1} \frac{d}{dz} (z-1)^2 \frac{G(z)}{z^{n+1}} \\
+&amp;= \lim_{z \to 1} \frac{d}{dz} \frac{1 - e^{-2z}}{2 z^{n+1}} \\
+&amp;= \lim_{z \to 1} \frac{2 z e^{-2z} - (n+1)(1 - e^{-2z})}{2 z^{n+2}} \\
+&amp;= \frac{(n+3)e^{-2} - (n+1)}{2}
+\end{align*}</div>
+<p>So <span class="math">\(\frac{1}{2 \pi i} I_n = a_n + \frac{(n+3)e^{-2} - (n+1)}{2}\)</span>. What good does this do us?</p>
+<p>If you&rsquo;ve seen this trick before, you know that <span class="math">\(I_n\)</span> drops exponentially to <span class="math">\(0\)</span> as <span class="math">\(n\)</span> increases, but if not, here&rsquo;s the justification. Let <span class="math">\(M\)</span> be the largest value (in terms of absolute value) that <span class="math">\(G\)</span> attains on the circle <span class="math">\(|z| = R\)</span>. Then the triangle inequality tells us:
+</p>
+<div class="math">$$ | I_n | = \left| \int_{C_R} \frac{G(z)}{z^{n+1}}~dz \right| \le \int_{C_R} \left| \frac{G(z)}{z^{n+1}} \right|~dz \le \int_{C_R} \frac{M}{R^{n+1}}~dz = \frac{2 \pi M}{R^n} $$</div>
+<p>So as <span class="math">\(n \to \infty\)</span>, <span class="math">\(I_n\)</span> drops to <span class="math">\(0\)</span>, and so <span class="math">\(a_n\)</span> approaches <span class="math">\(\frac{(n+1)-(n+3)e^{-2}}{2}\)</span>. Therefore, the expected density of pigeons, <span class="math">\(a_n/n\)</span>, approaches <span class="math">\((1 - e^{-2})/2\)</span>, or about <span class="math">\(0.432332\)</span>.</p>
+<hr>
+<p>There were other solutions that people came up with for this problem, but what I really like about this one is that it demonstrates a way to approach these problems in general, and (at least IMO) it&rsquo;s a pretty unexpected one. If someone asked me to figure out how fast the coefficients of a power series grow, the residue theorem would not be the first thing on my mind. And yet, not only does it get the job done, it works for many other similar problems, in essentially the same way. I&rsquo;m not much of an analysis person, but my understanding is that this kind of trick is common in analytic combinatorics, and I think that&rsquo;s pretty cool!</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-pigeons&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

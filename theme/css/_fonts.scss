@@ -1,0 +1,52 @@
+// Font Directories
+$FONT_PARENT_DIR: '../fonts/';
+
+
+// Alte DIN 1451
+$ALTE_DIN_DIR: $FONT_PARENT_DIR + 'alte-din-1451-mittelschrift/';
+
+@font-face {
+    font-family: 'Alte DIN 1451';
+    src: url($ALTE_DIN_DIR + 'din1451alt.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Alte DIN 1451';
+    src: url($ALTE_DIN_DIR + 'din1451alt G.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+// EB Garamond
+$GARAMOND_DIR: $FONT_PARENT_DIR + 'eb-garamond/static/';
+
+@font-face {
+    font-family: 'EB Garamond';
+    src: url($GARAMOND_DIR + 'EBGaramond-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'EB Garamond';
+    src: url($GARAMOND_DIR + 'EBGaramond-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+// Titillium Web
+$TITILLIUM_DIR: $FONT_PARENT_DIR + 'titillium-web/';
+
+@font-face {
+    font-family: 'Titillium Web';
+    src: url($TITILLIUM_DIR + 'TitilliumWeb-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Titillium Web';
+    src: url($TITILLIUM_DIR + 'TitilliumWeb-Italic.ttf') format('truetype');
+    font-style: italic;
+}

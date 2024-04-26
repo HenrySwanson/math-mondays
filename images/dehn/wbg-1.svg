@@ -1,0 +1,15 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="-0.1 -0.6 18.4 7.1000000000000005">
+ <g>
+  <polygon points="0,0 5,1 8,4 3,6 1,4 2,2" fill="#f7ca36" stroke-width="0.08" stroke="#000000"></polygon>
+  <line x1="5" y1="1" x2="2" y2="2" stroke-dasharray="0.2" stroke-width="0.05" stroke="#000000"></line>
+  <line x1="5" y1="1" x2="1" y2="4" stroke-dasharray="0.2" stroke-width="0.05" stroke="#000000"></line>
+  <line x1="8" y1="4" x2="1" y2="4" stroke-dasharray="0.2" stroke-width="0.05" stroke="#000000"></line>
+ </g>
+ <g transform="matrix(1,0,0,1,10,0)">
+  <polygon points="-0.3,-0.5 4.7,0.5 1.7,1.5" fill="#f7ca36" stroke-width="0.08" stroke="#000000"></polygon>
+  <polygon points="4.8,0.9 0.8,3.9 1.8,1.9" fill="#f7ca36" stroke-width="0.08" stroke="#000000"></polygon>
+  <polygon points="5.2,1 8.2,4 1.2,4" fill="#f7ca36" stroke-width="0.08" stroke="#000000"></polygon>
+  <polygon points="8.2,4.4 3.2,6.4 1.2,4.4" fill="#f7ca36" stroke-width="0.08" stroke="#000000"></polygon>
+ </g>
+</svg>

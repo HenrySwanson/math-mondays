@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Cauchy Residue Theorem</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/residues" title="Permalink to Cauchy Residue Theorem">Cauchy Residue Theorem</a>
+    </h1>
+    <div class="article-date">October 1, 2018</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/analysis">analysis</a>
+    </div>
+  </header>
+
+  <section><p><span class="mathdefs">
+<span class="math">\(\DeclareMathOperator{\res}{Res}\)</span>
+</span></p>
+<p>The Cauchy Residue Theorem is a remarkable tool for evaluating contour integrals. Essentially, it says that, instead of computing an integral along a curve <span class="math">\(\gamma\)</span>, you can replace it with a sum of &ldquo;residues&rdquo; at some special points <span class="math">\(a_k\)</span>:
+</p>
+<div class="math">$$ \oint_\gamma f(z)~dz = 2 \pi i \sum_k \res(f, a_k) $$</div>
+<p>But what is a residue? What are the <span class="math">\(a_k\)</span>? What&rsquo;s really going on here?</p>
+
+
+<h1>Residues</h1>
+<p>Since this isn&rsquo;t a rigorous complex analysis text, it&rsquo;s a post on some blog, we&rsquo;ll gloss over some of the technicalities, such as verifying convergence, or checking that holomorphic functions are analytic. All we need is some imagination, and the following fact:</p>
+<div class="theorem-box">
+<div class="theorem-title">Path Independence</div>
+<p>Let <span class="math">\(D\)</span> be a region of the complex plane and <span class="math">\(f\)</span> be a function holomorphic (complex-differentiable) on <span class="math">\(D\)</span>. If you take a curve <span class="math">\(\gamma\)</span>, and continuously deform it into a curve <span class="math">\(\gamma'\)</span>, staying inside <span class="math">\(D\)</span>, then
+<div class="math">$$ \int_\gamma f(z)~dz = \int_{\gamma'} f(z)~dz $$</div>
+</p>
+<p>Also, we say two such curves are &ldquo;homotopic&rdquo;.</p>
+</div>
+<p>For example, if the blue dashed area is <span class="math">\(D\)</span>, the curves in the first picture are homotopic, but not the curves in the second picture. There is no way to deform one of the curves into the other, without leaving the domain.</p>
+<div class="image-container">
+<p><img alt="Homotopic curves" height="250px" src="/images/residues/contours-1.svg"></p>
+<p><img alt="Non-homotopic curves" height="250px" src="/images/residues/contours-2.svg"></p>
+</div>
+<p>If you&rsquo;re comfortable with multivariable calculus, compare this to the Fundamental Theorem of Calculus for line integrals. How does complex-differentiability encode the &ldquo;curl-free&rdquo; condition?</p>
+<p>This means that if <span class="math">\(\gamma\)</span> is a closed loop and <span class="math">\(f\)</span> is holomorphic on the region enclosed by <span class="math">\(\gamma\)</span>, then <span class="math">\(\gamma\)</span> is homotopic to a point, which tells us that <span class="math">\(\int_\gamma f~dz\)</span> must be zero. Where things get interesting is when there are points in <span class="math">\(D\)</span> at which <span class="math">\(f\)</span> is not holomorphic.</p>
+<hr>
+<p>So let&rsquo;s approach the theorem.</p>
+<p>Let <span class="math">\(f\)</span> be a function holomorphic on <span class="math">\(D\)</span>, except at a set of points <span class="math">\(a_k\)</span>, and <span class="math">\(\gamma\)</span> a closed curve in <span class="math">\(D\)</span>, avoiding the points <span class="math">\(a_k\)</span>. Without loss of generality, we can assume all of the <span class="math">\(a_k\)</span> lie within the region enclosed by <span class="math">\(\gamma\)</span> (if not, we just make <span class="math">\(D\)</span> smaller). We can use the path-independence of contour integrals to deform <span class="math">\(\gamma\)</span>, without changing the value of the integral:</p>
+<div class="image-container">
+<p><img alt="A contour around several a_k" height="250px" src="/images/residues/deform-1.svg"></p>
+<p><img alt="Deformed into several circles with sections between them" height="250px" src="/images/residues/deform-2.svg"></p>
+</div>
+<p>These corridors between the circles can be moved so they lie on top of each other, and cancel out. This leaves us with circles <span class="math">\(C_k\)</span>, one for each point <span class="math">\(a_k\)</span>.
+</p>
+<div class="math">$$ \oint_\gamma f(z)~dz = \sum_k \oint_{C_k} f(z)~dz $$</div>
+<div class="image-container">
+<p><img alt="A few circular contours" height="250px" src="/images/residues/deform-3.svg"></p>
+</div>
+<p>So all we need to do to now is determine what the integral of <span class="math">\(f\)</span> on each circle is.</p>
+<div class="theorem-box">
+<div class="theorem-title">Residue Definition #1</div>
+<p>The residue of <span class="math">\(f\)</span> at <span class="math">\(a\)</span> is <span class="math">\(\displaystyle \frac{1}{2 \pi i} \oint_{C} f(z)~dz\)</span>, where <span class="math">\(C\)</span> is a small circle around <span class="math">\(a\)</span>.
+<br><br>
+From path-independence, we know we can shrink the circles as much as we like without changing the value of the integral, which tells us this definition is well-defined (just make sure <span class="math">\(f\)</span> is holomorphic everywhere else in your circle!).</p>
+</div>
+<p>&ldquo;But wait,&rdquo; you complain, &ldquo;This definition is ridiculous; you set it up in such a way that the residue theorem is trivial! What gives?&rdquo;</p>
+<p>Well, there are other, equivalent definitions of residue that are much easier to compute, and those are what give the residue theorem its power. Sometimes people will use these computational definitions of residue as the primary definition, but this obscures what&rsquo;s going on. When you think of what the residue <em>means</em>, in a spiritual sense, you should think of it as &ldquo;the integral of a small loop around a point&rdquo;.</p>
+<hr>
+<p>A point at which <span class="math">\(f\)</span> is not holomorphic is called a &ldquo;singularity&rdquo;, and there are a few types. The most manageable of these is the pole, where <span class="math">\(f(z)\)</span> &ldquo;behaves like&rdquo; <span class="math">\(\frac{1}{(z-a)^n}\)</span>. To be more concrete, <span class="math">\(f\)</span> has a pole (of order <span class="math">\(n\)</span>) at <span class="math">\(a\)</span> if <span class="math">\((z - a)^n f(z)\)</span> is holomorphic and non-zero at <span class="math">\(a\)</span>. In other words, a zero of order <span class="math">\(n\)</span> cancels out a pole of order <span class="math">\(n\)</span>.</p>
+<p>For example, <span class="math">\(\frac{1}{\sin z}\)</span> has a pole of order <span class="math">\(1\)</span> at <span class="math">\(z = 0\)</span>, as evidenced by the fact that <span class="math">\(\frac{z}{\sin z}\)</span> approaches <span class="math">\(1\)</span> as <span class="math">\(z \to 0\)</span>. The rational function <span class="math">\(\frac{x-2}{x^2 + 1}\)</span> has poles at <span class="math">\(\pm i\)</span>, also of order <span class="math">\(1\)</span>. And the function <span class="math">\(\frac{1}{\cos z - 1}\)</span> has a pole of order <span class="math">\(2\)</span> at zero.</p>
+<p>There are other kinds of singularities, but nothing good comes from them, so we will henceforth only consider singularities that are poles.</p>
+<p>If <span class="math">\(f\)</span> has a pole of order <span class="math">\(n\)</span> at <span class="math">\(a\)</span>, then <span class="math">\((z-a)^n f(z)\)</span> has a Taylor series centered at <span class="math">\(z = a\)</span>, with non-zero constant term:
+</p>
+<div class="math">$$ (z-a)^n f(z) = b_0 + b_1 (z - a) + b_2 (z - a)^2 + b_3 (z - a)^3 + \cdots $$</div>
+<p>Letting <span class="math">\(c_k = b_{k+n}\)</span>, we can define a series for <span class="math">\(f(z)\)</span> itself, called the <strong>Laurent series</strong>:
+</p>
+<div class="math">$$ f(z) = \frac{c_{-n}}{(z-a)^n} + \frac{c_{-n+1}}{(z - a)^{n-1}} + \cdots + \frac{c_{-1}}{z - a} + c_0 + c_1 (z - a) + \cdots $$</div>
+<p>It&rsquo;s almost a Taylor series, but we allow (finitely many) negative terms as well. This expansion will allow us to compute the residue at <span class="math">\(a\)</span>.</p>
+<p>Let&rsquo;s just take a single term, <span class="math">\((z - a)^n\)</span>, and we&rsquo;ll recombine our results at the end, because integrals are linear. What happens when we integrate around a circle centered at <span class="math">\(a\)</span> with radius <span class="math">\(R\)</span>? Subsitute <span class="math">\(z = a + R e^{it}\)</span> for the contour:
+</p>
+<div class="math">$$ \oint (z - a)^n~dz = \int_0^{2\pi} (R e^{it})^n~d(R e^{it}) = i R^{n+1} \int_0^{2\pi} e^{(n+1) it}~dt = i R^{n+1} \left[ \frac{e^{(n+1)it}}{(n+1)i} \right]^{2\pi}_0 $$</div>
+<p>Since <span class="math">\(n\)</span> is an integer, <span class="math">\(e^{(n+1)2 \pi i} = 1\)</span>, and <span class="math">\(e^{0} = 1\)</span>, so this integral should be zero. But that doesn&rsquo;t make any sense; that would suggest that the integral of <em>any</em> function around a circle is zero. But that&rsquo;s not true.</p>
+<p>We actually made a mistake in the last step; the antiderivative of <span class="math">\(e^{kt}\)</span> is <span class="math">\(e^{kt} / k\)</span> <em>unless</em> <span class="math">\(k = 0\)</span>. For that to happen, we need <span class="math">\(n = -1\)</span>, and in that case:
+</p>
+<div class="math">$$ \oint \frac{1}{z - a}~dz = \int_0^{2\pi} \frac{d(R e^{it})}{R e^{it}} = \int_0^{2\pi} i~dt = 2 \pi i $$</div>
+<p>Therefore, when we integrate <span class="math">\(f(z) = \sum_{k = -n}^\infty c_k (z - a)^k\)</span>, all the terms vanish, except for the <span class="math">\(k = -1\)</span> term, which pops out a <span class="math">\(2 \pi i \cdot c_{-1}\)</span>. This gives us another definition for the residue!</p>
+<div class="theorem-box">
+<div class="theorem-title">Residue Definition #2</div>
+<p>If <span class="math">\(f\)</span> has a pole at <span class="math">\(a\)</span>, and a Laurent series <span class="math">\(f(z) = \sum c_k (z - a)^k\)</span>, then the residue of <span class="math">\(f\)</span> at <span class="math">\(a\)</span> is <span class="math">\(c_{-1}\)</span>.</p>
+</div>
+<hr>
+<p>If this were all we knew, it would still be a pretty good theorem. Finding power series instead of taking integrals? Not too shabby. But we can take it one step more.</p>
+<p>Finding power series can be frustrating; how many people know the power series for <span class="math">\(\tan z\)</span> off the top of their head? Besides, we don&rsquo;t need the whole thing, just a specific coefficient.</p>
+<p>Instead, we&rsquo;ll assume the existence of a power series, and use some tricks to extract <span class="math">\(c_{-1}\)</span>.</p>
+<p>Say we&rsquo;ve got a simple pole (a pole of order <span class="math">\(1\)</span>). By multiplying by <span class="math">\((z - a)\)</span>, we can get a Taylor series:
+</p>
+<div class="math">$$ (z - a) f(z) = c_{-1} + c_0 (z - a) + c_1 (z - a)^2 + \cdots $$</div>
+<p>If we plug in <span class="math">\(z = a\)</span>, then we&rsquo;ll get <span class="math">\(c_{-1}\)</span>. Well, technically, we can&rsquo;t plug in <span class="math">\(z = a\)</span> directly, because <span class="math">\(f(z)\)</span> isn&rsquo;t defined at <span class="math">\(a\)</span>. But if we take a limit, that&rsquo;s okay.</p>
+<p>How about a pole of order <span class="math">\(2\)</span>? Our trick won&rsquo;t work the same way; if we apply it naively, we&rsquo;ll just get <span class="math">\(c_{-2}\)</span>, which we don&rsquo;t care about at all.
+</p>
+<div class="math">$$ (z - a)^2 f(z) = c_{-2} + c_{-1} (z - a) + c_0 (z - a)^2 + c_1 (z - a)^3 \cdots $$</div>
+<p>But if we take the derivative, we can knock off a term from the end, and <em>then</em> we can take the limit as <span class="math">\(z \to a\)</span>.
+</p>
+<div class="math">$$ \frac{d}{dz} (z - a)^2 f(z) = c_{-1} + 2 c_0 (z - a) + 3 c_1 (z - a)^2 \cdots $$</div>
+<p>For <span class="math">\(n = 3\)</span>, there&rsquo;s a slight wrinkle; we end up with an extra factor of <span class="math">\(2\)</span> that we have to divide out:
+</p>
+<div class="math">$$ \frac{d^2}{dz^2} (z - a)^3 f(z) = 2 c_{-1} + 6 c_0 (z - a) + 12 c_1 (z - a)^2 \cdots $$</div>
+<p>The pattern for higher-order poles is similar:</p>
+<ul>
+<li>multiply by <span class="math">\((z - a)^n\)</span>; this changes our term of interest to <span class="math">\(c_{-1} (z - a)^{n-1}\)</span></li>
+<li>take <span class="math">\(n-1\)</span> derivatives; the important term is now <span class="math">\((n-1)! c_{-1}\)</span></li>
+<li>divide by <span class="math">\((n-1)!\)</span>; the important term is now <span class="math">\(c_{-1}\)</span></li>
+<li>take the limit as <span class="math">\(z \to a\)</span>; all higher order terms vanish, and we are left with <span class="math">\(c_{-1}\)</span></li>
+</ul>
+<p>We now have our last, and most computationally accessible, definition of residue:</p>
+<div class="theorem-box">
+<div class="theorem-title">Residue Definition #3</div>
+<p>If <span class="math">\(f\)</span> has a pole at <span class="math">\(a\)</span> of order <span class="math">\(n\)</span>, then the residue of <span class="math">\(f\)</span> at <span class="math">\(a\)</span> is:
+<div class="math">$$ \res(f, a) = \lim_{z \to a} \frac{1}{(n-1)!} \frac{d^{n-1}}{dz^{n-1}} (z - a)^n f(z) $$</div>
+</p>
+</div>
+<p>This is the definition often presented as &ldquo;the&rdquo; definition of residue, but this hides where the residue theorem comes from, and why residues are defined the way they are.</p>
+<h1>Winding Number</h1>
+<p>As a final note, we can add a tiny bit more generality to the theorem.</p>
+<p>Technically, we&rsquo;ve been a little sloppy with our curve <span class="math">\(\gamma\)</span>. What if it goes the other way? Or loops around some points multiple times?</p>
+<p>To fix this, we introduce <span class="math">\(W(\gamma, a)\)</span>, the <strong>winding number</strong> of <span class="math">\(\gamma\)</span> around <span class="math">\(a\)</span>. It means exactly what the name suggests, it indicates how many times (and in what direction) <span class="math">\(\gamma\)</span> loops around <span class="math">\(a\)</span>. Counter-clockwise is positive, and clockwise is negative. Two examples are pictured below:</p>
+<div class="image-container">
+<p><img alt="A limacon" height="250px" src="/images/residues/winding-1.svg"></p>
+<p><img alt="A lemniscate" height="250px" src="/images/residues/winding-3.svg"></p>
+</div>
+<p>In the first picture, the specified points have winding number +1 and +2, and in the second, they have -1 and +1. The only thing this changes about our proof is that when we deform our <span class="math">\(\gamma\)</span> into circles, we may get multiple loops around the same point:</p>
+<div class="image-container">
+<p><img alt="A limacon" height="250px" src="/images/residues/winding-2.svg"></p>
+<p><img alt="A lemniscate" height="250px" src="/images/residues/winding-4.svg"></p>
+</div>
+<p>But by definition, the number of loops is exactly the winding number, and if the loop runs clockwise, we pick up a negative sign. So after accounting for multiplicity and direction, we get:
+</p>
+<div class="math">$$ \oint_\gamma f(z)~dz = \sum_k W(\gamma, a_k) \res(f, a_k) $$</div>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-residues&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

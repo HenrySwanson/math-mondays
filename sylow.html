@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Sylow Theorems</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/sylow" title="Permalink to Sylow Theorems">Sylow Theorems</a>
+    </h1>
+    <div class="article-date">October 29, 2018</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/group-theory">group-theory</a>
+    </div>
+  </header>
+
+  <section><p><span class="mathdefs">
+<span class="math">\(\newcommand{\ZZ}{\Bbb Z}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Fix}{Fix}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\sgn}{sgn}\)</span>
+</span></p>
+<p>In group theory, the Sylow theorems are a triplet of theorems that pin down a suprising amount of information about certain subgroups.</p>
+<p>Lagrange&rsquo;s theorem tells us that if <span class="math">\(H\)</span> is a subgroup of <span class="math">\(G\)</span>, then the size of <span class="math">\(H\)</span> divides the size of <span class="math">\(G\)</span>. The Sylow theorems give us some answers to the converse question: for what divisors of <span class="math">\(|G|\)</span> can we find a subgroup of that size?</p>
+
+
+<hr>
+<p>For a group <span class="math">\(G\)</span>, and a prime <span class="math">\(p\)</span>, and <span class="math">\(n\)</span> be the largest integer such that <span class="math">\(p^n\)</span> divides <span class="math">\(|G|\)</span>. A <span class="math">\(p\)</span>-subgroup of <span class="math">\(G\)</span> is a subgroup of order <span class="math">\(p^k\)</span>, and if it has order <span class="math">\(p^n\)</span>, then it is called a Sylow <span class="math">\(p\)</span>-subgroup. Under these definitions, the Sylow theorems are:</p>
+<div class="theorem-box">
+<div class="theorem-title">Sylow Theorems</div>
+<ol>
+<li>Every <span class="math">\(p\)</span>-subgroup is contained in a Sylow <span class="math">\(p\)</span>-subgroup. As such, Sylow <span class="math">\(p\)</span>-subgroups exist.</li>
+<li>All Sylow <span class="math">\(p\)</span>-subgroups are conjugate to each other.</li>
+<li>Let <span class="math">\(n_p\)</span> be the number of Sylow <span class="math">\(p\)</span>-subgroups, and <span class="math">\(m = |G|/p^n\)</span>. Then the following hold:<ul>
+<li><span class="math">\(n_p\)</span> divides <span class="math">\(m\)</span></li>
+<li><span class="math">\(n_p \equiv 1 \bmod p\)</span></li>
+<li><span class="math">\(n_p = [G : N(P)]\)</span>, where <span class="math">\(N(P)\)</span> is the normalizer of any Sylow <span class="math">\(p\)</span>-subgroup.</li>
+</ul>
+</li>
+</ol>
+</div>
+<p>These are rather technical and deserve some more thorough digestion. Sylow 1 tells us that maximal <span class="math">\(p\)</span>-subgroups are as big as possible; there is no obstruction preventing them from being the full <span class="math">\(p^n\)</span>.</p>
+<p>Sylow 2 tells us that all Sylow <span class="math">\(p\)</span>-subgroups are isomorphic in a very strong way; there is a conjugation of the group sending them to each other. To see how this is a strong criterion, consider a non-example. Let <span class="math">\(G = \ZZ_4 \times \ZZ_2\)</span>, and pick out the subgroups <span class="math">\(H_1 = \{ (0, 0), (2, 0) \}\)</span> and <span class="math">\(H_2 = \{ (0, 0), (0, 1) \}\)</span>. It&rsquo;s clear that <span class="math">\(H_1\)</span> and <span class="math">\(H_2\)</span> are isomorphic, but they are not conjugate. This manifests in <span class="math">\(G/H_1 = \ZZ_2 \times \ZZ_2\)</span> and <span class="math">\(G/H_2 = \ZZ_4\)</span> not being isomorphic.</p>
+<p>Sylow 3 is the easiest to understand; it just puts some arithmetic criteria on <span class="math">\(n_p\)</span>. For small-ish groups, this is often enough to nail down <span class="math">\(n_p\)</span> exactly!</p>
+<p>On to the proofs!</p>
+<h2>Lemma</h2>
+<p>First let&rsquo;s establish a lemma we&rsquo;ll use frequently.</p>
+<div class="theorem-box">
+<div class="theorem-title">Lemma</div>
+<p>If <span class="math">\(G\)</span> is a <span class="math">\(p\)</span>-group, and it acts on a set <span class="math">\(X\)</span>, then <span class="math">\(|X| \equiv |\Fix(X)| \bmod p\)</span>, where <span class="math">\(\Fix(X)\)</span> is the set of points in <span class="math">\(X\)</span> that are fixed by every <span class="math">\(g \in G\)</span>.</p>
+</div>
+<p>Proof: Let <span class="math">\(x_1, \ldots, x_k\)</span> be representatives for the <span class="math">\(G\)</span>-orbits of <span class="math">\(X\)</span>. We know that the sum of the sizes of the orbits is <span class="math">\(|X|\)</span>. If <span class="math">\(x_i\)</span> is a fixed point, then the orbit is of size <span class="math">\(1\)</span>. If it is not, then by orbit-stabilizer, the size of the orbit is <span class="math">\([G : \Stab(x_i)]\)</span>, which is divisible by <span class="math">\(p\)</span>. Thus, mod <span class="math">\(p\)</span>, every fixed point contributes <span class="math">\(1\)</span>, and everything else in <span class="math">\(X\)</span> contributes <span class="math">\(0\)</span>.</p>
+<h2>Sylow 1</h2>
+<p>Given a <span class="math">\(p\)</span>-subgroup <span class="math">\(H\)</span>, we show that, if it is not already maximal, we can find a <span class="math">\(p\)</span>-subgroup <span class="math">\(H' \supset H\)</span> that is <span class="math">\(p\)</span> times bigger. Repeating this process gives us a Sylow <span class="math">\(p\)</span>-subgroup containing our original <span class="math">\(H\)</span>. Since the trivial subgroup is a <span class="math">\(p\)</span>-subgroup, this also establishes the existence of Sylow <span class="math">\(p\)</span>-subgroups!</p>
+<p>Let <span class="math">\(H\)</span> be a <span class="math">\(p\)</span>-group that is not maximal, i.e., it has order <span class="math">\(p^i\)</span>, where <span class="math">\(i &lt; n\)</span>. There is a natural action of <span class="math">\(H\)</span> on the left coset space <span class="math">\(G/H\)</span>, and since <span class="math">\(H\)</span> is a <span class="math">\(p\)</span>-group, our lemma tells us that <span class="math">\(|G/H|\)</span> is equivalent to the number of fixed points mod <span class="math">\(p\)</span>. But since <span class="math">\(i &lt; n\)</span>, <span class="math">\(G/H\)</span> has order divisible by <span class="math">\(p\)</span>. So the number of fixed points of this action is also divisible by <span class="math">\(p\)</span>.</p>
+<p>What do fixed points of this action look like? If <span class="math">\(gH\)</span> is a coset fixed by <span class="math">\(h \in H\)</span>, then <span class="math">\(hgH = gH\)</span>, i.e., <span class="math">\(g^{-1} h g \in H\)</span>. If this is true for all <span class="math">\(h\)</span>, then <span class="math">\(g\)</span> lies in the normalizer of <span class="math">\(H\)</span>. The converse is also true, since these implications were all reversible. This means that <span class="math">\(N(H)\)</span> is composed of the cosets of <span class="math">\(H\)</span> that are fixed points.</p>
+<p>Combining the two observations above, we conclude that <span class="math">\([N(H) : H]\)</span> is divisible by <span class="math">\(p\)</span>. Therefore, by Cauchy&rsquo;s theorem, there&rsquo;s some subgroup of order <span class="math">\(p\)</span> in <span class="math">\(N(H)/H\)</span>. Lifting this subgroup to <span class="math">\(N(H)\)</span>, we get a subgroup of size <span class="math">\(p \cdot |H| = p^{i+1}\)</span>. This is the <span class="math">\(H'\)</span> we were looking for.</p>
+<h2>Sylow 2</h2>
+<p>Let <span class="math">\(P\)</span> and <span class="math">\(Q\)</span> be two Sylow <span class="math">\(p\)</span>-subgroups of <span class="math">\(G\)</span>. We want to show they are conjugate.</p>
+<p>There is a natural action of <span class="math">\(P\)</span> on <span class="math">\(G\)</span> by multiplication, and this descends to an action of <span class="math">\(P\)</span> on <span class="math">\(G/Q\)</span> (again, left coset space). From our lemma, the number of fixed points of this action is equivalent to <span class="math">\(|G/Q|\)</span>, mod <span class="math">\(p\)</span>. But since <span class="math">\(Q\)</span> is a Sylow <span class="math">\(p\)</span>-subgroup, <span class="math">\(|G/Q|\)</span> is not divisible by <span class="math">\(p\)</span>. This means that the number of fixed points cannot be zero; i.e., there is at least one fixed point for this action. This is some <span class="math">\(gQ\)</span> such that <span class="math">\(pgQ = gQ\)</span> for all <span class="math">\(p \in P\)</span>. Or, rearranging the terms, a <span class="math">\(g\)</span> such that <span class="math">\(g^{-1}pg \in Q\)</span> for all <span class="math">\(p \in P\)</span>. Since <span class="math">\(P\)</span> and <span class="math">\(Q\)</span> are the same size, being Sylow <span class="math">\(p\)</span>-subgroups, this means that <span class="math">\(g^{-1}Pg = Q\)</span>, and so they are indeed conjugate.</p>
+<h2>Sylow 3</h2>
+<p>Let <span class="math">\(P\)</span> be a particular Sylow <span class="math">\(p\)</span>-subgroup, and let it act on the set of <em>all</em> Sylow <span class="math">\(p\)</span>-subgroups by conjugation. We claim that <span class="math">\(P\)</span> is the only fixed point of this action. This would, by our lemma (we&rsquo;re getting so much mileage out of this baby), instantly tell us that <span class="math">\(n_p \equiv 1 \bmod p\)</span>.</p>
+<p>Consider some fixed point <span class="math">\(Q\)</span>. Then for any <span class="math">\(p \in P\)</span>, <span class="math">\(p^{-1}Qp = Q\)</span>, which means that <span class="math">\(P\)</span> lies in the normalizer of <span class="math">\(Q\)</span>. Since both <span class="math">\(P\)</span> and <span class="math">\(Q\)</span> are Sylow <span class="math">\(p\)</span>-subgroups of <span class="math">\(G\)</span>, they are both Sylow <span class="math">\(p\)</span>-subgroups of <span class="math">\(N(Q)\)</span>. By Sylow 2, they must be conjugate, but since <span class="math">\(Q\)</span> is normal in <span class="math">\(N(Q)\)</span>, it&rsquo;s not going anywhere under conjugation. Thus <span class="math">\(Q\)</span> must equal <span class="math">\(P\)</span>.</p>
+<p>Next, we show that <span class="math">\(n_p = [G : N(P)]\)</span>. Consider the action of <span class="math">\(G\)</span> by conjugation on the set of Sylow <span class="math">\(p\)</span>-subgroups. There&rsquo;s only one orbit, because of Sylow 2, and by orbit-stabilizer, it has size <span class="math">\([G : \Stab(P)]\)</span>. But the stabilizer of <span class="math">\(P\)</span> is just the normalizer, so <span class="math">\(n_p = [G : N(P)]\)</span>, as desired.</p>
+<p>Lastly, since <span class="math">\(m = [G : P] = [G : N(P)] [N(P) : P]\)</span>, we get that <span class="math">\(n_p\)</span> divides <span class="math">\(m\)</span> for free.</p>
+<h2>Applications</h2>
+<p>Cool! These are nice theorems, how do we put them to use? Let&rsquo;s look at some example applications.</p>
+<hr>
+<p><em>Show that <span class="math">\(\ZZ_{35}\)</span> is the only group of size <span class="math">\(35\)</span>.</em></p>
+<p>Let <span class="math">\(G\)</span> be a group of size <span class="math">\(35\)</span>. We&rsquo;ll consider its Sylow <span class="math">\(5\)</span> and <span class="math">\(7\)</span>-subgroups. By Sylow 3, we know that <span class="math">\(n_5 \equiv 1 \bmod 5\)</span>, and divides <span class="math">\(7\)</span>. This means it&rsquo;s gotta be <span class="math">\(1\)</span>, which means <span class="math">\(G\)</span> has a normal subgroup of size <span class="math">\(5\)</span>. Likewise, <span class="math">\(n_7 \equiv 1 \bmod 7\)</span>, and divides <span class="math">\(5\)</span>, so <span class="math">\(G\)</span> has a normal subgroup of size <span class="math">\(7\)</span> as well. They intersect trivially, since their sizes are relatively prime, so <span class="math">\(G\)</span> is a direct product of these groups. Therefore, <span class="math">\(G \cong \ZZ_5 \times \ZZ_7\)</span>, which is <span class="math">\(\ZZ_{35}\)</span>.</p>
+<hr>
+<p><em>Classify all groups of order <span class="math">\(105\)</span>.</em></p>
+<p>Let <span class="math">\(G\)</span> be a group of order <span class="math">\(105\)</span>. First, we show that it has normal Sylow <span class="math">\(5\)</span>- and <span class="math">\(7\)</span>-subgroups. Sylow 3 restricts <span class="math">\(n_5 = 1,21\)</span> and <span class="math">\(n_7 = 1,15\)</span>.</p>
+<p>If <span class="math">\(n_5 = 1\)</span>, then there&rsquo;s a unique Sylow <span class="math">\(5\)</span>-subgroup <span class="math">\(N_5\)</span>. Picking out some Sylow <span class="math">\(7\)</span>-subgroup <span class="math">\(P_7\)</span>, we get a subgroup <span class="math">\(H = N_5 P_7\)</span> of size <span class="math">\(35\)</span> (the normality of <span class="math">\(N_5\)</span> is necessary for this to be a subgroup). But from our previous exercise, we know that this must be isomorphic to <span class="math">\(\ZZ_{35}\)</span>. Since it&rsquo;s abelian, <span class="math">\(P_7\)</span> must of course be normal in <span class="math">\(H\)</span>. This means that the normalizer <span class="math">\(N(P_7) \supseteq H\)</span>. Since <span class="math">\(n_7 = [G : N(P_7)] \le [G : H] = 3\)</span>, we are forced to conclude that <span class="math">\(n_7 = 1\)</span> as well.</p>
+<p>Likewise, if <span class="math">\(n_7 = 1\)</span>, we can construct a subgroup <span class="math">\(H = P_5 N_7\)</span> isomorphic to <span class="math">\(\ZZ_{35}\)</span>, in which <span class="math">\(P_5\)</span> is normal. The index of <span class="math">\(H\)</span> here is <span class="math">\(7\)</span>, and this also pins down <span class="math">\(n_5 = 1\)</span>.</p>
+<p>If neither of these are <span class="math">\(1\)</span>, then we run out of elements. Each of these subgroups intersects trivially (because they have prime order), and so we would have <span class="math">\(20 \cdot 4\)</span> non-identity elements from the Sylow <span class="math">\(5\)</span>-subgroups, and <span class="math">\(15 \cdot 6\)</span> non-identity elements from the Sylow <span class="math">\(7\)</span>-subgroups. Adding in the identity, this is a total of <span class="math">\(171\)</span> elements, way too many.</p>
+<p>So <span class="math">\(G\)</span> has normal Sylow <span class="math">\(5\)</span>- and <span class="math">\(7\)</span>-subgroups, and their product is a subgroup <span class="math">\(H\)</span> or size <span class="math">\(35\)</span>. As the product of normal subgroups, it is itself normal. Cauchy&rsquo;s theorem gives us an element <span class="math">\(x\)</span> of order <span class="math">\(3\)</span>, and it generates a subgroup <span class="math">\(K\)</span>. Since <span class="math">\(H\)</span> and <span class="math">\(K\)</span> intersect trivially, <span class="math">\(HK\)</span> is the whole group, and so <span class="math">\(G\)</span> is a semidirect product of <span class="math">\(H\)</span> and <span class="math">\(K\)</span>.</p>
+<p>What options do we have for our twisting homomorphism <span class="math">\(\phi : K \to \Aut(H)\)</span>? All we have to do is specify <span class="math">\(\phi(x)\)</span>, and all we need is that <span class="math">\(\phi(x)^3\)</span> is the identity.</p>
+<p>The automorphisms of <span class="math">\(\ZZ_n\)</span> are those given by multiplying by some <span class="math">\(a\)</span> relatively prime to <span class="math">\(n\)</span>. As such, the automorphisms of <span class="math">\(\ZZ_{35}\)</span> with degree dividing <span class="math">\(3\)</span> are <span class="math">\((r \mapsto ar)\)</span>, where <span class="math">\(a^3 \equiv 1 \bmod 35\)</span>. The only such solutions are <span class="math">\(1, 11, 16\)</span>.</p>
+<p>If <span class="math">\(a = 1\)</span>, then this is the trivial automorphism, and so <span class="math">\(G \cong \ZZ_3 \times \ZZ_{35} \cong \ZZ_{105}\)</span>.</p>
+<p>It turns out that the groups for <span class="math">\(a = 11\)</span> and <span class="math">\(a = 16\)</span> are isomorphic, but I can&rsquo;t figure out a clean way to show it at the moment. Stay tuned. <!--TODO--></p>
+<hr>
+<p><em>Show <span class="math">\(A_5\)</span> is the smallest non-abelian simple group.</em></p>
+<p>To prove this, we need to eliminate the possibility of a simple non-abelian group of any smaller size. First, we can eliminate primes; any group of size <span class="math">\(p\)</span> is cyclic, hence abelian.</p>
+<p>We can also eliminate prime powers. Any group of prime power order has a non-trivial center, so it cannot be simple.</p>
+<p>Next, we eliminate anything that is <span class="math">\(2\)</span> mod <span class="math">\(4\)</span>. Such a number is equal to <span class="math">\(2m\)</span> with <span class="math">\(m\)</span> odd. If <span class="math">\(G\)</span> is a group of size <span class="math">\(2m\)</span>, let <span class="math">\(G\)</span> act on itself by multiplication. This gives us a map <span class="math">\(\phi : G \to S_{2m}\)</span> sending <span class="math">\(g\)</span> to the permutation it induces. By Cauchy&rsquo;s theorem, there&rsquo;s an element of order <span class="math">\(2\)</span>. This induces a product of <span class="math">\(m\)</span> transpositions, and thus an odd permutation. So the map <span class="math">\(\sgn \circ \phi : G \to \{ \pm 1 \}\)</span> is surjective, and so its kernel is a non-trivial proper subgroup of <span class="math">\(G\)</span>. (Unless <span class="math">\(G\)</span> has order <span class="math">\(2\)</span>, but we already handled that case.)</p>
+<p>Our last big sweep will be to eliminate groups of size <span class="math">\(p^k m\)</span> with <span class="math">\(m &lt; p\)</span>. Since <span class="math">\(n_p\)</span> divides <span class="math">\(m\)</span>, we have <span class="math">\(n_p \le m &lt; p\)</span>. But <span class="math">\(n_p\)</span> is <span class="math">\(1\)</span> mod <span class="math">\(p\)</span>, and so must be <span class="math">\(1\)</span>. If there is a single Sylow <span class="math">\(p\)</span>-subgroup, it must be normal. This eliminates 15, 20, 21, 28, 33, 35, 39, 44, 51, 52, 55, and 57.</p>
+<p>This leaves us with 12, 24, 36, 40, 45, 48, and 56.</p>
+<p><span class="math">\(|G|=40\)</span>: From the congruence conditions, we know that <span class="math">\(n_5\)</span> is <span class="math">\(1\)</span> mod <span class="math">\(5\)</span> and divides <span class="math">\(8\)</span>. But this forces it to be <span class="math">\(1\)</span>, so there is a unique Sylow <span class="math">\(5\)</span>-subgroup. </p>
+<p><span class="math">\(|G|=45\)</span>: Similar to <span class="math">\(|G|=40\)</span>, the arithmetic restrictions force <span class="math">\(n_5\)</span> to be <span class="math">\(1\)</span>.</p>
+<p><span class="math">\(|G| = 12\)</span>: We know that <span class="math">\(n_3\)</span> is either <span class="math">\(1\)</span> or <span class="math">\(4\)</span>. If it&rsquo;s not <span class="math">\(1\)</span>, there&rsquo;s <span class="math">\(4\)</span> Sylow <span class="math">\(3\)</span>-subgroups, and because they have prime order, they intersect trivially. This gives <span class="math">\(8\)</span> elements of order <span class="math">\(3\)</span>, leaving <span class="math">\(4\)</span> other elements to constitute the Sylow <span class="math">\(2\)</span>-subgroups. But each Sylow <span class="math">\(2\)</span>-subgroup has <span class="math">\(4\)</span> elements, and so there is a unique (hence normal) one.</p>
+<p><span class="math">\(|G| = 56\)</span>: Similar to the case for <span class="math">\(12\)</span>. If <span class="math">\(n_7\)</span> is not <span class="math">\(1\)</span>, it is <span class="math">\(8\)</span>, yielding <span class="math">\(48\)</span> elements of order <span class="math">\(7\)</span>. The leftover <span class="math">\(8\)</span> elements form the unique Sylow <span class="math">\(2\)</span>-subgroup.</p>
+<p>For the other three cases we need some stronger stuff.</p>
+<p><em>Claim</em>: if <span class="math">\(G\)</span> is simple and non-abelian, then for all <span class="math">\(p\)</span> dividing <span class="math">\(|G|\)</span>, we must have <span class="math">\(|G|\)</span> divides <span class="math">\(n_p!\)</span>.</p>
+<p><em>Proof</em>: Let <span class="math">\(G\)</span> act on the Sylow <span class="math">\(p\)</span>-subgroups by conjugation. Because there are <span class="math">\(n_p\)</span> of them, this gives us a homomorphism <span class="math">\(\phi : G \to S_{n_p}\)</span>. Since <span class="math">\(G\)</span> is simple, <span class="math">\(\ker \phi\)</span> is either trivial or all of <span class="math">\(G\)</span>. Because all Sylow <span class="math">\(p\)</span>-subgroups are conjugate, the latter situation only occurs when there is only one of them, something impossible if <span class="math">\(G\)</span> is simple and non-abelian. </p>
+<!-- TODO you don't need abelian-ness, having no other conjugates means you're normal! -->
+
+<p>This leaves us with the former case, where the kernel is trivial, and thus <span class="math">\(\phi\)</span> is an injection. Identifying <span class="math">\(G\)</span> as a subgroup of <span class="math">\(S_{n_p}\)</span>, we get that <span class="math">\(|G|\)</span> divides <span class="math">\(n_p!\)</span> as promised.</p>
+<p>We can now eliminate the last cases.</p>
+<p><span class="math">\(|G|=24\)</span>: We know that <span class="math">\(n_2\)</span> is either <span class="math">\(1\)</span> or <span class="math">\(3\)</span>, by the usual congruence conditions. But now we have a new tool. If <span class="math">\(G\)</span> were simple, then <span class="math">\(24\)</span> would divide <span class="math">\(n_2!\)</span>, which it can&rsquo;t in either case. So <span class="math">\(G\)</span> can&rsquo;t be simple.</p>
+<p><span class="math">\(|G|=36\)</span>: We know <span class="math">\(n_3\)</span> is <span class="math">\(1\)</span> or <span class="math">\(4\)</span>. If <span class="math">\(G\)</span> is simple, then <span class="math">\(36\)</span> would divide <span class="math">\(n_3!\)</span>, which it can&rsquo;t.</p>
+<p><span class="math">\(|G|=48\)</span>: Identical to the case for <span class="math">\(24\)</span>.</p>
+<p>Phew!</p>
+<p>This was a lot of work. Back when I was in high school, we had to prove this without the Sylow theorems, and by god we appreciated them. Get off my lawn!</p>
+<p>(But actually though, that was an&hellip; experience.)</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-sylow&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

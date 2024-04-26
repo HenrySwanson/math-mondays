@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Ax-Grothendieck Theorem</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/ax-grothendieck" title="Permalink to Ax-Grothendieck Theorem">Ax-Grothendieck Theorem</a>
+    </h1>
+    <div class="article-date">November 12, 2018</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/model-theory">model-theory</a>
+    </div>
+  </header>
+
+  <section><p><span class="mathdefs">
+<span class="math">\(\newcommand{\CC}{\Bbb C}
+\newcommand{\FF}{\Bbb F}
+\newcommand{\QQ}{\Bbb Q}
+\newcommand{\FFx}[1]{\overline{\FF_{#1}}}
+\newcommand{\ACF}{\mathbf{ACF}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cT}{\mathcal{T}}\)</span>
+</span></p>
+<p>The Ax-Grothendieck theorem is the statement:</p>
+<div class="theorem-box">
+<div class="theorem-title">Ax-Grothendieck Theorem</div>
+<p>Let <span class="math">\(f: \CC^n \to \CC^n\)</span> be a polynomial map; that is, each coordinate <span class="math">\(f_i: \CC^n \to \CC\)</span> is a polynomial in the <span class="math">\(n\)</span> input variables.
+Then, if <span class="math">\(f\)</span> is injective, it is surjective.</p>
+</div>
+<p>This&hellip; doesn&rsquo;t seem like a particularly exciting theorem. But it has a really exciting proof.</p>
+
+
+<hr>
+<p>The idea behind the proof isn&rsquo;t algebraic, it isn&rsquo;t topological, it&rsquo;s not even geometric, it&rsquo;s <s>DiGiorno</s> model-theoretic!</p>
+<p>The spirit of the proof is as follows:</p>
+<ul>
+<li>if the theorem is false, then there is a disproof (a proof of the negation)</li>
+<li>this proof can be written in &ldquo;first-order logic&rdquo;, a particularly limited set of axioms</li>
+<li>because this proof is finitely long, and uses only first-order logic, it &ldquo;can&rsquo;t tell the difference&rdquo; between <span class="math">\(\CC\)</span> and <span class="math">\(\FFx{p}\)</span> for large enough <span class="math">\(p\)</span><ul>
+<li>note: <span class="math">\(\FFx{p}\)</span> is the algebraic closure of the finite field <span class="math">\(\FF_p\)</span></li>
+</ul>
+</li>
+<li>pick a large enough <span class="math">\(p\)</span>, and transfer our proof to <span class="math">\(\FFx{p}\)</span>; this won&rsquo;t affect its structure or validity</li>
+<li>show that there is, in fact, no counterexample in <span class="math">\(\FFx{p}\)</span></li>
+<li>by contradiction, there is no disproof, and the theorem must be true</li>
+</ul>
+<p>This is an&hellip; unusual proof strategy. I don&rsquo;t usually think about my proofs as mathematical objects unto themselves. But that&rsquo;s probably because I&rsquo;m not a model theorist.</p>
+<hr>
+<p>First, we&rsquo;ll get the last step out of the way.</p>
+<p><em>Proof</em>: Let <span class="math">\(f: \FFx{p}^n \to \FFx{p}^n\)</span> be injective. Pick an arbitrary target <span class="math">\(y_i \in \FFx{p}^n\)</span> to hit. Let <span class="math">\(K \supseteq \FF_p\)</span> be the field extension generated by the <span class="math">\(y_i\)</span> and the coefficients that show up in <span class="math">\(f\)</span>. Since all of these generators are algebraic over <span class="math">\(\FF_p\)</span>, and there&rsquo;s finitely many of them, <span class="math">\(K\)</span> is finite. Also, since fields are closed under polynomial operations, <span class="math">\(f(K^n) \subseteq K^n\)</span>. But because <span class="math">\(f\)</span> is injective, and <span class="math">\(K^n\)</span> is finite, <span class="math">\(f(K^n)\)</span> must be all of <span class="math">\(K^n\)</span>, i.e., there&rsquo;s some input <span class="math">\(x_i\)</span> such that <span class="math">\(f(x_i) = y_i\)</span>. Thus <span class="math">\(f\)</span> is surjective.</p>
+<hr>
+<p>Now for the exciting stuff.</p>
+<p>We have to figure out a way of taking proofs over <span class="math">\(\CC\)</span>, and translating them into proofs over <span class="math">\(\FFx{p}\)</span>. This is daunting, but it&rsquo;s made easier by the fact that they are both algebraically closed fields, and so they have a shared pool of axioms. Of course, they are very different in other ways: <span class="math">\(\CC\)</span> is uncountable while <span class="math">\(\FFx{p}\)</span> is countable, they have different characteristic, etc. We have to show that our proof manipulations aren&rsquo;t affected by these differences.</p>
+<p>Since this isn&rsquo;t an intro to model theory post, I won&rsquo;t be defining the basic terms. If these look unfamiliar, check out <a href="https://www.lesswrong.com/posts/F6BrJFkqEhh22rFsZ/very-basic-model-theory">this post</a>.</p>
+<p>Let <span class="math">\(\ACF\)</span> be the theory of algebraically closed fields. We claim that it&rsquo;s first-order, and it&rsquo;s <em>almost</em> complete.</p>
+<p>This is a theory in the language of rings, which is <span class="math">\(\cL_{ring} = \{ +, \times, 0, 1 \}\)</span>. Our axioms are:</p>
+<ul>
+<li>the usual field axioms (these are all first-order)</li>
+<li>for each <span class="math">\(d \ge 1\)</span>, add the sentence <span class="math">\(\forall a_0 \forall a_1 \cdots \forall a_d \exists x \ a_0 + a_1 x + \cdots a_d x^d = 0 \land a_d \ne 0\)</span><ul>
+<li>this are first-order sentences, and together, they tell us that every non-constant polynomial has a root</li>
+</ul>
+</li>
+</ul>
+<p>So <span class="math">\(\ACF\)</span> is a first-order theory. It isn&rsquo;t complete, of course. For example, the sentence <span class="math">\(1 + 1 = 0\)</span> is true in <span class="math">\(\FFx{2}\)</span>, but not in <span class="math">\(\FFx{3}\)</span> or <span class="math">\(\CC\)</span>. Turns out fields of different characteristic are&hellip; different. No surprise there.</p>
+<p>So we define extensions of <span class="math">\(\ACF\)</span>, where we <em>do</em> specify the characteristic. For a prime <span class="math">\(p\)</span>, define <span class="math">\(S_p\)</span> to be the sentence <span class="math">\(1 + \cdots + 1 = 0\)</span>, where there are <span class="math">\(p\)</span> copies of <span class="math">\(1\)</span>. Then the theory of algebraically closed fields of characteristic <span class="math">\(p\)</span> is <span class="math">\(\ACF_p = \ACF \cup \{ S_p \}\)</span>.</p>
+<p>What about characteristic <span class="math">\(0\)</span>? To force our field to have characteristic zero, we can throw in <span class="math">\(\lnot S_p\)</span> for all primes <span class="math">\(p\)</span>: <span class="math">\(\ACF_0 = \ACF \cup \{ \lnot S_2, \lnot S_3, \lnot S_5, \ldots \}\)</span>. This nails down exactly the algebraically closed fields of characteristic <span class="math">\(0\)</span>.</p>
+<p>We claim that <span class="math">\(\ACF_0\)</span> and <span class="math">\(\ACF_p\)</span> are complete theories.</p>
+<hr>
+<p>If that is indeed the case, then we can prove a stronger form of the Ax-Grothendieck theorem.</p>
+<div class="theorem-box">
+<div class="theorem-title">Ax-Grothendieck Theorem (Stronger)</div>
+<p>Let <span class="math">\(k\)</span> be an algebraically closed field. If <span class="math">\(f: k^n \to k^n\)</span> is a polynomial map, then if <span class="math">\(f\)</span> is injective, it is surjective.</p>
+</div>
+<p><em>Proof</em>: We start by breaking our claim into a number of first-order sentences. We can&rsquo;t first-order define an arbitrary polynomial, so we&rsquo;ll work with all polynomials of bounded degree. For a fixed <span class="math">\(d\)</span>, the sentence &ldquo;for all polynomial maps <span class="math">\(f\)</span> of degree at most <span class="math">\(d\)</span>, injectivity of <span class="math">\(f\)</span> implies surjectivity of <span class="math">\(f\)</span>&rdquo; can be expressed as a first-order sentence.</p>
+<p>First, introduce <span class="math">\(n \cdot (d+1)\)</span> variables for the coefficients of <span class="math">\(f\)</span>. The sentence &ldquo;<span class="math">\(f\)</span> is injective&rdquo; can be made first-order by taking <span class="math">\(f(x) = f(y) \implies x = y\)</span> and expanding out the coefficients of <span class="math">\(f\)</span>. Likewise, &ldquo;<span class="math">\(f\)</span> is surjective&rdquo; can be written as <span class="math">\(\forall z \exists x \ f(x) = z\)</span>, and expanding <span class="math">\(f\)</span>.</p>
+<p>As an example, if <span class="math">\(n = 1, d = 2\)</span>, our sentence is:
+</p>
+<div class="math">$$ \forall a_0 \forall a_1 \forall a_2 \ (\forall x \forall y \ a_2 x^2 + a_1 x + a_0 = a_2 y^2 + a_1 y + a_0 \implies x = y) $$</div>
+<div class="math">$$ \implies \forall z \exists x \ a_2 x^2 + a_1 x + a_0 = z $$</div>
+<p>Since I literally never want to write out that sentence in the general case, let&rsquo;s just call it <span class="math">\(\phi_d\)</span>.</p>
+<p>We&rsquo;ll separately tackle the case of characteristic <span class="math">\(p\)</span> and characteristic <span class="math">\(0\)</span>.</p>
+<p>Let <span class="math">\(p\)</span> be any prime. Because <span class="math">\(\ACF_p\)</span> is complete, either there is a proof of <span class="math">\(\phi_d\)</span> or a proof of <span class="math">\(\lnot \phi_d\)</span>. The latter is impossible; if there were such a proof, then it would show that <span class="math">\(\phi_d\)</span> is false in <span class="math">\(\FFx{p}\)</span>, and we&rsquo;ve proven before that it is true in this field. Therefore, <span class="math">\(\ACF_p\)</span> entails a proof of <span class="math">\(\phi_d\)</span>.</p>
+<p>Similarly, because <span class="math">\(\ACF_0\)</span> is complete, either it can prove <span class="math">\(\phi_d\)</span>, or it can prove <span class="math">\(\lnot \phi_d\)</span>. Again, for the sake of contradiction, we assume the latter. Let <span class="math">\(P\)</span> be a proof of <span class="math">\(\phi_d\)</span> from <span class="math">\(\ACF_0\)</span>. Since <span class="math">\(P\)</span> is finite, it can only use finitely many axioms. In particular, it can only use finitely many of the <span class="math">\(\lnot S_p\)</span>. So there&rsquo;s some prime <span class="math">\(q\)</span> such that <span class="math">\(\lnot S_q\)</span> was not used in <span class="math">\(P\)</span>. Therefore, <span class="math">\(P\)</span> is also a valid proof in <span class="math">\(\ACF_q\)</span>. But we already know there are no proofs of <span class="math">\(\lnot \phi_d\)</span> from <span class="math">\(\ACF_q\)</span>, and so we&rsquo;ve reached a contradiction. Therefore, there must be a proof of <span class="math">\(\phi_d\)</span> from <span class="math">\(\ACF_0\)</span>.</p>
+<p>Since <span class="math">\(\ACF_p\)</span> can prove <span class="math">\(\phi_d\)</span>, and <span class="math">\(\ACF_0\)</span> can prove <span class="math">\(\phi_d\)</span>, we know that <span class="math">\(\phi_d\)</span> is true in all algebraically closed fields <span class="math">\(k\)</span>, no matter what the characteristic of <span class="math">\(k\)</span> is. And since <span class="math">\(\phi_d\)</span> is true for all <span class="math">\(d\)</span>, we have proved the claim for polynomials of arbitrary degree.</p>
+<hr>
+<p>This proof is magical in two ways.</p>
+<p>One is that, despite there being no homomorphisms between <span class="math">\(\FFx{p}\)</span> and <span class="math">\(\CC\)</span>, we were able to somehow transport a claim between the two. This was possible not by looking at the structure of <span class="math">\(\CC\)</span> and <span class="math">\(\FFx{p}\)</span> themselves, but by using the structure of their axiomatizations. The reduction to only finitely many axioms is an example of the <a href="https://en.wikipedia.org/wiki/Compactness_theorem">compactness theorem</a>, a very useful logical principle.</p>
+<p>The other is that we never actually made use of <span class="math">\(\phi_d\)</span>! All we knew is that it was a first-order sentence, and that it was true in some model of <span class="math">\(\ACF_p\)</span> for each <span class="math">\(p\)</span>. Generalizing this argument, we get the following principle:</p>
+<div class="theorem-box">
+<div class="theorem-title">Robinson's Principle</div>
+<p>If <span class="math">\(\phi\)</span> is a first-order sentence, then the following are equivalent:</p>
+<ol>
+<li><span class="math">\(\ACF_p\)</span> proves <span class="math">\(\phi\)</span> for all but finitely many <span class="math">\(p\)</span></li></li>
+<li><span class="math">\(\ACF_p\)</span> proves <span class="math">\(\phi\)</span> for infinitely many <span class="math">\(p\)</span></li></li>
+<li><span class="math">\(\ACF_0\)</span> proves <span class="math">\(\phi\)</span></li></li>
+</ol>
+<p>Furthermore, the following are equivalent for <span class="math">\(r\)</span> a prime or <span class="math">\(0\)</span>:</p>
+<ol>
+<li><span class="math">\(\ACF_r\)</span> proves <span class="math">\(\phi\)</span></li></li>
+<li><span class="math">\(\phi\)</span> is true in some algebraically closed field of characteristic <span class="math">\(r\)</span></li></li>
+<li><span class="math">\(\phi\)</span> is true in all algebraically closed fields of characteristic <span class="math">\(r\)</span></li></li>
+</ol>
+</div>
+<p>For the first claim, obviously (1) implies (2). The proof that (2) implies (3) is essentially the proof we gave above: if <span class="math">\(\phi\)</span> can&rsquo;t be proved from <span class="math">\(\ACF_0\)</span>, then <span class="math">\(\lnot \phi\)</span> can. This proof can only use finitely many of the <span class="math">\(\lnot S_p\)</span>, and there&rsquo;s infinitely many <span class="math">\(\ACF_p\)</span> that prove <span class="math">\(\phi\)</span>, so there&rsquo;s some <span class="math">\(p\)</span> we can transfer the proof to and get our contradiction. The proof that (3) implies (1) is similar: if there&rsquo;s a proof of <span class="math">\(\phi\)</span> from <span class="math">\(\ACF_0\)</span>, it can be transferred to all but finitely many <span class="math">\(\ACF_p\)</span>.</p>
+<p>The second claim is a direct consequence of completeness of <span class="math">\(\ACF_r\)</span>.</p>
+<p>Combining these two claims gives some very powerful techniques. The way we used it is: to show something is true for all algebraically closed fields, it suffices to show it only for a single example at each prime <span class="math">\(p\)</span>.</p>
+<p>At this point, there is no more spooky magic, and the rest of the article is about justifying the completeness of <span class="math">\(\ACF_p\)</span> and <span class="math">\(\ACF_0\)</span>. Still cool though, IMO.</p>
+<hr>
+<p>First, we&rsquo;ll state a popular theorem in model theory:</p>
+<div class="theorem-box">
+<div class="theorem-title">Löwenheim–Skolem Theorem</div>
+<p>Let <span class="math">\(\cT\)</span> be a countable theory. If it has an infinite model, then for any infinite cardinal <span class="math">\(\kappa\)</span>, it has a model of size <span class="math">\(\kappa\)</span>.</p>
+</div>
+<p>Essentially, first-order logic is too limited to distinguish between different sizes of infinity; if there&rsquo;s a model of one infinite size, there&rsquo;s a model of all infinite sizes. The proof of this theorem is somewhat involved, and we won&rsquo;t cover it here, but see <a href="http://modeltheory.wikia.com/wiki/L%C3%B6wenheim-Skolem_Theorem">here</a> for a proof.</p>
+<p>Using this, we can prove the Łoś–Vaught test:</p>
+<div class="theorem-box">
+<div class="theorem-title">Łoś–Vaught Test</div>
+<p>Let <span class="math">\(\cT\)</span> be a theory and <span class="math">\(\kappa\)</span> be some infinite cardinal. We say that <span class="math">\(\cT\)</span> is <span class="math">\(\kappa\)</span>-categorical if there is exactly one model of <span class="math">\(\cT\)</span> of size <span class="math">\(\kappa\)</span>, up to isomorphism.
+<br><br>
+If <span class="math">\(\cT\)</span> is <span class="math">\(\kappa\)</span>-categorical for some <span class="math">\(\kappa\)</span>, and has no finite models, then it is a complete theory.</p>
+</div>
+<p>This is unexpected, at least in my opinion. But then again, model theory isn&rsquo;t my forte. Maybe there&rsquo;s some intution one can use here that I don&rsquo;t have.</p>
+<p><em>Proof</em>: If <span class="math">\(\cT\)</span> isn&rsquo;t complete, then there&rsquo;s some <span class="math">\(\phi\)</span> such that <span class="math">\(\cT\)</span> proves neither <span class="math">\(\phi\)</span> nor <span class="math">\(\lnot \phi\)</span>. By the <a href="https://en.wikipedia.org/wiki/G%C3%B6del%27s_completeness_theorem">completeness theorem</a>, this means there&rsquo;s a model <span class="math">\(M\)</span> of <span class="math">\(\cT\)</span> in which <span class="math">\(\phi\)</span> is true, and a model <span class="math">\(M'\)</span> of <span class="math">\(\cT\)</span> in which <span class="math">\(\lnot \phi\)</span> is true.</p>
+<p>Since all models of <span class="math">\(\cT\)</span> are infinite, both <span class="math">\(M\)</span> and <span class="math">\(M'\)</span> are infinite. This means that <span class="math">\(M\)</span> is an infinite model of <span class="math">\(\cT \cup \{ \phi \}\)</span>, thus we can apply Löwenheim–Skolem to get a model <span class="math">\(N\)</span> of <span class="math">\(\cT \cup \{ \phi \}\)</span> which has size <span class="math">\(\kappa\)</span>. Likewise, we use <span class="math">\(M'\)</span> to get a model <span class="math">\(N'\)</span> of <span class="math">\(\cT \cup \{ \lnot \phi \}\)</span> which has size <span class="math">\(\kappa\)</span>. But because <span class="math">\(\cT\)</span> is <span class="math">\(\kappa\)</span>-categorical and both <span class="math">\(N\)</span> and <span class="math">\(N'\)</span> are models of <span class="math">\(\cT\)</span>, they must be isomorphic. But because <span class="math">\(\phi\)</span> is true in <span class="math">\(N\)</span> and false in <span class="math">\(N'\)</span>, this is a contradiction.</p>
+<p>We&rsquo;d like to apply the Łoś–Vaught test to <span class="math">\(\ACF_p\)</span> and <span class="math">\(\ACF_0\)</span>. Since all algebraically closed fields are infinite, it suffices to show that these theories are <span class="math">\(\kappa\)</span>-categoral for some <span class="math">\(\kappa\)</span>.</p>
+<p><em>Proof</em>: Let <span class="math">\(\kappa\)</span> be an uncountable cardinal and <span class="math">\(K\)</span> be an algebraically closed field of size <span class="math">\(\kappa\)</span>. Let <span class="math">\(B\)</span> be a transcendence basis of <span class="math">\(K\)</span> over its prime subfield <span class="math">\(k\)</span> (<span class="math">\(\FF_p\)</span> or <span class="math">\(\QQ\)</span>). <a href="https://proofwiki.org/wiki/Field_of_Uncountable_Cardinality_K_has_Transcendence_Degree_K">A cardinality argument</a> shows that <span class="math">\(\|B\| = \kappa\)</span> (this is where the uncountability of <span class="math">\(\kappa\)</span> is used; for example, <span class="math">\(\overline{\QQ}(t_1, \ldots, t_n)\)</span> has transcendence degree <span class="math">\(n\)</span>, but cardinality <span class="math">\(\aleph_0\)</span>). So, if <span class="math">\(K'\)</span> is another algebraically closed field, with the same cardinality and characteristic, and we pick a transcendence basis <span class="math">\(B'\)</span>, it will also have cardinality <span class="math">\(\kappa\)</span>. The bijection between <span class="math">\(B\)</span> and <span class="math">\(B'\)</span> induces an isomorphism between <span class="math">\(k(B)\)</span> and <span class="math">\(k(B')\)</span>. But since <span class="math">\(K\)</span> and <span class="math">\(K'\)</span> are algebraically closed, and algebraic over <span class="math">\(k(B) \cong k(B')\)</span>, they are algebraic closures of the same field, and are thus isomorphic!</p>
+<p>This proves that <span class="math">\(\ACF_p\)</span> and <span class="math">\(\ACF_0\)</span> are <span class="math">\(\kappa\)</span>-categorical for uncountable cardinals <span class="math">\(\kappa\)</span>. In particular, they&rsquo;re <span class="math">\(\kappa\)</span>-categorical for at least one infinite cardinal, and so via the Łoś–Vaught test, we conclude they are complete.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-ax-grothendieck&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

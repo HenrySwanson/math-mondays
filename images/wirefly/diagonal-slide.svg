@@ -1,0 +1,63 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="-0.15000000000000002 -6.1499999999999995 6.3 6.3">
+ <circle r="0.05" cx="0" cy="0"></circle>
+ <circle r="0.05" cx="0" cy="-1"></circle>
+ <circle r="0.05" cx="0" cy="-2"></circle>
+ <circle r="0.05" cx="0" cy="-3"></circle>
+ <circle r="0.05" cx="0" cy="-4"></circle>
+ <circle r="0.05" cx="0" cy="-5"></circle>
+ <circle r="0.05" cx="0" cy="-6"></circle>
+ <circle r="0.05" cx="1" cy="0"></circle>
+ <circle r="0.05" cx="1" cy="-1"></circle>
+ <circle r="0.05" cx="1" cy="-2"></circle>
+ <circle r="0.05" cx="1" cy="-3"></circle>
+ <circle r="0.05" cx="1" cy="-4"></circle>
+ <circle r="0.05" cx="1" cy="-5"></circle>
+ <circle r="0.05" cx="1" cy="-6"></circle>
+ <circle r="0.05" cx="2" cy="0"></circle>
+ <circle r="0.05" cx="2" cy="-1"></circle>
+ <circle r="0.05" cx="2" cy="-2"></circle>
+ <circle r="0.05" cx="2" cy="-3"></circle>
+ <circle r="0.05" cx="2" cy="-4"></circle>
+ <circle r="0.05" cx="2" cy="-5"></circle>
+ <circle r="0.05" cx="2" cy="-6"></circle>
+ <circle r="0.05" cx="3" cy="0"></circle>
+ <circle r="0.05" cx="3" cy="-1"></circle>
+ <circle r="0.05" cx="3" cy="-2"></circle>
+ <circle r="0.05" cx="3" cy="-3"></circle>
+ <circle r="0.05" cx="3" cy="-4"></circle>
+ <circle r="0.05" cx="3" cy="-5"></circle>
+ <circle r="0.05" cx="3" cy="-6"></circle>
+ <circle r="0.05" cx="4" cy="0"></circle>
+ <circle r="0.05" cx="4" cy="-1"></circle>
+ <circle r="0.05" cx="4" cy="-2"></circle>
+ <circle r="0.05" cx="4" cy="-3"></circle>
+ <circle r="0.05" cx="4" cy="-4"></circle>
+ <circle r="0.05" cx="4" cy="-5"></circle>
+ <circle r="0.05" cx="4" cy="-6"></circle>
+ <circle r="0.05" cx="5" cy="0"></circle>
+ <circle r="0.05" cx="5" cy="-1"></circle>
+ <circle r="0.05" cx="5" cy="-2"></circle>
+ <circle r="0.05" cx="5" cy="-3"></circle>
+ <circle r="0.05" cx="5" cy="-4"></circle>
+ <circle r="0.05" cx="5" cy="-5"></circle>
+ <circle r="0.05" cx="5" cy="-6"></circle>
+ <circle r="0.05" cx="6" cy="0"></circle>
+ <circle r="0.05" cx="6" cy="-1"></circle>
+ <circle r="0.05" cx="6" cy="-2"></circle>
+ <circle r="0.05" cx="6" cy="-3"></circle>
+ <circle r="0.05" cx="6" cy="-4"></circle>
+ <circle r="0.05" cx="6" cy="-5"></circle>
+ <circle r="0.05" cx="6" cy="-6"></circle>
+ <line x1="0" y1="0" x2="6" y2="0" stroke-width="0.04" stroke="#000000"></line>
+ <line x1="0" y1="0" x2="0" y2="-6" stroke-width="0.04" stroke="#000000"></line>
+ <line x1="0" y1="0" x2="6" y2="-6" stroke-width="0.02" stroke="#000000"></line>
+ <defs>
+  <marker markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" viewBox="0 0 5 5" orient="auto" id="SvgjsMarker1015">
+   <polygon points="0,0 5,2.5 0,5" fill="#ff0000"></polygon>
+  </marker>
+ </defs>
+ <line x1="3.1" y1="-2.9" x2="5.8" y2="-0.2" stroke-width="0.05" stroke="#ff0000" marker-end="url(#SvgjsMarker1015)"></line>
+ <circle r="0.1" cx="5" cy="-1" fill="#ff0000"></circle>
+ <circle r="0.1" cx="4" cy="-2" fill="#ff0000"></circle>
+</svg>

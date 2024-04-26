@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Monsky's Theorem</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/monskys-theorem" title="Permalink to Monsky's Theorem">Monsky's Theorem</a>
+    </h1>
+    <div class="article-date">September 24, 2018</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/geometry">geometry</a>
+    </div>
+  </header>
+
+  <section><p><span class="mathdefs">
+<span class="math">\(\newcommand{\RR}{\Bbb R}
+\newcommand{\QQ}{\Bbb Q}
+\newcommand{\ZZ}{\Bbb Z}\)</span>
+</span></p>
+<p>For which <span class="math">\(n\)</span> can you cut a square into <span class="math">\(n\)</span> triangles of equal area?</p>
+<p>This question appears quite simple; it could have been posed to the Ancient Greeks. But like many good puzzles, it is a remarkably stubborn one.</p>
+<p>It was first solved in 1970, by Paul Monsky. Despite the completely geometric nature of the question, his proof relies primarily on number theory and combinatorics! There is a small amount of algebraic machinery involved, but his proof is quite accessible, and we will describe it below.</p>
+
+
+<hr>
+<p>If you have a napkin on hand, it should be straightforward to come up with a solution for <span class="math">\(n = 2\)</span> and <span class="math">\(4\)</span>. A little more thought should yield solutions for any even <span class="math">\(n\)</span>. One such scheme is depicted below:</p>
+<p><img alt="Equidissection when n is even" height="auto" src="/images/monsky/even-equidissections.svg" width="100%"></p>
+<p>But when <span class="math">\(n\)</span> is odd, you will have considerably more trouble. Monsky&rsquo;s theorem states that such a task is, in fact, impossible.</p>
+<div class="theorem-box">
+<div class="theorem-title">Monsky's Theorem</div>
+<p>The unit square cannot be dissected into an odd number of triangles of equal area.</p>
+</div>
+<p>The result clearly extends to squares of any size, and in fact, arbitrary parallelograms.</p>
+<p>There are two key ingredients here:</p>
+<ol>
+<li>Sperner&rsquo;s Lemma</li>
+<li>2-adic valuations</li>
+</ol>
+<p>Proof sketch:</p>
+<ul>
+<li>Color the vertices of the dissection using three colors</li>
+<li>Find a triangle with exactly one vertex of each color</li>
+<li>Show that such a triangle cannot have area <span class="math">\(1/n\)</span></li>
+</ul>
+<p>If the last step seems ridiculous to you, don&rsquo;t worry. It&rsquo;s completely non-obvious that the coloring of a triangle&rsquo;s vertices could at all be related to its area. But once you see the trick, it will (hopefully) seem less mysterious. Just hang in there.</p>
+<h1>Sperner&rsquo;s Lemma</h1>
+<p>Consider a polygon <span class="math">\(P\)</span> in the plane, and some dissection of it into triangles <span class="math">\(T_i\)</span>. As promised in the previous section, color the vertices with three colors; we&rsquo;ll use red, green, and blue. We will call a segment <strong>purple</strong> if it has one red and one blue endpoint. A triangle with exactly one corner of each color will be called <strong>trichromatic</strong>. (Great terminology, eh?)</p>
+<p>A <strong>Sperner coloring</strong> is a coloring of the vertices of <span class="math">\(T_i\)</span>, using three colors, with the following properties:</p>
+<ul>
+<li>no face of <span class="math">\(P\)</span>, nor any face of one of the <span class="math">\(T_i\)</span>, contains vertices of all three colors</li>
+<li>there are an odd number of purple segments on the boundary of <span class="math">\(P\)</span></li>
+</ul>
+<p>For example, the following are Sperner colorings:</p>
+<div class="image-container">
+<p><img alt="Sperner Coloring 1" height="200px" src="/images/monsky/sperner-1.svg"></p>
+<p><img alt="Sperner Coloring 2" height="200px" src="/images/monsky/sperner-2.svg"></p>
+</div>
+<p>But these are not &ndash; the first has lines of more than two colors, and the second has an even number of purple boundary segments:</p>
+<div class="image-container">
+<p><img alt="Non-Sperner Coloring 1" height="200px" src="/images/monsky/sperner-3.svg"></p>
+<p><img alt="Non-Sperner Coloring 2" height="200px" src="/images/monsky/sperner-4.svg"></p>
+</div>
+<p>In this format, Sperner&rsquo;s lemma can be stated as:</p>
+<div class="theorem-box">
+<div class="theorem-title">Sperner's Lemma</div>
+<p>Given a Sperner coloring of <span class="math">\((P, T_i)\)</span>, there is at least one trichromatic triangle.
+<br>
+<br>
+Check the examples above, both Sperner colorings have trichromatic triangles. The first non-Sperner coloring has one, but the other does not.</p>
+</div>
+<p><em>Proof</em>: First, we establish a lemma: a triangle <span class="math">\(T\)</span> is trichromatic iff its faces have an odd number of purple segments.</p>
+<p>This is easy to see if there are no vertices lying on the faces of <span class="math">\(T\)</span>: a trichromatic triangle has exactly one purple segment, and otherwise, it has zero or two.</p>
+<p>We can reduce to this case by deleting vertices that lie on the faces of <span class="math">\(T\)</span>. We claim that this won&rsquo;t change whether the number of purple segments is even or odd. And of course, since we aren&rsquo;t touching the corners, it can&rsquo;t change whether or not the triangle is trichromatic. Consider some vertex on a face of <span class="math">\(T\)</span>. If that face contains green at all, then by the first property of Sperner colorings, it can&rsquo;t ever have purple segments, as it must omit either red or blue vertices. Monochromatic faces also present no concern, because they also cannot have purple segments. The remaining cases are shown below:</p>
+<p><img alt="Illustration of the cases" height="auto" src="/images/monsky/delete-purple.svg" width="100%"></p>
+<hr>
+<p>Cool. How does this help us?</p>
+<p>Let&rsquo;s do some counting mod <span class="math">\(2\)</span>. Let <span class="math">\(f(T)\)</span> be the number of purple segments in a triangle <span class="math">\(T\)</span>. What is the sum of all <span class="math">\(f(T)\)</span>, mod <span class="math">\(2\)</span>?</p>
+<p>On one hand, it&rsquo;s simply the number of trichromatic triangles; <span class="math">\(f(T) \not\equiv 0 \pmod 2\)</span> exactly when <span class="math">\(T\)</span> is trichromatic. But also, it&rsquo;s the number of purple segments on the boundary. Each purple segment in the interior of <span class="math">\(P\)</span> gets counted twice, and so contributes nothing, but boundary segments contribute exactly once.</p>
+<p>Since there are an odd number of purple segments on the boundary of <span class="math">\(P\)</span>, there are an odd number of trichromatic triangles. In particular, there&rsquo;s at least one of them.</p>
+<p>(This illustrates a common trick among combinatorialists: if you want to show that an object <span class="math">\(X\)</span> exists, show that the number of <span class="math">\(X\)</span>s is odd. Cheeky!)</p>
+<h1><span class="math">\(2\)</span>-adic valuations</h1>
+<p>Before we describe our coloring, we&rsquo;ll take an unexpected detour into the land of valuations.</p>
+<p>A <strong>valuation</strong> is a function that assigns a notion of &ldquo;value&rdquo; or &ldquo;size&rdquo; to numbers. There&rsquo;s multiple conventions, but we one we&rsquo;ll use is that a valuation on a ring <span class="math">\(R\)</span> is a function <span class="math">\(\nu\)</span> from <span class="math">\(R\)</span> to <span class="math">\(\RR^+ \cup \{ \infty \}\)</span> such that:</p>
+<ul>
+<li><span class="math">\(\nu(x) = \infty\)</span> if and only if <span class="math">\(x = 0\)</span></li>
+<li><span class="math">\(\nu(xy) = \nu(x) + \nu(y)\)</span></li>
+<li><span class="math">\(\nu(x + y) \ge \min(\nu(x), \nu(y))\)</span></li>
+</ul>
+<p>We&rsquo;ll assign the obvious rules to <span class="math">\(\infty\)</span>, such as, <span class="math">\(a + \infty = \infty\)</span>, and <span class="math">\(\min(a, \infty) = a\)</span>.</p>
+<p>One example of a valuation, that might help guide your intuition, is the &ldquo;multiplicity of a root&rdquo;. For some polynomial <span class="math">\(p(x) = a_0 + a_1 x + \cdots + a_n x^n\)</span>, let <span class="math">\(\nu(p)\)</span> be the index of the first non-zero coefficient. For example, <span class="math">\(\nu(3x^4 - x^5 + 7x^8) = 4\)</span>, and <span class="math">\(\nu(1 + x - x^2) = 0\)</span>. If all coefficients are zero, define <span class="math">\(\nu(p) = \infty\)</span>. In essence, <span class="math">\(\nu(p)\)</span> is &ldquo;how many&rdquo; roots <span class="math">\(p\)</span> has at <span class="math">\(0\)</span>; e.g., is <span class="math">\(0\)</span> a single root? A double root? Not a root at all?</p>
+<p>Is this a valuation?</p>
+<p>Well we satisfied the first property by fiat. The second one is pretty easy to see; when you multiply two polynomials, the lowest term has the sum of the degrees. And the third one ain&rsquo;t too bad either. If both <span class="math">\(p\)</span> and <span class="math">\(q\)</span> have zero coefficients on <span class="math">\(x^k\)</span>, <span class="math">\(p+q\)</span> certainly will too. The converse isn&rsquo;t true though, it&rsquo;s possible that the low-degree terms in <span class="math">\(p\)</span> and <span class="math">\(q\)</span> could cancel, and so <span class="math">\(\nu(p+q)\)</span> could be larger than either <span class="math">\(\nu(p)\)</span> or <span class="math">\(\nu(q)\)</span>. This is why we have an inequality, instead of an equality.</p>
+<hr>
+<p>The particular valuation we&rsquo;re interested in the <span class="math">\(2\)</span>-adic valuation, which measures how divisible by two a number is. The more factors of <span class="math">\(2\)</span> a number has, the bigger its valuation is.</p>
+<p>For example, <span class="math">\(\nu_2(2) = \nu_2(6) = \nu_2(-22) = 1\)</span>, since they all have a single factor of <span class="math">\(2\)</span>. Odd integers have <span class="math">\(\nu_2\)</span> of <span class="math">\(0\)</span>, since they have no factors of <span class="math">\(2\)</span> at all. And because <span class="math">\(0\)</span> can be factored as <span class="math">\(2^k \cdot 0\)</span> for any <span class="math">\(k\)</span>, no matter how big, it makes sense to say <span class="math">\(\nu_2(0) = \infty\)</span>.</p>
+<p>To extend this to rational numbers, we consider <span class="math">\(2\)</span>s in the denominator to count as negative. Consider the following examples until they make sense:
+</p>
+<div class="math">$$ \nu_2(1/4) = -2 \qquad \nu_2(1/3) = 0 \qquad \nu_2(2/3) = 1 \qquad \nu(3/8) = -3 \qquad \nu_2(12/5) = 2 $$</div>
+<p>We claim this is also a valuation.</p>
+<p>Again, we get the first property simply because we defined it to be so. The second one is also easy to verify, but the third one needs some work.</p>
+<p>Let <span class="math">\(x\)</span> and <span class="math">\(y\)</span> be rational numbers. By pulling out all the factors of <span class="math">\(2\)</span> from numerator and denominator, they can be written as <span class="math">\(x = 2^n \frac{a}{b}\)</span> and <span class="math">\(y = 2^m \frac{c}{d}\)</span>, where <span class="math">\(a\)</span>, <span class="math">\(b\)</span>, <span class="math">\(c\)</span>, and <span class="math">\(d\)</span> are odd. (Note that any of these, including <span class="math">\(n\)</span> and <span class="math">\(m\)</span>, may be negative.) Without loss of generality, let <span class="math">\(n \ge m\)</span>. We&rsquo;d like to show that <span class="math">\(\nu_2(x + y)\)</span> is at least <span class="math">\(\min(\nu_2(x), \nu_2(y)) = m\)</span>.
+</p>
+<div class="math">$$ x + y = 2^n \frac{a}{b} + 2^m \frac{c}{d} = 2^m \left( \frac{2^{n-m} a}{b} + \frac{c}{d} \right) = 2^m \frac{2^{n-m} ad + bc}{bd} $$</div>
+<p>Since <span class="math">\(2^{n-m} ad + bc\)</span> is an integer, and <span class="math">\(bd\)</span> is odd, <span class="math">\(x + y\)</span> has at least <span class="math">\(m\)</span> factors of <span class="math">\(2\)</span>, and so <span class="math">\(\nu_2(x + y) \ge m\)</span>, as desired. Notably, if <span class="math">\(n\)</span> is strictly larger than <span class="math">\(m\)</span>, i.e., <span class="math">\(\nu(x) &gt; \nu(y)\)</span>, then <span class="math">\(2^{n-m} ad + bc\)</span> is odd, and we can guarantee that <span class="math">\(\nu_2(x+y)\)</span> is exactly <span class="math">\(\nu(y)\)</span>. This is actually a property true of all valuations, so we&rsquo;ll state it again:</p>
+<ul>
+<li><span class="math">\(\nu(x + y) \ge \min(\nu(x), \nu(y))\)</span>, <strong>and if <span class="math">\(\nu(x) \ne \nu(y)\)</span> this is an equality</strong></li>
+</ul>
+<p>So <span class="math">\(\nu_2\)</span> is an honest-to-god valuation on <span class="math">\(\QQ\)</span>. By a theorem of Chevalley, we can extend this to a valuation on <span class="math">\(\RR\)</span>. The details are not particularly important, and the curious reader can find them at the end of this post.</p>
+<h1>Coloring The Plane</h1>
+<p>Our coloring of the dissection will use the (extended) <span class="math">\(2\)</span>-adic valuation. Our choice of coloring is peculiar enough that it deserves its own section though.</p>
+<p>Given a point <span class="math">\((x,y)\)</span> in the plane, we&rsquo;ll color it:</p>
+<ul>
+<li>red if <span class="math">\(\nu_2(x) &gt; 0\)</span> and <span class="math">\(\nu_2(y) &gt; 0\)</span></li>
+<li>green if <span class="math">\(\nu_2(x) \le 0\)</span> and <span class="math">\(\nu_2(x) \le \nu_2(y)\)</span></li>
+<li>blue if <span class="math">\(\nu_2(y) \le 0\)</span> and <span class="math">\(\nu_2(y) &lt; \nu_2(x)\)</span></li>
+</ul>
+<p>This coloring has some interesting properties, which we&rsquo;ll establish quickly.</p>
+<div class="theorem-box">
+<div class="theorem-title">Claim</div>
+<p>If <span class="math">\(P\)</span> is a red point, then <span class="math">\(Q\)</span> and <span class="math">\(Q-P\)</span> have the same color.</p>
+</div>
+<p><em>Proof</em>: This is a good exercise for the reader. Make use of the fact that, if <span class="math">\(\nu_2(a) &gt; 0\)</span> and <span class="math">\(\nu_2(x) \le 0\)</span>, then <span class="math">\(\nu_2(x - a) \ge \min(\nu_2(x), \nu_2(a)) = \nu_2(x)\)</span>. On the other hand, if <span class="math">\(\nu_2(x) &gt; 0\)</span>, then <span class="math">\(\nu_2(x - a) &gt; 0\)</span> as well.</p>
+<div class="theorem-box">
+<div class="theorem-title">Claim</div>
+<p>If we forget the dissection for a second, and pick <em>any</em> three collinear points in the plane, they cannot all be different colors.</p>
+</div>
+<p><em>Proof</em>: Let <span class="math">\(P_r\)</span>, <span class="math">\(P_g\)</span>, and <span class="math">\(P_b\)</span> be three points, colored red, green, and blue, respectively. We must show they can&rsquo;t be collinear; equivalently, the vectors <span class="math">\(P_g - P_r\)</span> and <span class="math">\(P_b - P_r\)</span> are not parallel. This is a question about linear independence, so we&rsquo;d better take a determinant. Let <span class="math">\(P_g - P_r = (x_g, y_g)\)</span>, and <span class="math">\(P_b - P_r = (x_b, y_b)\)</span>.</p>
+<div class="math">$$
+\det M =
+\det \begin{pmatrix}
+x_g &amp; x_b \\
+y_g &amp; y_b
+\end{pmatrix}
+=
+x_g y_b - x_b y_g
+$$</div>
+<p>To show that <span class="math">\(\det M\)</span> is non-zero, we can show that its <span class="math">\(2\)</span>-adic valuation is nonzero. This might seem harder, but since the only thing we know about these points is their valuations, it&rsquo;s the only shot we have!</p>
+<p>By the previous claim, <span class="math">\(P_g - P_r\)</span> is green, and <span class="math">\(P_b - P_r\)</span> is blue. From the coloring rules, we then know that <span class="math">\(\nu_2(y_b) &lt; \nu_2(x_b)\)</span> and <span class="math">\(\nu_2(x_g) \le \nu_2(y_g)\)</span>. So <span class="math">\(\nu_2(x_g y_b)\)</span> is strictly less than <span class="math">\(\nu_2(x_b y_g)\)</span>. The third property then tells us that <span class="math">\(\nu_2(\det M) = \nu_2(x_g y_b) \le 0\)</span>. Therefore, <span class="math">\(\det M \ne 0\)</span>, and so <span class="math">\(P_r\)</span>, <span class="math">\(P_g\)</span>, and <span class="math">\(P_b\)</span> cannot be collinear.</p>
+<h1>Putting it Together</h1>
+<p>Now we&rsquo;re ready. Let <span class="math">\(n\)</span> be odd, and consider a dissection of the unit square into <span class="math">\(n\)</span> triangles of equal area.</p>
+<p>Using the coloring rule above, we claim we get a Sperner coloring. The time we invested in the previous section pays off handsomely, as both required properties become almost trivial.</p>
+<ul>
+<li>No face of the square, nor of a triangle in the dissection, can contain vertices of all three colors, because no line <em>anywhere</em> in the plane can have vertices of all three colors!</li>
+<li>Again, we use the fact that there are no trichromatic lines.  Consider the corners of the square and their colors:</li>
+</ul>
+<div class="math">$$ (0, 0) \textrm{ is red} \qquad (1, 0) \textrm{ is green} \qquad (0, 1) \textrm{ is blue} \qquad (1, 1) \textrm{ is green} $$</div>
+<!--TODO diagram instead?-->
+
+<p>The only segments that could be purple lie between <span class="math">\((0, 0)\)</span> and <span class="math">\((0, 1)\)</span>. And because one endpoint is red, and the other blue, there must be an odd number of purple segments. (Remember our exercise about deleting vertices on faces&hellip;?)</p>
+<p>Therefore, this coloring is a Sperner coloring, and so somewhere, there is a trichromatic triangle. To finish the proof, we must show that this triangle can&rsquo;t have area <span class="math">\(1/n\)</span>.</p>
+<p>Let&rsquo;s revisit our second claim. Strong as it is, we can squeeze just a tiny bit more out of it. Using the same notation as before, basic coordinate geometry tells us that the area of the triangle formed by <span class="math">\(P_r\)</span>, <span class="math">\(P_g\)</span>, and <span class="math">\(P_b\)</span> is <span class="math">\(K = \frac{1}{2} \det M\)</span>. By showing that <span class="math">\(\det M \ne 0\)</span>, we showed that this triangle was not degenerate, i.e., the three points were not collinear. But we actually showed a little more than that; we showed that <span class="math">\(\nu_2(\det M) \le 0\)</span>. Therefore, if a trichromatic triangle has area <span class="math">\(K\)</span>, then <span class="math">\(\nu_2(K) = \nu_2(\frac{1}{2} \det M) \le -1\)</span>.</p>
+<p>But because <span class="math">\(n\)</span> is odd, <span class="math">\(\nu_2(1/n) = 0\)</span>. Contradiction.</p>
+<h1>Appendix</h1>
+<p>We promised a proof that a valuation on <span class="math">\(\QQ\)</span> can be extended to a valuation on <span class="math">\(\RR\)</span>. More generally, for a field extension <span class="math">\(L/K\)</span>, a valuation <span class="math">\(\nu\)</span> on <span class="math">\(K\)</span> can be extended to a valuation on <span class="math">\(L\)</span>.</p>
+<p>Unfortunately, I&rsquo;ve got diagrams to finish making before Monday ends, so I&rsquo;ll amend this later ;)</p>
+<!--
+*Proof*: We'll extend one element at a time. If we have a valuation on $K$, we'll extend it to a valuation on $K(\alpha)$, where $\alpha \in L$.
+
+If $\alpha$ is transcendental over $K$, then we will write it as $t$ instead. First we extend the valuation to the polynomial ring $K[t]$, by defining $\nu(\sum_i a_i t^i)$ to be $\max(\nu(a_i))$. After that, we'll extend it to the fraction field $K(t)$ by defining $\nu(p/q) = \nu(p) / \nu(q)$, which will be a valuation for the same reason we could extend from $\ZZ$ to $\QQ$ earlier.
+
+To show that what we defined on $K[t]$ is a valuation, let $p = \sum_i a_i t^i$ and $q = \sum_i b_i t^i$. If $\nu(p) = \max(\nu(a_i))$ is zero, then all the $\nu(a_i)$ are zero. But then all the $a_i$ must have been zero, giving $p = 0$.
+
+Showing multiplicativity is an exercise to the reader cause I'm actually stuck on it lol TODO
+
+If $\alpha$ is algebraic, then let $f(x) = x^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0$ be the minimal polynomial of $\alpha$. We define
+-->
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-monskys-theorem&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

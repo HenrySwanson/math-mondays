@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Wirefly Hive Problem</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/wirefly-hive" title="Permalink to Wirefly Hive Problem">Wirefly Hive Problem</a>
+    </h1>
+    <div class="article-date">February 6, 2023</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/puzzles">puzzles</a>
+    </div>
+  </header>
+
+  <section><p>This puzzle comes from a video about Magic the Gathering that my brother sent me, which you can watch <a href="https://www.youtube.com/watch?v=mKZ-ibOkRzs">here</a>.</p>
+<div class="video-wrapper">
+    <iframe src="https://www.youtube-nocookie.com/embed/mKZ-ibOkRzs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+    </iframe>
+</div>
+
+<p>The video is more about the specific rules of Magic, but this isn&rsquo;t a Magic blog, so let&rsquo;s get to the math as soon as possible.</p>
+
+
+<p>I&rsquo;ll try to summarize what&rsquo;s going on here, but I don&rsquo;t actually play Magic, so please forgive the inevitable inaccuracy here.</p>
+<p>It&rsquo;s your turn, and on your side of the board, you have some infinite source of mana, a <strong>Wirefly Hive</strong>, and <strong>Filigree Sages</strong>. Meanwhile, your opponent has a <strong>Leonin Elder</strong>.</p>
+<div class="image-container">
+<p><img alt="Wirefly Hive" height="350px" src="/images/wirefly/wirefly-hive.jpg"></p>
+<p><img alt="Filigree Sages" height="350px" src="/images/wirefly/filigree-sages.jpg"></p>
+<p><img alt="Leonin Elder" height="350px" src="/images/wirefly/leonin-elder.jpg"></p>
+</div>
+<p>Basically, what this means is that, due to the effect of <strong>Filigree Sages</strong>, you can activate <strong>Wirefly Hive</strong> as many times as you want this turn. Each time you do so, you flip a coin.</p>
+<ul>
+<li>If it comes up heads, you get a <strong>Wirefly</strong> with 2 power (i.e attack strength), and your opponent gains 1 life from the effect of <strong>Leonin Elder</strong>.</li>
+<li>However, if it&rsquo;s tails, all your Wireflies are destroyed. Plus, your opponent keeps their increased life!</li>
+</ul>
+<p>This means that if you flip several heads in a row, you can gain a bunch of attack, potentially enough to kill your opponent. However, the more you flip tails, the harder your task becomes, as your opponent&rsquo;s life steadily climbs higher.</p>
+<p>The question is: if your opponent starts with <span class="math">\(L\)</span> life, what is the probability that you eventually amass enough Wireflies to win?</p>
+<h1>Small <span class="math">\(L\)</span></h1>
+<p>Obviously if <span class="math">\(L = 0\)</span> you have already won, so let&rsquo;s look at <span class="math">\(L = 1\)</span>.</p>
+<p>If we flip heads, then we get 1 Wirefly, and our opponent increases to 2 life. Because our Wirefly has attack 2, that&rsquo;s enough for us to win.</p>
+<p>But what if we flip tails?</p>
+<p>All zero of our Wireflies get destroyed, and our opponent remains at 1 life, so this is actually a no-op. Nothing has happened, and we are free to keep flipping until we get a heads.</p>
+<p>In other words, the probability of winning with <span class="math">\(L = 1\)</span> is 100%!</p>
+<p>How about <span class="math">\(L = 2\)</span>?</p>
+<h1>Recurrence Relation</h1>
+<p>Just like before, we can keep flipping tails at the start, and nothing will happen. So eventually, we will flip a head, and get one Wirefly, bringing our opponent to 3 life. But now it gets harder.</p>
+<ul>
+<li>If we get another heads, we get a second Wirefly, and our opponent heals to 4 life. We can now attack with our two Wireflies for 4 damage and win.</li>
+<li>If we get tails, we lose our Wirefly, and have to start all over, but our opponent starts with 3 life this time.</li>
+</ul>
+<p>If we let <span class="math">\(p(L)\)</span> be the probability of winning, when our opponent starts with <span class="math">\(L\)</span> life, then we have
+</p>
+<div class="math">$$p(2) = \frac{1}{2} + \frac{1}{2} p(3)$$</div>
+<p>We can do something similar for higher <span class="math">\(L\)</span>. If our opponent starts with <span class="math">\(L\)</span> life, then we flip the coin until we get our first head, giving our opponent <span class="math">\(L+1\)</span> life, and us one Wirefly. After that, if we get a streak of <span class="math">\(L\)</span> heads, our opponent will have <span class="math">\(2L\)</span> life, but we will have <span class="math">\(L\)</span> Wireflies total, and that is just enough to win. However, if our streak only lasts <span class="math">\(k &lt; L\)</span> heads, we have to start over, with our opponent at <span class="math">\(L+k\)</span> life. </p>
+<p>The probability of getting a streak of <span class="math">\(L\)</span> heads (remember, the first is &ldquo;free&rdquo;), is <span class="math">\(1/2^{L-1}\)</span>. The probability of getting <span class="math">\(k\)</span> heads followed by a tail is <span class="math">\(1/2^{k-1+1}\)</span>. Putting it all together, we get:</p>
+<div class="math">$$ p(L) = \frac{1}{2^L} + \sum_{k = 1}^{L} \frac{1}{2^k} p(L+k) $$</div>
+<p>Unlike normal recurrence relations, this grows towards higher values of <span class="math">\(L\)</span>, and we have no base case to start with (try expanding this formula for <span class="math">\(L=1\)</span>!).</p>
+<p>Additionally, this relation is under-determined. For example, it is satisfied by <span class="math">\(p(L) = 1\)</span> always, which could be the answer, but as we discover below, it is not. So we&rsquo;ve lost some information somewhere, but I don&rsquo;t know what it is.</p>
+<p>I was not able to get anywhere with this, but maybe there&rsquo;s some fancy generating function tricks one can do.</p>
+<h1>Random Walk</h1>
+<p>To make some progress, let&rsquo;s transform the problem a bit.</p>
+<p>If instead, we weaken our Wireflies to have only 1 attack, and change the effect on <strong>Leonin Elder</strong> to be &ldquo;Whenever an artifact is destroyed, gain 1 life&rdquo;, then we get the same puzzle, but it&rsquo;s easier to reason about geometrically!</p>
+<p>(If our opponent has <span class="math">\(L\)</span> life, we still have to flip <span class="math">\(L\)</span> heads in a row to get lethal damage. And when we break a streak of <span class="math">\(k\)</span> heads, we still have to start over with our opponent at <span class="math">\(L+k\)</span> life.)</p>
+<p>Let&rsquo;s draw a grid, where the x-axis is &ldquo;opponent&rsquo;s life&rdquo;, and the y-axis is &ldquo;number of Wireflies&rdquo;. Each time we flip heads, we move up one step, and when we flip tails, we slide diagonally down to the x-axis. Our goal is to touch the diagonal <span class="math">\(x=y\)</span>, at which point we have lethal damage.</p>
+<div class="image-container">
+<p><img alt="Grid showing the directions of the random walk" height="300px" src="/images/wirefly/grid.svg"></p>
+</div>
+<p>Now our problem takes the form of a random walk!</p>
+<p>In order to figure out the probability of touching the diagonal, let&rsquo;s figure out the probability of touching it at each point.</p>
+<p>If our opponent starts with <span class="math">\(L\)</span> life, and we touch the diagonal at <span class="math">\((N, N)\)</span>, then we must have:</p>
+<ul>
+<li>Traversed some path from <span class="math">\((L, 0)\)</span> to <span class="math">\((N, 0)\)</span>, without touching the diagonal.</li>
+<li>Then we flipped <span class="math">\(N\)</span> consecutive heads.</li>
+</ul>
+<p>The probability of the latter is easy to compute; we&rsquo;ve done it several times already: <span class="math">\(1/2^{N-1}\)</span>. The former is trickier.</p>
+<p>Any particular path from <span class="math">\((L, 0)\)</span> to <span class="math">\((N, 0)\)</span> comes from a specific sequence of heads streaks, punctuated by arbitrary runs of tails. For example, the sequence shown in the diagram above has streaks of <span class="math">\((1, 2, 1)\)</span>, and could have been produced by:</p>
+<ul>
+<li><strong>H</strong>T<strong>HH</strong>T<strong>H</strong>T</li>
+<li><strong>H</strong>TTTT<strong>HH</strong>TTTTT<strong>H</strong>TTTTTT</li>
+<li>TTTTT<strong>H</strong>T<strong>HH</strong>TT<strong>H</strong>T</li>
+<li>and so on</li>
+</ul>
+<p>What&rsquo;s the probability of getting this particular sequence?</p>
+<ul>
+<li>We have to get a streak of one head: <span class="math">\(1/2\)</span></li>
+<li>Then a streak of two heads: <span class="math">\(1/4\)</span></li>
+<li>And lastly, a streak of one head again: <span class="math">\(1/2\)</span></li>
+</ul>
+<p>In total, that&rsquo;s <span class="math">\(1/16\)</span>.</p>
+<p>In general, the probability of getting a streak pattern of <span class="math">\((k_1, k_2, \ldots, k_i)\)</span> is <span class="math">\(1/2^{k_1} \cdot 1/2^{k_2} \cdots 1/2^{k_i}\)</span>, or in other words, <span class="math">\(1/2^{k_1 + k_2 + \cdots + k_i}\)</span>. And since we know we need <span class="math">\(N - L\)</span> heads to get from <span class="math">\((L, 0)\)</span> to <span class="math">\((N, 0)\)</span>, that means each path has the <strong>exact same probability</strong>: <span class="math">\(1/2^{N - L}\)</span>.</p>
+<p>The only thing we&rsquo;re missing is the number of paths from <span class="math">\((L, 0)\)</span> to <span class="math">\((N, 0)\)</span>. If we call that quantity <span class="math">\(a_{L, N}\)</span>, then the probability that we win is:</p>
+<div class="math">$$ p(L) = \sum_{N = L}^\infty p(\textrm{walked to $(N, 0)$}) \cdot \frac{1}{2^{N-1}} = \sum_{N = L}^\infty \frac{a_{L, N}}{2^{N - L}} \cdot \frac{1}{2^{N-1}} $$</div>
+<p>The only thing left to do is find the values of <span class="math">\(a_{L, N}\)</span>.</p>
+<h1>Counting Paths</h1>
+<p>Counting these paths turns out to be quite an ordeal, and I never ended up finding a closed form for them. Still though, there&rsquo;s a clean recurrence relation that one can use to compute these things, so let&rsquo;s dive in.</p>
+<p>If we&rsquo;re looking for a path from <span class="math">\((L, 0)\)</span> to <span class="math">\((N, 0)\)</span>, our last step has to be a diagonal. There&rsquo;s only a few possible places we can slide down the diagonal and hit <span class="math">\((N, 0)\)</span>.</p>
+<div class="image-container">
+<p><img alt="Diagonal arrow down to (6, 0)" height="300px" src="/images/wirefly/diagonal-slide.svg"></p>
+</div>
+<p>Specifically, we can be on any point <span class="math">\((N - i, N + i)\)</span>, as long as <span class="math">\(N - i &lt; N + i\)</span>, otherwise we&rsquo;d be on (or past) the diagonal, and this would not be a valid path.</p>
+<p>The only way to get from <span class="math">\((L, 0)\)</span> to <span class="math">\((N - i, N + i)\)</span> is to make it to <span class="math">\((N - i, 0)\)</span>, and then go straight up. So each path to <span class="math">\((N - i, 0)\)</span> gives us exactly one path to <span class="math">\((N, 0)\)</span>, meaning the number of paths is just:</p>
+<div class="math">$$ a_{L, N} = \sum_{i} a_{L, N - i} $$</div>
+<p>where the sum is taken over all <span class="math">\(i\)</span> such that <span class="math">\(N - i &lt; N + i\)</span>. Also, we can skip all <span class="math">\(i\)</span> such that <span class="math">\(N - i &lt; L\)</span>, because there are no paths going backwards.</p>
+<p>For a specific example, consider <span class="math">\(a_{2, 6}\)</span>.</p>
+<p>We can slide down to <span class="math">\((6, 0)\)</span> from <span class="math">\((5, 1)\)</span> or <span class="math">\((4, 2)\)</span>, but not <span class="math">\((3, 3)\)</span>. So we have that <span class="math">\(a_{2, 6} = a_{2, 5} + a_{2, 4}\)</span>. The possible paths are shown below, albeit, kind of cluttered:</p>
+<div class="image-container">
+<p><img alt="All paths from (2, 0) to (6, 0)" height="300px" src="/images/wirefly/paths-for-six.svg"></p>
+</div>
+<p>We see that there are 3 possible paths, two of which come from <span class="math">\(a_{2, 5}\)</span> (blue and purple), and one of which comes from <span class="math">\(a_{2, 4}\)</span> (cyan).</p>
+<h1>Simpler Recurrence</h1>
+<p>This is a pretty simple recurrence relation, but we can actually do better!</p>
+<p>Consider <span class="math">\(a_{2, 7}\)</span>. From our existing knowledge, we have that <span class="math">\(a_{2, 7} = a_{2, 6} + a_{2, 5} + a_{2, 4}\)</span>. But if we replace <span class="math">\(a_{2, 5} + a_{2, 4}\)</span>, then we get that <span class="math">\(a_{2, 7} = 2 a_{2, 6}\)</span>!</p>
+<p>Similarly, <span class="math">\(a_{2, 8} = a_{2, 7} + a_{2, 6} + a_{2, 5}\)</span>, but here we are not quite so lucky &ndash; we do not have all the terms we need. The best we can do is <span class="math">\(a_{2, 8} = 2 a_{2, 7} - a_{2, 4}\)</span>.</p>
+<p>And in general, for all <span class="math">\(n\)</span> and <span class="math">\(k &gt; n\)</span>, we have:</p>
+<div class="math">$$ a_{n, 2k+1} = 2 a_{n, 2k} $$</div>
+<div class="math">$$ a_{n, 2k} = 2 a_{n, 2k-1} - a_{n, k} $$</div>
+<h1>Conclusion?</h1>
+<p>Unfortunately, I was not able to find any closed-form solution here.</p>
+<p>I threw the recurrence relation into Python, and got the following results:</p>
+<table>
+<thead>
+<tr>
+<th><span class="math">\(L\)</span></th>
+<th><span class="math">\(p(L)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.68332</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.36663</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.18645</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.093619</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0.046859</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0.023435</td>
+</tr>
+<tr>
+<td>8</td>
+<td>0.011718</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.0058593</td>
+</tr>
+<tr>
+<td>10</td>
+<td>0.0029297</td>
+</tr>
+</tbody>
+</table>
+<p>Additionally, I found an <a href="https://oeis.org/A002083">OEIS sequence</a> that counts <span class="math">\(a_{2, n}\)</span>, and I was able to find other references to this sequence, but not the specific sum we&rsquo;re looking for. Wolfram Alpha doesn&rsquo;t produce any reasonable guesses for a closed form either. Can&rsquo;t win them all, I guess.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-wirefly-hive&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

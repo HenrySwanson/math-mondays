@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - A Cooperative Hat Game</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/hat-game" title="Permalink to A Cooperative Hat Game">A Cooperative Hat Game</a>
+    </h1>
+    <div class="article-date">February 15, 2021</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/puzzles">puzzles</a>
+    </div>
+  </header>
+
+  <section><p><span class="mathdefs">
+<span class="math">\(\newcommand{W}{\square}
+\newcommand{B}{\blacksquare}\)</span>
+</span></p>
+<p>Hat puzzles are super popular among mathematicians. Most of them have cute and clever solutions. Here&rsquo;s one that, at the time of writing, is still an open problem.</p>
+<!-- TODO consider 0-indexing the darn thing -->
+
+<blockquote>
+<p>Alice and Bob sit facing each other, each with an infinite tower of hats on their heads. Each hat is either black or white, with equal probability. Alice can see all of Bob&rsquo;s hats, but not her own, and vice versa. On the count of three, both players must name a natural number, which is used to index into their own hat tower. If the two hats match, then the players win, otherwise they lose. (Also, they&rsquo;re not allowed to talk, cough, wink, or otherwise communicate.)</p>
+</blockquote>
+<p>As an example, say Alice&rsquo;s hats are <span class="math">\(\W\W\B\W\W\B\cdots\)</span> and Bob&rsquo;s hats are <span class="math">\(\B\W\B\W\W\B\cdots\)</span>. If Alice says 3 and Bob says 1, then since Alice&rsquo;s third hat and Bob&rsquo;s first hat are both black, then they win. If they both say 1, their first hats do not match, so they lose.</p>
+<!-- TODO diagram! -->
+
+<p>What&rsquo;s the best possible strategy, and how often does it win? No one knows! I have some conjectures here, and some (probably unoriginal) strategies that do pretty well.</p>
+
+
+<h1>Simplest Strategy</h1>
+<p>The simplest strategy is for both players to ignore any information they have and just pick the first hat. Unsurprisingly, this doesn&rsquo;t go very well. The outcomes <span class="math">\(\W/\W\)</span>, <span class="math">\(\W/\B\)</span>, <span class="math">\(\B/\W\)</span>, and <span class="math">\(\B/\B\)</span> are all equally likely, so the chance of winning is <span class="math">\(1/2\)</span>.</p>
+<p>It&rsquo;s not at all obvious that you can do any better than this. Since there&rsquo;s no communication, neither player can learn anything about their own hats, and so both players are equally likely to pick a white hat or a black hat. How can you squeeze out any additional advantage?</p>
+<h1>First-White Strategy</h1>
+<p>Here&rsquo;s a strategy that does better. Both players look for the first white hat on their partner&rsquo;s head, and guess the corresponding number. For example, if Bob is wearing <span class="math">\(\B\B\W\B\W\W\cdots\)</span>, Alice would say &ldquo;3&rdquo;. If he&rsquo;s wearing <span class="math">\(\W\W\W\B\W\B\cdots\)</span>, Alice would say &ldquo;1&rdquo;. Call Alice&rsquo;s guess <span class="math">\(a\)</span> and Bob&rsquo;s guess <span class="math">\(b\)</span>. What&rsquo;s the probability of success?</p>
+<ul>
+<li>Case <span class="math">\(a = b\)</span>: they&rsquo;re both pointing at white hats, so they win.</li>
+<li>Case <span class="math">\(a &lt; b\)</span>: Bob&rsquo;s guess means that every one of Alice&rsquo;s hats before <span class="math">\(b\)</span> was black, including the one at <span class="math">\(a\)</span>. Alice stopped looking at Bob&rsquo;s hats at <span class="math">\(a\)</span>, so Bob&rsquo;s <span class="math">\(b\)</span>th hat could be either color. They win with probability <span class="math">\(1/2\)</span>.</li>
+<li>Case <span class="math">\(a &gt; b\)</span>: Symmetric to the previous case.</li>
+</ul>
+<p>So if <span class="math">\(p\)</span> is the probability that <span class="math">\(a = b\)</span>, then the chance of success is <span class="math">\(p + (1 - p) / 2 = 1/2 + p/2\)</span>. Even before we know <span class="math">\(p\)</span>, we can already tell that we&rsquo;re going to do better than <span class="math">\(1/2\)</span>!</p>
+<p>To find <span class="math">\(p\)</span>, we sum up the probabilities both players say &ldquo;1&rdquo;, that they both say &ldquo;2&rdquo;, that they both say &ldquo;3&rdquo;, etc. Note that the chance that Alice says &ldquo;<span class="math">\(k\)</span>&rdquo; is the chance that Bob&rsquo;s <span class="math">\(k\)</span>th hat is white, <em>and</em> that none of the previous ones were. Likewise for Bob. Summing up the resulting geometric series, we get</p>
+<div class="math">$$
+p = \sum_{k = 1}^\infty \left[ \left(\frac{1}{2} \right) \left(\frac{1}{2} \right)^{k-1} \right]^2 = \sum_{k = 1}^\infty \frac{1}{4^k} = \frac{1/4}{1 - 1/4} = \frac{1}{3}
+$$</div>
+<p>So by following this strategy, Alice and Bob can win with probability <span class="math">\(2/3\)</span>. Much better!</p>
+<h1>Finite Strategies</h1>
+<p>Here&rsquo;s another approach: what if we focus only on the first <span class="math">\(N\)</span> hats, reducing it to a finite problem?</p>
+<p>If <span class="math">\(N = 1\)</span> obviously there&rsquo;s nothing interesting we can do, so let&rsquo;s look at <span class="math">\(N = 2\)</span>. If Alice sees only black hats on Bob&rsquo;s head, then she knows that strategizing is hopeless &ndash; Bob will pick a black hat for sure, and she&rsquo;ll pick a black hat with probability only 50%. Same thing goes if she sees only white, and same thing from Bob&rsquo;s point of view. So the only interesting cases are when both players have non-monochromatic hat stacks.</p>
+<p>There&rsquo;s four possible situations: <span class="math">\(\W\B / \W\B\)</span>, <span class="math">\(\W\B / \B\W\)</span>, <span class="math">\(\B\W / \W\B\)</span>, and <span class="math">\(\B\W / \B\W\)</span>. We could brute-force all possible strategies (there&rsquo;s only four possible for each player, and half of those are constant strategies). But let&rsquo;s think this one through. Let&rsquo;s say, arbitrarily, that Alice guesses &ldquo;1&rdquo; if she sees <span class="math">\(\W\B\)</span>, and &ldquo;2&rdquo; if she sees <span class="math">\(\B\W\)</span>. If Bob sees <span class="math">\(\W\B\)</span> on Alice&rsquo;s head, what should he do?</p>
+<ul>
+<li>If he has <span class="math">\(\W\B\)</span>, then Alice will pick &ldquo;1&rdquo;, selecting her white hat. Bob should select his white hat by saying &ldquo;1&rdquo;.</li>
+<li>If he has <span class="math">\(\B\W\)</span>, then Alice will pick &ldquo;2&rdquo;, selecting her black hat. Bob should select his black hat by saying &ldquo;1&rdquo;.</li>
+</ul>
+<p>In both situations, saying &ldquo;1&rdquo; guarantees a win. Similarly, if he sees <span class="math">\(\B\W\)</span> on Alice&rsquo;s head, he wins by saying &ldquo;2&rdquo;. So in the &ldquo;neither player is monochrome&rdquo; situation, they can win 100% of the time! For the monochrome cases, no strategy is possible, and so that&rsquo;s just 50%. There&rsquo;s 4 non-monochrome cases, and 12 monochrome ones, so that gives a win rate of <span class="math">\(10/16 = 62.5\%\)</span>.</p>
+<!-- TODO diagram -->
+
+<p>How about <span class="math">\(N = 3\)</span>? We could just ignore the third hat, giving us a win rate of at least <span class="math">\(10/16\)</span>, but we can do better. Consider the following (asymmetric) strategy:</p>
+<ul>
+<li>If a player sees a monochromatic stack, they pick an arbitrary hat. Doesn&rsquo;t matter.</li>
+<li>If a player sees only one white hat, they pick the index corresponding to that hat.</li>
+<li>If Alice sees one black hat, she picks the hat <em>after</em> that one (with wraparound, so <span class="math">\(\B\W\W \to 2\)</span>, <span class="math">\(\W\B\W \to 3\)</span>, <span class="math">\(\W\W\B \to 1\)</span>).</li>
+<li>If Bob sees one black hat, he picks the hat <em>before</em> that one (again, with wraparound).</li>
+</ul>
+<p>How does this strategy do? Note that the strategy is unchanged by cyclic shifting of the hats, which reduces the amount of casework we have to do.</p>
+<p>If either player has a monochromatic stack, then they win only 50% of the time, as usual.</p>
+<p>If they both have a one-white-hat stack, then they have a guaranteed win.
+</p>
+<div class="math">$$
+\begin{matrix}
+\\
+\textrm{Alice's hats} \\
+\\
+\textrm{Bob's hats}
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow\hphantom{\B\B} \\
+\W\B\B \\
+\downarrow\hphantom{\B\B} \\
+\W\B\B
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \\
+\W\B\B \\
+\downarrow\hphantom{\B\B} \\
+\B\W\B
+\end{matrix}
+\qquad
+\begin{matrix}
+\hphantom{\B\B}\downarrow \\
+\W\B\B \\
+\downarrow\hphantom{\B\B} \\
+\B\B\W
+\end{matrix}
+$$</div>
+<p>If they both have one-black-hat stacks, then they also have a guaranteed win, though it&rsquo;s less obvious why.
+</p>
+<div class="math">$$
+\begin{matrix}
+\\
+\textrm{Alice's hats} \\
+\\
+\textrm{Bob's hats}
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \\
+\B\W\W \\
+\hphantom{\B\B}\downarrow \\
+\B\W\W
+\end{matrix}
+\qquad
+\begin{matrix}
+\hphantom{\B\B}\downarrow \\
+\B\W\W \\
+\hphantom{\B\B}\downarrow \\
+\W\B\W
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow\hphantom{\B\B} \\
+\B\W\W \\
+\hphantom{\B\B}\downarrow \\
+\W\W\B
+\end{matrix}
+$$</div>
+<p>The only remaining case is when one player has a one-white stack, and the other has a one-black stack. We can&rsquo;t win every matchup here, but we can get a solid <span class="math">\(4/6\)</span>. (Note: what happens if you change the one-black strategy to &ldquo;pick the black hat&rdquo;?).
+</p>
+<div class="math">$$
+\begin{matrix}
+\\
+\textrm{Alice's hats} \\
+\\
+\textrm{Bob's hats}
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \\
+\W\B\B \\
+\downarrow \hphantom{\B\B} \\
+\B\W\W
+\end{matrix}
+\qquad
+\begin{matrix}
+\hphantom{\B\B} \downarrow \\
+\W\B\B \\
+\downarrow \hphantom{\B\B} \\
+\W\B\W
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \hphantom{\B\B} \\
+\W\B\B \\
+\downarrow \hphantom{\B\B} \\
+\W\W\B
+\end{matrix}
+$$</div>
+<div class="math">$$
+\begin{matrix}
+\\
+\textrm{Alice's hats} \\
+\\
+\textrm{Bob's hats}
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \hphantom{\B\B} \\
+\B\W\W \\
+\hphantom{\B\B} \downarrow \\
+\W\B\B \\
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \\
+\B\W\W \\
+\hphantom{\B\B} \downarrow \\
+\B\W\B \\
+\end{matrix}
+\qquad
+\begin{matrix}
+\hphantom{\B\B} \downarrow \\
+\B\W\W \\
+\hphantom{\B\B} \downarrow \\
+\B\B\W \\
+\end{matrix}
+$$</div>
+<p>This totals up to a winning probability of <span class="math">\(44/64 = 68.75\%\)</span>. Better than <span class="math">\(N = 2\)</span>, but also better than our &ldquo;first-white&rdquo; strategy!</p>
+<p>The casework becomes worse and worse for <span class="math">\(N \ge 4\)</span>, so we&rsquo;ll stop here for now.</p>
+<h1>Stronger Together</h1>
+<p>We&rsquo;ve seen two kinds of strategies so far: first-white, and finite strategies. These can be combined, in a pretty simple way, into a strategy better than either of them alone!</p>
+<p>With an <span class="math">\(N\)</span>-hat strategy, the augumented strategy goes as follows:</p>
+<ul>
+<li>Each player looks at the first <span class="math">\(N\)</span> hats on their partner&rsquo;s head.</li>
+<li>If they&rsquo;re not monochromatic, then apply the finite strategy as usual.</li>
+<li>Otherwise, skip those <span class="math">\(N\)</span> hats, and look at hats <span class="math">\(N+1\)</span> to <span class="math">\(2N\)</span>.</li>
+<li>If those are non-monochromatic, apply the finite strategy, but increase all your answers by <span class="math">\(N\)</span>.</li>
+<li>Otherwise, look at the next block of <span class="math">\(N\)</span> hats, and repeat.</li>
+</ul>
+<p>The finite strategies perform worst when facing a monochromatic block of hats. By using the &ldquo;scan upwards and focus on the first non-monochromatic block&rdquo; trick, we can sometimes salvage situations where the finite strategy would have to accept the 50-50 guess.</p>
+<p>Say that the <span class="math">\(N\)</span>-hat strategy has win rate <span class="math">\(q\)</span>. We&rsquo;d first like to find <span class="math">\(q^\ast\)</span>, the conditional win rate for scenarios where neither player has a monochromatic stack. Let <span class="math">\(W\)</span> be the event &ldquo;we win&rdquo;, and <span class="math">\(E\)</span> be the event &ldquo;neither player has a monochromatic stack&rdquo;. The number of situations where Alice has a non-monochromatic stack is <span class="math">\(2^N - 2\)</span>, and same for Bob. So the probability of <span class="math">\(E\)</span> is <span class="math">\((2^N - 2)^2/4^N\)</span>. Thus,</p>
+<div class="math">$$
+\begin{align*}
+Pr(W) &amp;= Pr(W | E) Pr(E) + Pr(W | \lnot E) Pr(\lnot E) \\
+q &amp;= q^\ast \frac{(2^N - 2)^2}{4^N} + \frac{1}{2} \left( 1 - \frac{(2^N - 2)^2}{4^N} \right) \\
+q &amp;= q^\ast \frac{(2^N - 2)^2}{4^N} + \frac{2^{N+1} - 2}{4^N} \\
+q \frac{4^N}{(2^N - 2)^2} &amp;= q^\ast + \frac{2^{N+1} - 2}{(2^N - 2)^2} \\
+\frac{4^N q - 2^{N+1} + 2}{(2^N - 2)^2} &amp;= q^\ast \\
+\end{align*}
+$$</div>
+<p>Next, we want to find <span class="math">\(r\)</span>, the probability that both players will select the same block of <span class="math">\(N\)</span> hats. The chance an individual block is monochromatic is <span class="math">\(2/2^N\)</span>, and so the chance that Alice (or Bob) picks the <span class="math">\(k\)</span>th block is &ldquo;probability the <span class="math">\(k\)</span>th block is non-monochromatic&rdquo; times &ldquo;probability the first <span class="math">\(k-1\)</span> were monochromatic&rdquo;. This is quite similar to the setup we had for the original first-white strategy.</p>
+<div class="math">$$
+\begin{align*}
+r &amp;= \sum_{k=1}^\infty \left( \frac{2^N - 2}{2^N} \cdot \left( \frac{2}{2^N} \right)^{k-1} \right)^2 \\
+&amp;= \frac{(2^N - 2)^2}{4^N} \sum_{k=1}^\infty \left( \frac{4}{4^N} \right)^{k-1} \\
+&amp;= \frac{(2^N - 2)^2}{4^N} \frac{1}{1 - 4/4^N} \\
+&amp;= \frac{(2^N - 2)^2}{4^N - 4} \\
+&amp;= \frac{2^N - 2}{2^N + 2}
+\end{align*}
+$$</div>
+<p>So now we can find <span class="math">\(q'\)</span>, the win rate of the augmented strategy. If they pick the same block, then they win with probability <span class="math">\(q^\ast\)</span> (remember that these blocks are necessarily non-monochromatic). If they don&rsquo;t, then someone is picking into a monochromatic block, and so we&rsquo;re fated to get only <span class="math">\(1/2\)</span> success.</p>
+<div class="math">$$
+\begin{align*}
+q' &amp;= r q^\ast + (1 - r) \frac{1}{2} \\
+&amp;= \frac{2^N - 2}{2^N + 2} \frac{4^N q - 2^{N+1} + 2}{(2^N - 2)^2} + \frac{4}{2^N + 2} \frac{1}{2} \\
+&amp;= \frac{4^N q - 2^{N+1} + 2}{4^N - 4} + \frac{2(2^N - 2)}{4^N - 4} \\
+&amp;= \frac{4^N q - 2}{4^N - 4}
+\end{align*}
+$$</div>
+<p>Since <span class="math">\(q \ge 1/2\)</span>, we have <span class="math">\(q' \ge q\)</span>, and when the first inequality is strict, so is the second. So, perhaps unsurprisingly, augmenting a finite strategy makes it work better. How much better? Let&rsquo;s take our <span class="math">\(N = 3\)</span> strategy:</p>
+<div class="math">$$ \frac{4^3 (44/64) - 2}{4^3 - 4} = \frac{42}{60} = \frac{7}{10} $$</div>
+<p>We&rsquo;ve nudged our 68.75% chance of winning to a 70% chance. That&rsquo;s small, but it&rsquo;s not nothing. Unfortunately, it&rsquo;s as far as we can go &ndash; this is conjectured to be an optimal strategy. No one&rsquo;s found or ruled out anything better yet.</p>
+<h1>Observations</h1>
+<p>Now that we&rsquo;ve seen some strategies, we can look for some patterns.</p>
+<p>In the simplest strategy, we&rsquo;re equally likely to get any pair of hats. With the &ldquo;first-white&rdquo; strategy, what are the odds of each outcome? The only way to get <span class="math">\(\W/\W\)</span> is for both players to guess the same index, which happens with probability <span class="math">\(1/3\)</span>. In the other <span class="math">\(2/3\)</span> of the time, half the time Alice guesses the higher number, and half the time it&rsquo;s Bob. In the former case, Bob&rsquo;s hat is guaranteed black, and Alice&rsquo;s hat is random. In the latter case, it&rsquo;s the other way around. So that adds up to <span class="math">\(\B/\B\)</span> with probability <span class="math">\(1/3\)</span>, <span class="math">\(\W/\B\)</span> with probablity <span class="math">\(1/6\)</span>, and <span class="math">\(\B/\W\)</span> with <span class="math">\(1/6\)</span>.</p>
+<p>Similarly, if you work through the strategies given in the &ldquo;Finite Strategies&rdquo; section, the probability of <span class="math">\(\W/\W\)</span> and <span class="math">\(\B/\B\)</span> outcomes are equal, as are <span class="math">\(\B/\W\)</span> and <span class="math">\(\W/\B\)</span> outcomes. This is no coincidence.</p>
+<p>Since Alice is equally likely to pick a white or black hat (remember, she never learns anything about her own hat stack), <span class="math">\(Pr(\W/\W) + Pr(\W/\B)\)</span> has to equal <span class="math">\(Pr(\B/\B) + Pr(\B/\W)\)</span>. Similarly, Bob has to be equally likely to pick white or black, meaning <span class="math">\(Pr(\W/\W) + Pr(\B/\W)\)</span> equals <span class="math">\(Pr(\W/\B) + Pr(\B/\B)\)</span>. Subtracting one equation from the other gives <span class="math">\(Pr(\B/\W) = Pr(\W/\B)\)</span>, and some quick algebra gives <span class="math">\(Pr(\W/\W) + Pr(\B/\B)\)</span> as well.</p>
+<p>This tells us something interesting &ndash; changing the win condition to &ldquo;both players pick white hats&rdquo; doesn&rsquo;t change the nature of the game at all. Maximizing the probability of matching pairs is the same as maximizing the number of white pairs (and in fact, this is how the problem is usually presented.)</p>
+<hr>
+<p>Another thing we can look at is the relationship between the finite and infinite game. Let <span class="math">\(p_\infty\)</span> denote the best possible winning probability for the infinite game, and <span class="math">\(p_N\)</span> for the game with just <span class="math">\(N\)</span> hats. How are these related to each other?</p>
+<p>Since an <span class="math">\(N\)</span>-hat strategy works just as well for a <span class="math">\((N+1)\)</span>-hat game (by just ignoring the last hat), we know that <span class="math">\(p_{N+1}\)</span> is at least <span class="math">\(p_N\)</span>. Similarly, <span class="math">\(p_\infty \ge p_N\)</span> for all <span class="math">\(N\)</span>. This gives us a chain of inequalities:</p>
+<div class="math">$$ p_1 \le p_2 \le p_3 \le \cdots \le p_\infty $$</div>
+<p>Also, from augmenting a strategy, we know that <span class="math">\(p_\infty \ge \frac{4^N p_N - 2}{4^N - 4}\)</span> for all <span class="math">\(N\)</span>.</p>
+<h1>Upper Bounds, Infinite</h1>
+<p>Well, we know that <span class="math">\(p_\infty\)</span> is at least <span class="math">\(0.7\)</span>; can we put an upper bound on it too?</p>
+<p>Let&rsquo;s say Alice and Bob have already decided on a strategy, one that has win rate <span class="math">\(p\)</span>. Now, imagine that, right before the game starts, we split the game into two identical games: in one game, things proceed as normal, and in the other game, all of Alice&rsquo;s hats are swapped with their opposites. Every black hat becomes a white hat, and vice versa. We&rsquo;ll refer to these players as &ldquo;Alice&rdquo; and &ldquo;nega-Alice&rdquo;. Let <span class="math">\(X\)</span> be the random variable &ldquo;how many games are won&rdquo; (so it is either <span class="math">\(0\)</span>, <span class="math">\(1\)</span>, or <span class="math">\(2\)</span>).</p>
+<p>Then clearly the expected value of <span class="math">\(X\)</span> is just <span class="math">\(p + p\)</span> &ndash; each game has probability <span class="math">\(p\)</span> of being won, and expected value is linear. But we can also bound it in an interesting way. Let <span class="math">\(S\)</span> be the event &ldquo;Bob picks the same color hat in both games&rdquo;. Then in such a situation, only one of the two games is winnable. Both Alices will see the same hats on Bob, and will say the same number. But this will always result in different hats between them, and so Bob will win in exactly one game. If we let <span class="math">\(q\)</span> denote the probability of <span class="math">\(S\)</span> under the chosen strategy:</p>
+<div class="math">$$ E[X] = Pr(S) E[X|S] + Pr(\lnot S) E[X | \lnot S] \le q + (1 - q) 2 = 2 - q $$</div>
+<p>Rearranging, we get that <span class="math">\(p \le 1 - q/2\)</span>. What do we know about <span class="math">\(q\)</span>? If Bob picks the same index in both games, then he&rsquo;s guaranteed to pick the same color hat too, and if he doesn&rsquo;t, then the hats are uncorrelated, and there&rsquo;s a 50-50 chance he picks the same hat. So this means <span class="math">\(q \ge 1/2\)</span>, and thus <span class="math">\(p \le 3/4\)</span>.</p>
+<p>So we know that the optimal <span class="math">\(p_\infty\)</span> is between <span class="math">\(0.7\)</span> and <span class="math">\(0.75\)</span>. This is the best I&rsquo;ve been able to prove, but apparently, there is a proof that <span class="math">\(p_\infty &lt; \frac{81}{112} \approx 0.723\)</span>, as mentioned in <a href="https://arxiv.org/abs/1407.4711">this paper</a>. Doesn&rsquo;t seem to be published though, unfortunately.</p>
+<h1>Upper Bounds, Finite</h1>
+<p>Let&rsquo;s, for the moment, assume that <span class="math">\(p_\infty\)</span> is indeed <span class="math">\(7/10\)</span>, and try to put some upper bounds on <span class="math">\(p_N\)</span>.</p>
+<p>In this section, it&rsquo;ll be easier to work with &ldquo;number of winning outcomes&rdquo; than &ldquo;probability of winning&rdquo;, so for a strategy on <span class="math">\(N\)</span> hats, we&rsquo;ll call the number of winning outcomes the &ldquo;score&rdquo; of a strategy, which is equal to <span class="math">\(4^N\)</span> times the win rate. The optimal score for an <span class="math">\(N\)</span>-hat strategy we&rsquo;ll denote <span class="math">\(s_N\)</span>, which is of course equal to <span class="math">\(4^N p_N\)</span>.</p>
+<p>We&rsquo;ll start with the inequality we learned about from augumenting finite strategies: <span class="math">\(p_\infty \ge \frac{4^N p_N - 2}{4^N - 4}\)</span>. Rearranging it, we get that <span class="math">\(s_N = 4^N p_N \le \frac{7}{10} (4^N - 4) + 2\)</span>. Let <span class="math">\(B_N\)</span> be the floor of the RHS, so that <span class="math">\(s_N \le B_N\)</span>. Later, we&rsquo;ll show that these bounds are sharp, and so <span class="math">\(s_N\)</span> actually equals <span class="math">\(B_N\)</span>, but for now it&rsquo;s easier to call them different names.</p>
+<p>Computing some values of <span class="math">\(B_N\)</span>, we can see a pattern forming:</p>
+<!-- TODO fix table margins and top border -->
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math">\(N\)</span></td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(2\)</span></td>
+<td><span class="math">\(3\)</span></td>
+<td><span class="math">\(4\)</span></td>
+<td><span class="math">\(5\)</span></td>
+<td><span class="math">\(6\)</span></td>
+<td><span class="math">\(7\)</span></td>
+<td><span class="math">\(8\)</span></td>
+<td><span class="math">\(9\)</span></td>
+<td><span class="math">\(10\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(B_N\)</span></td>
+<td><span class="math">\(2\)</span></td>
+<td><span class="math">\(10\)</span></td>
+<td><span class="math">\(44\)</span></td>
+<td><span class="math">\(178\)</span></td>
+<td><span class="math">\(716\)</span></td>
+<td><span class="math">\(2866\)</span></td>
+<td><span class="math">\(11468\)</span></td>
+<td><span class="math">\(45874\)</span></td>
+<td><span class="math">\(183500\)</span></td>
+<td><span class="math">\(734002\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>They seem to follow an almost-geometric recurrence relation:</p>
+<ul>
+<li><span class="math">\(B_1 = 2\)</span></li>
+<li>for even <span class="math">\(N\)</span>, <span class="math">\(B_N = 4 B_{N-1} + 2\)</span></li>
+<li>for odd <span class="math">\(N\)</span>, <span class="math">\(B_N = 4 B_{N-1} + 4\)</span></li>
+</ul>
+<p>Proof: Let <span class="math">\(e_N\)</span> be the amount removed by flooring, i.e., <span class="math">\(\left( \frac{7}{10} (4^N - 4) + 2 \right) - B_N\)</span>. We&rsquo;d like to find <span class="math">\(e_N\)</span>, since it will make our lives easier.</p>
+<p>For odd <span class="math">\(N\)</span>, this is easy: <span class="math">\(4^N - 4\)</span> is divisible by <span class="math">\(10\)</span>, so the flooring is unnecessary, which makes <span class="math">\(e_N = 0\)</span>.</p>
+<p>For even <span class="math">\(N\)</span>, <span class="math">\(4^N - 4\)</span> is <span class="math">\(2\)</span> mod <span class="math">\(10\)</span>, and so <span class="math">\(\frac{7}{10} (4^N - 4)\)</span> is of the form &ldquo;integer <span class="math">\(+ \frac{7 \cdot 2}{10}\)</span>&rdquo;. This makes <span class="math">\(e_N = 2/5\)</span>.</p>
+<p>Now, we can find the difference between <span class="math">\(B_N\)</span> and <span class="math">\(4 B_{N-1}\)</span>:
+</p>
+<div class="math">$$
+\begin{align*}
+B_N - 4 B_{N-1} &amp;= \left( \frac{7}{10} (4^N - 4) + 2 - e_N \right) - 4 \left( \frac{7}{10} (4^{N-1} - 4) + 2 - e_{N-1} \right) \\
+&amp;= \left( \frac{7}{10} (4^N - 4) + 2 - e_N \right) + \left( \frac{7}{10} (16 - 4^N) - 8 + 4 e_{N-1} \right) \\
+&amp;= \frac{7}{10} (16 - 4) - 6 + 4 e_{N-1} - e_N \\
+&amp;= \frac{12}{5} + 4 e_{N-1} - e_N
+\end{align*}
+$$</div>
+<p>For odd <span class="math">\(N\)</span>, this is <span class="math">\(\frac{12}{5} + \frac{8}{5} - 0 = 4\)</span>. For even <span class="math">\(N\)</span>, this is <span class="math">\(\frac{12}{5} + 0 - \frac{2}{5} = 2\)</span>. Check.</p>
+<p>Now, we don&rsquo;t know for sure that these <span class="math">\(B_N\)</span> are upper bounds on our score. That proof relied on <span class="math">\(p_\infty\)</span> actually being <span class="math">\(7/10\)</span>. But when I take a computer and search for good strategies, I found lots of strategies that acheive <span class="math">\(B_N\)</span>, and none that surpass it. That&rsquo;s pretty suggestive that this conjecture is right.</p>
+<p>But computer-generated strategies don&rsquo;t give good intution, and my program starts to struggle at about <span class="math">\(N = 11\)</span>. Can we come up with a way to construct strategies that hit <span class="math">\(B_N\)</span>?</p>
+<h1>Finite Strategies, Part II</h1>
+<p>We&rsquo;ll start with the following <span class="math">\(3\)</span>-hat strategy, and build it up into <span class="math">\(4\)</span>-hat and <span class="math">\(5\)</span>-hat strategies. (I&rsquo;ve picked a symmetric one, for ease of presentation). It has score <span class="math">\(44\)</span>:</p>
+<!-- TODO can i show a grid giving the score? -->
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hats</td>
+<td><span class="math">\(\B\B\B\)</span></td>
+<td><span class="math">\(\W\B\B\)</span></td>
+<td><span class="math">\(\B\W\B\)</span></td>
+<td><span class="math">\(\W\W\B\)</span></td>
+<td><span class="math">\(\B\B\W\)</span></td>
+<td><span class="math">\(\W\B\W\)</span></td>
+<td><span class="math">\(\B\W\W\)</span></td>
+<td><span class="math">\(\W\W\W\)</span></td>
+</tr>
+<tr>
+<td>Choice</td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(2\)</span></td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(3\)</span></td>
+<td><span class="math">\(2\)</span></td>
+<td><span class="math">\(3\)</span></td>
+<td><span class="math">\(1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>It&rsquo;s easy to extend to a <span class="math">\(4\)</span>-hat strategy, by just ignoring the last hat and applying the original strategy. But obviously this doesn&rsquo;t improve the probability of winning, and it just increases the score to <span class="math">\(4 \cdot 44 = 176\)</span>, which is a little less than <span class="math">\(B_4 = 178\)</span>. Somehow we need to squeeze out an additional two points.</p>
+<p>The key observation is that when we designed the <span class="math">\(3\)</span>-hat strategy, it didn&rsquo;t matter what our decision was when seeing <span class="math">\(\B\B\B\)</span> or <span class="math">\(\W\W\W\)</span>. When you see your partner with a monochromatic stack of hats, you know that your choice doesn&rsquo;t matter. But when we extended this to a <span class="math">\(4\)</span>-hat strategy, those decisons were copied over to <span class="math">\(\B\B\B\W\)</span> and <span class="math">\(\W\W\W\B\)</span>, where now they might matter! (They still won&rsquo;t matter for <span class="math">\(\B\B\B\B\)</span> and <span class="math">\(\W\W\W\W\)</span> of course.)</p>
+<p>Let&rsquo;s just focus on the case where both Alice and Bob have one of these &ldquo;almost monochromatic&rdquo; stacks. Right now, they&rsquo;ll both say &ldquo;1&rdquo;, and will only win when their stacks are identical. If they change their strategy so that <span class="math">\(\B\B\B\W \to 4\)</span>, then they&rsquo;ll win all four possible matchups.
+</p>
+<div class="math">$$
+\begin{matrix}
+\\
+\textrm{Alice's hats} \\
+\\
+\textrm{Bob's hats}
+\end{matrix}
+\qquad
+\begin{matrix}
+\hphantom{\B\B\B} \downarrow \\
+\B\B\B\W \\
+\hphantom{\B\B\B} \downarrow \\
+\B\B\B\W \\
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \hphantom{\B\B\B} \\
+\B\B\B\W \\
+\hphantom{\B\B\B} \downarrow \\
+\W\W\W\B \\
+\end{matrix}
+\qquad
+\begin{matrix}
+\hphantom{\B\B\B} \downarrow \\
+\W\W\W\B \\
+\downarrow \hphantom{\B\B\B} \\
+\B\B\B\W \\
+\end{matrix}
+\qquad
+\begin{matrix}
+\downarrow \hphantom{\B\B\B} \\
+\W\W\W\B \\
+\downarrow \hphantom{\B\B\B} \\
+\W\W\W\B \\
+\end{matrix}
+$$</div>
+<p>That could be our extra two points we need. We just need to confirm that this tweak didn&rsquo;t have a negative effect elsewhere.</p>
+<p>If the matchup doesn&rsquo;t involve <span class="math">\(\B\B\B\W\)</span>, then obviously the result is unaffected. So all we have to look at are matchups of the form &ldquo;<span class="math">\(\B\B\B\W\)</span> vs &lsquo;anything other than <span class="math">\(\B\B\B\W\)</span> and <span class="math">\(\W\W\W\B\)</span>&rsquo;&ldquo;. Before our tweak, we won exactly half of these matchups. Afterwards, the first player will answer &ldquo;1&rdquo;, &ldquo;2&rdquo;, or &ldquo;3&rdquo;, and the second player will answer &ldquo;4&rdquo;. The first player is guaranteed to pick a black hat, and since the second player is equally likely to pick a white or black hat, we still win exactly half of our matchups. So we have a score of <span class="math">\(178\)</span>, as desired!</p>
+<hr>
+<p>How about <span class="math">\(N = 5\)</span>? We could try the same approach &ndash; extend and tweak the <span class="math">\(\B\B\B\B\W\)</span> state &ndash; but that would only get us to <span class="math">\(4 \cdot 178 + 2 = 714\)</span>, which is still two points away from our target of <span class="math">\(B_5 = 716\)</span>.</p>
+<p>The key is to think about why tweaking <span class="math">\(\B\B\B\W\)</span> was a strict improvement on the old strategy. It didn&rsquo;t affect the outcome against most other hat configurations. You can reframe our <span class="math">\(4\)</span>-hat strategy as similar to our augumented &ldquo;first-white&rdquo; strategy:</p>
+<ul>
+<li>Split the <span class="math">\(4\)</span> hats you see into a block of <span class="math">\(3\)</span> and a block of <span class="math">\(1\)</span>.</li>
+<li>If the first block is not monochromatic, apply the <span class="math">\(3\)</span>-hat strategy.</li>
+<li>If it is, apply the following strategy:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hats</td>
+<td><span class="math">\((\B\B\B)\B\)</span></td>
+<td><span class="math">\((\W\W\W)\B\)</span></td>
+<td><span class="math">\((\B\B\B)\W\)</span></td>
+<td><span class="math">\((\W\W\W)\W\)</span></td>
+</tr>
+<tr>
+<td>Choice</td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(4\)</span></td>
+<td><span class="math">\(1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>That table should look familar; it&rsquo;s essentially our <span class="math">\(2\)</span>-hat strategy from earlier on, but using the monochromatic block as a single hat!</p>
+<p>This provides an interesting way to build strategies. If we have an <span class="math">\(N\)</span>-hat strategy <span class="math">\(S\)</span>, and an <span class="math">\(M\)</span>-hat strategy <span class="math">\(T\)</span>, then we can combine them into an <span class="math">\((N+M-1)\)</span>-hat strategy that has a potentially better score.</p>
+<p>Let <span class="math">\(p\)</span> be the win rate of <span class="math">\(S\)</span>, and <span class="math">\(q\)</span> the win rate of <span class="math">\(T\)</span>. Then we can find the win rate of this new strategy.</p>
+<ul>
+<li>If both players have a non-monochromatic first block, then the conditional win rate here is <span class="math">\(p^\ast\)</span>, which we know how to compute.</li>
+<li>If both players have a monochromatic first block, then the conditional win rate is just <span class="math">\(q\)</span>.</li>
+<li>If only one player has a monochromatic first block, then I claim they can only win half the time.<ul>
+<li>Say Alice has the monochromatic first block, and Bob doesn&rsquo;t. Then Alice will only ever answer a number between <span class="math">\(1\)</span> and <span class="math">\(N\)</span>.</li>
+<li>Imagine flipping all of Bob&rsquo;s hats; since Alice will still pick into her first block, it won&rsquo;t change the color of the hat she picks. But it does flip the color of Bob&rsquo;s choice.</li>
+<li>This pairs every win with a loss, and vice versa, so they must be equal in number.</li>
+</ul>
+</li>
+</ul>
+<p>This means the total win rate of this strategy is:
+</p>
+<div class="math">$$
+\begin{align*}
+p_{new} &amp;= p^\ast \frac{(2^N - 2)^2}{4^N} + \frac{1}{2} \frac{2 \cdot 2 \cdot (2^N - 2)}{4^N} + q \frac{2^2}{4^N} \\
+&amp;= \frac{4^N p - 2^{N+1} + 2}{4^N} + \frac{2^{N+1} - 4}{4^N} + \frac{4q}{4^N} \\
+&amp;= \frac{4^N p + 4q - 2}{4^N} \\
+&amp;= p + \frac{4q - 2}{4^N}
+\end{align*} 
+$$</div>
+<p>Interestingly enough, this doesn&rsquo;t depend on the particular strategy chosen, only its win rate. Converting this into a score-based equation, where <span class="math">\(s\)</span> is the score of <span class="math">\(S\)</span>, and <span class="math">\(t\)</span> the score of <span class="math">\(T\)</span>, we get:
+</p>
+<div class="math">$$ s_{new}  = 4^{M-1} s + (t - 4^M / 2) $$</div>
+<p>That last term can be interpreted as &ldquo;score above halfway&rdquo;. I don&rsquo;t know if that&rsquo;s meaningful, but it&rsquo;s crisp.</p>
+<p>Let&rsquo;s try to make a good <span class="math">\(5\)</span>-hat strategy with this. We know that combining a <span class="math">\(4\)</span> and <span class="math">\(2\)</span> hat strategy doesn&rsquo;t work (we get a score of <span class="math">\(4 \cdot 178 + (10 - 8) = 714\)</span>). How about <span class="math">\(3\)</span> and <span class="math">\(3\)</span>? We&rsquo;d get <span class="math">\(16 \cdot 44 + (44 - 32) = 716\)</span>. That works!</p>
+<p>For completeness&rsquo;s sake, let&rsquo;s check out <span class="math">\((2, 4)\)</span>. The score would be <span class="math">\(64 \cdot 10 + (178 - 128) = 710\)</span>. Not great, which kind of makes sense. Front-loading the <span class="math">\(2\)</span>-hat strategy, which is worse than the <span class="math">\(4\)</span>-hat strategy, is a bad idea.</p>
+<hr>
+<p>Using this idea, we can construct strategies with scores of <span class="math">\(B_N\)</span> for all <span class="math">\(N\)</span>.</p>
+<ul>
+<li>For <span class="math">\(N = 1, 2, 3\)</span> we have explicit examples.</li>
+<li>For even <span class="math">\(N\)</span>, extend an <span class="math">\((N-1)\)</span>-hat strategy by the optimal <span class="math">\(2\)</span>-hat strategy. This has a score of <span class="math">\(4 B_{N-1} + (10 - 8) = B_N\)</span>.</li>
+<li>For odd <span class="math">\(N\)</span>, extend an <span class="math">\((N-2)\)</span>-hat strategy by the optimal <span class="math">\(3\)</span>-hat strategy. This has a score of <span class="math">\(16 B_{N-2} + (44 - 32) = 16 B_{N-2} + 12\)</span>. This is <span class="math">\(4 B_{N-1} + 4 = B_N\)</span>.</li>
+</ul>
+<h1>Final Thoughts</h1>
+<p>Okay, we&rsquo;ve defined a series <span class="math">\(B_N\)</span>, and shown we can construct strategies for <span class="math">\(N\)</span>-hat games with a score of <span class="math">\(B_N\)</span>.</p>
+<p>If <span class="math">\(p_\infty = 7/10\)</span>, then we know that <span class="math">\(B_N\)</span> is an upper bound on our possible scores, which makes the strategies described above optimal. And conversely, if these finite strategies are optimal, then we can prove <span class="math">\(p_\infty = 7/10\)</span>.</p>
+<!-- TODO figure this out lol -->
+<p>I don&rsquo;t quite have a proof figured out, because there&rsquo;s some measurability criterion I&rsquo;m missing, but the gist of it is: it should be the case that an infinite strategy can be approximated arbitrarily well by an <span class="math">\(N\)</span>-hat strategy, as long as we allow <span class="math">\(N\)</span> to be large. If <span class="math">\(p_\infty\)</span> were larger than <span class="math">\(7/10\)</span>, we&rsquo;d be able to find a finite strategy with success rate higher than <span class="math">\(7/10\)</span>. But <span class="math">\(B_N / 4^N\)</span> is always less than <span class="math">\(7/10\)</span>:</p>
+<div class="math">$$ B_N = \left \lfloor \frac{7}{10} (4^N - 4) + 2 \right \rfloor = \left \lfloor \frac{7}{10} 4^N - \frac{8}{10} \right \rfloor $$</div>
+<p>So proving one of these two claims is sufficient for proving the other. Unfortunately, I can&rsquo;t prove either one of them.</p>
+<p>I&rsquo;ve proven via computer search that the finite strategies described up to <span class="math">\(N = 8\)</span> are optimal, which is reassuring, but certainly not a proof.</p>
+<hr>
+<p>Interestingly enough, it doesn&rsquo;t seem to matter if we restrict ourselves to symmetric strategies. We seem to get just as successful strategies even when we&rsquo;re limited like that.</p>
+<hr>
+<p>One possible way to prove an upper bound is to show some kind of relation between a given <span class="math">\(N\)</span>-hat strategy, and an <span class="math">\((N-1)\)</span>-hat strategy derived from it. The difficult part here is that unless you remove a hat from both players at once, you end up in a situation where players have different numbers of hats, which I really don&rsquo;t want to think about.</p>
+<p>But I do want to throw a computer at it!</p>
+<p>I wrote up a &ldquo;relaxation&rdquo; algorithm, that starts with a random strategy for Alice, computes Bob&rsquo;s best response to it, then Alice&rsquo;s best response to that, and so on, until we hit a fixed point. Repeating this over and over again gave the following table of scores:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(2\)</span></td>
+<td><span class="math">\(3\)</span></td>
+<td><span class="math">\(4\)</span></td>
+<td><span class="math">\(5\)</span></td>
+<td><span class="math">\(6\)</span></td>
+<td><span class="math">\(7\)</span></td>
+<td><span class="math">\(8\)</span></td>
+<td><span class="math">\(9\)</span></td>
+<td><span class="math">\(10\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(1\)</span></td>
+<td></td>
+<td><span class="math">\(2\)</span></td>
+<td><span class="math">\(4\)</span></td>
+<td><span class="math">\(8\)</span></td>
+<td><span class="math">\(16\)</span></td>
+<td><span class="math">\(32\)</span></td>
+<td><span class="math">\(64\)</span></td>
+<td><span class="math">\(128\)</span></td>
+<td><span class="math">\(256\)</span></td>
+<td><span class="math">\(512\)</span></td>
+<td><span class="math">\(1024\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(2\)</span></td>
+<td></td>
+<td><span class="math">\(4\)</span></td>
+<td><span class="math">\(10\)</span></td>
+<td><span class="math">\(20\)</span></td>
+<td><span class="math">\(40\)</span></td>
+<td><span class="math">\(80\)</span></td>
+<td><span class="math">\(160\)</span></td>
+<td><span class="math">\(320\)</span></td>
+<td><span class="math">\(640\)</span></td>
+<td><span class="math">\(1280\)</span></td>
+<td><span class="math">\(2560\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(3\)</span></td>
+<td></td>
+<td><span class="math">\(8\)</span></td>
+<td><span class="math">\(20\)</span></td>
+<td><span class="math">\(44\)</span></td>
+<td><span class="math">\(88\)</span></td>
+<td><span class="math">\(176\)</span></td>
+<td><span class="math">\(352\)</span></td>
+<td><span class="math">\(704\)</span></td>
+<td><span class="math">\(1408\)</span></td>
+<td><span class="math">\(2816\)</span></td>
+<td><span class="math">\(5632\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(4\)</span></td>
+<td></td>
+<td><span class="math">\(16\)</span></td>
+<td><span class="math">\(40\)</span></td>
+<td><span class="math">\(88\)</span></td>
+<td><span class="math">\(178\)</span></td>
+<td><span class="math">\(356\)</span></td>
+<td><span class="math">\(712\)</span></td>
+<td><span class="math">\(1424\)</span></td>
+<td><span class="math">\(2848\)</span></td>
+<td><span class="math">\(5696\)</span></td>
+<td><span class="math">\(11392\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(5\)</span></td>
+<td></td>
+<td><span class="math">\(32\)</span></td>
+<td><span class="math">\(80\)</span></td>
+<td><span class="math">\(176\)</span></td>
+<td><span class="math">\(356\)</span></td>
+<td><span class="math">\(716\)</span></td>
+<td><span class="math">\(1432\)</span></td>
+<td><span class="math">\(2864\)</span></td>
+<td><span class="math">\(5728\)</span></td>
+<td><span class="math">\(11456\)</span></td>
+<td><span class="math">\(22912\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(6\)</span></td>
+<td></td>
+<td><span class="math">\(64\)</span></td>
+<td><span class="math">\(160\)</span></td>
+<td><span class="math">\(352\)</span></td>
+<td><span class="math">\(712\)</span></td>
+<td><span class="math">\(1432\)</span></td>
+<td><span class="math">\(2866\)</span></td>
+<td><span class="math">\(5732\)</span></td>
+<td><span class="math">\(11464\)</span></td>
+<td><span class="math">\(22928\)</span></td>
+<td><span class="math">\(45856\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(7\)</span></td>
+<td></td>
+<td><span class="math">\(128\)</span></td>
+<td><span class="math">\(320\)</span></td>
+<td><span class="math">\(704\)</span></td>
+<td><span class="math">\(1424\)</span></td>
+<td><span class="math">\(2864\)</span></td>
+<td><span class="math">\(5732\)</span></td>
+<td><span class="math">\(11468\)</span></td>
+<td><span class="math">\(22936\)</span></td>
+<td><span class="math">\(45872\)</span></td>
+<td><span class="math">\(91744\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(8\)</span></td>
+<td></td>
+<td><span class="math">\(256\)</span></td>
+<td><span class="math">\(640\)</span></td>
+<td><span class="math">\(1408\)</span></td>
+<td><span class="math">\(2848\)</span></td>
+<td><span class="math">\(5728\)</span></td>
+<td><span class="math">\(11464\)</span></td>
+<td><span class="math">\(22936\)</span></td>
+<td><span class="math">\(45874\)</span></td>
+<td><span class="math">\(91748\)</span></td>
+<td><span class="math">\(183496\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(9\)</span></td>
+<td></td>
+<td><span class="math">\(512\)</span></td>
+<td><span class="math">\(1280\)</span></td>
+<td><span class="math">\(2816\)</span></td>
+<td><span class="math">\(5696\)</span></td>
+<td><span class="math">\(11456\)</span></td>
+<td><span class="math">\(22928\)</span></td>
+<td><span class="math">\(45872\)</span></td>
+<td><span class="math">\(91748\)</span></td>
+<td><span class="math">\(183500\)</span></td>
+<td><span class="math">\(367000\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(10\)</span></td>
+<td></td>
+<td><span class="math">\(1024\)</span></td>
+<td><span class="math">\(2560\)</span></td>
+<td><span class="math">\(5632\)</span></td>
+<td><span class="math">\(11392\)</span></td>
+<td><span class="math">\(22912\)</span></td>
+<td><span class="math">\(45856\)</span></td>
+<td><span class="math">\(91744\)</span></td>
+<td><span class="math">\(183496\)</span></td>
+<td><span class="math">\(367000\)</span></td>
+<td><span class="math">\(734002\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>It seems to follow a&hellip; pattern? Not a nice pattern, but a pattern. Say you have <span class="math">\(a_{m,n}\)</span>, where <span class="math">\(m &gt; n\)</span>. Then:</p>
+<ul>
+<li>To step &ldquo;away from the diagonal&rdquo;, i.e., to <span class="math">\(a_{m+1,n}\)</span>, then you just double the score.</li>
+<li>To step &ldquo;toward the diagonal&rdquo;, i.e., to <span class="math">\(a_{m, n+1}\)</span>, then you double and add <span class="math">\(2^k\)</span>, where <span class="math">\(k\)</span> is <span class="math">\(m - 1 - 2 \lfloor n / 2 \rfloor\)</span>.<ul>
+<li>In other words, <span class="math">\(k\)</span> goes <span class="math">\(m-1, m-1, m-3, m-3, m-5, m-5, \ldots\)</span>, until it ends in either <span class="math">\(2, 2\)</span> or <span class="math">\(3, 3, 1\)</span>, at which point we arrive at the diagonal itself.</li>
+</ul>
+</li>
+</ul>
+<p>No idea if that&rsquo;s helpful, or can be cleaned up into anything nice.</p>
+<!-- Clean up python code and link to it? -->
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-hat-game&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

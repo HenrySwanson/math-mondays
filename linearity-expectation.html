@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - Linearity of Expectation</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/linearity-expectation" title="Permalink to Linearity of Expectation">Linearity of Expectation</a>
+    </h1>
+    <div class="article-date">October 15, 2018</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/probability">probability</a>
+    </div>
+  </header>
+
+  <section><p>To introduce this topic, let&rsquo;s start with an innocuous problem:</p>
+<blockquote>
+<p>You have <span class="math">\(10\)</span> six-sided dice. If you roll all of them, what is the expected sum of the faces?</p>
+</blockquote>
+<p>Your intuition should tell you that it&rsquo;s <span class="math">\(35\)</span>. But what&rsquo;s really going on here is an example of a slick principle called <strong>linearity of expectation</strong>.</p>
+
+
+<hr>
+<p>We&rsquo;re not actually computing the probability of getting <span class="math">\(10, 11, \ldots, 60\)</span>, and summing it all up. Implicitly, we are making the following line of argument: the expected value of the first die is <span class="math">\(3.5\)</span>, and so the expected value for <span class="math">\(k\)</span> dice is <span class="math">\(3.5k\)</span>. This relies on the following claim: given two random variables <span class="math">\(X\)</span> and <span class="math">\(Y\)</span>, the expected value of their sum, <span class="math">\(E[X + Y]\)</span>, is just <span class="math">\(E[X] + E[Y]\)</span>.</p>
+<p>This feels intuitively true, and proving it is straightforward. Let <span class="math">\(\Omega\)</span> be the space of possible outcomes. Then
+</p>
+<div class="math">$$
+\begin{align*}
+E[X + Y] &amp;= \sum_{\omega \in \Omega} p(\omega) (X + Y)(\omega) \\
+&amp;= \sum_{\omega \in \Omega} p(\omega) (X(\omega) + Y(\omega)) \\
+&amp;= \sum_{\omega \in \Omega} p(\omega) X(\omega) + \sum_{\omega \in \Omega} p(\omega) Y(\omega) \\
+&amp;= E[X] + E[Y]
+\end{align*}
+$$</div>
+<p>But interestingly enough, at no point did we require <span class="math">\(X\)</span> and <span class="math">\(Y\)</span> be independent. This still works even when <span class="math">\(X\)</span> and <span class="math">\(Y\)</span> are correlated! For some sanity-checking examples, consider <span class="math">\(X = Y\)</span> and <span class="math">\(X = -Y\)</span>.</p>
+<p>This principle, which is rather obvious when <span class="math">\(X\)</span> and <span class="math">\(Y\)</span> are independent (so much so that we often use it unconsciously), is unexpectedly powerful when applied to dependent variables. We&rsquo;ll explore the concept through several example problems.</p>
+<h1>Gumballs</h1>
+<blockquote>
+<p>Imagine a very large gumball machine, with <span class="math">\(4\)</span> colors of gumballs in it, evenly distributed. We only have enough money for <span class="math">\(6\)</span> gumballs; what&rsquo;s the expected number of colors we will receive? Assume that the machine has so many gumballs that the ones we take out don&rsquo;t matter; effectively, we are drawing with replacement.</p>
+</blockquote>
+<p>Let&rsquo;s compute this the naive way first. Let&rsquo;s count the number of ways we can get each number of colors, and do the appropriate weighted sum.</p>
+<p>There are <span class="math">\(4\)</span> ways we can get only one color.</p>
+<p>For any two colors, there&rsquo;s <span class="math">\(2^6 = 32\)</span> ways we can get gumballs using just those colors. There&rsquo;s <span class="math">\(6\)</span> pairs of colors, so there&rsquo;s <span class="math">\(32 \cdot 6 = 192\)</span> ways to get at most two colors. Subtracting off the single-color cases, we get <span class="math">\(188\)</span> ways to get exactly two colors.</p>
+<p>Similarly, for any three colors, there&rsquo;s <span class="math">\(3^6 = 729\)</span> ways to get gumballs with just those colors. There&rsquo;s <span class="math">\(4\)</span> possible triplets, giving <span class="math">\(2916\)</span> ways to get at most three colors. Subtracting off the two-color cases, we get <span class="math">\(2728\)</span> ways to get exactly three colors.</p>
+<p>All other cases have four colors: <span class="math">\(4^6 - 2728 - 188 - 4 = 1176\)</span> possible ways.</p>
+<p>Now we do the weighted sum. Each possible sequence of gumballs has probability <span class="math">\(1/4^6\)</span> of occuring, so the expected value of the number of colors is:
+</p>
+<div class="math">$$ 1 \frac{4}{4^6} + 2 \frac{188}{4^6} + 3 \frac{2728}{4^6} + 4 \frac{1176}{4^6} = \frac{3317}{1024} \approx 3.239 $$</div>
+<p>It&rsquo;s doable, but one can imagine this is much harder for larger numbers.</p>
+<hr>
+<p>Let&rsquo;s take another go at it. For the <span class="math">\(i\)</span>th color, define <span class="math">\(X_i\)</span> to be <span class="math">\(1\)</span> if we get at least one gumball of that color, and <span class="math">\(0\)</span> otherwise. The number of colors we get, <span class="math">\(X\)</span>, is then the sum of the <span class="math">\(X_i\)</span>.</p>
+<p>The probability of <em>not</em> getting a gumball of a particular color on a particular draw is <span class="math">\(3/4\)</span>, so the probability of not getting it in <span class="math">\(6\)</span> draws is <span class="math">\((3/4)^6\)</span>. This means that <span class="math">\(E[X_i] = 1 - (3/4)^6 = 3367/4096\)</span>.</p>
+<p>The <span class="math">\(X_i\)</span> are not independent; for example, if we know three of them are <span class="math">\(0\)</span>, the last one must be <span class="math">\(1\)</span> (we must draw a gumball of <strong>some</strong> color). But we can still apply linearity of expectation, even to dependent variables.</p>
+<p>Thus, the expected number of colors we get is <span class="math">\(E[X] = \sum_{i = 1}^4 E[X_i] = 4 \cdot \frac{3367}{4096} = \frac{3367}{1024}\)</span>, just as we got earlier.</p>
+<p>Notably, this approach extends gracefully to when we take <span class="math">\(k\)</span> gumballs with <span class="math">\(n\)</span> available colors. The expected value of each <span class="math">\(X_i\)</span> is then <span class="math">\((1 - 1/n)^k\)</span>, so the expected value of <span class="math">\(X\)</span> is then <span class="math">\(n (1 - 1/n)^k\)</span>.</p>
+<p>(This reveals an interesting approximation: if <span class="math">\(n\)</span> and <span class="math">\(k\)</span> are equal and large, then <span class="math">\((1 - 1/n)^n \approx 1/e\)</span>, so the expected number of colors is <span class="math">\(n(1 - 1/e) \approx 0.63n\)</span>).</p>
+<h1>Number of Fixed Points</h1>
+<p>These variables we saw earlier, that are <span class="math">\(1\)</span> if a condition is true, and <span class="math">\(0\)</span> otherwise, are called <strong>indicator variables</strong>, and they are particularly good candidates for linearity of expectation problems.</p>
+<blockquote>
+<p>After we shuffle a deck of <span class="math">\(n\)</span> cards, what are the expected number of cards that have stayed in the same position? Equivalently, given an arbitrary permutation on <span class="math">\(n\)</span> objects, how many fixed points does it have on average.</p>
+</blockquote>
+<p>We have no interest in examining all <span class="math">\(n!\)</span> possible outcomes, and summing over the number of fixed points in each. That would be terrible. Instead, we&rsquo;re going to split our desired variable into several indicator variables, each of which is easier to analyze.</p>
+<p>Let <span class="math">\(X_k\)</span> be <span class="math">\(1\)</span> if the <span class="math">\(k\)</span>th card is in the <span class="math">\(k\)</span>th position, and <span class="math">\(0\)</span> otherwise. Then the number of fixed points is <span class="math">\(\sum_k X_k\)</span>.</p>
+<p>After shuffling, the <span class="math">\(k\)</span>th card is equally likely to be in any position in the deck. So the chance of ending up in the same place is <span class="math">\(1/n\)</span>, which makes <span class="math">\(E[X_k] = 1/n\)</span>. So by linearity of expectation, <span class="math">\(E[X_1 + \cdots + X_n] = n \cdot \frac{1}{n} = 1\)</span>. So on average, one card will stay in the same place.</p>
+<h1>Number of Cycles</h1>
+<p>We don&rsquo;t have to limit ourselves to indicator variables: sometimes we can use a constant factor to help us avoid overcounting.</p>
+<blockquote>
+<p>Given a random permutation on <span class="math">\(n\)</span> objects, how many cycles does it have?</p>
+</blockquote>
+<p>As a reminder, the cycles of a permutation are the &ldquo;connected components&rdquo;. For example, if <span class="math">\(\sigma\)</span> sends <span class="math">\(1 \to 2\)</span>, <span class="math">\(2 \to 4\)</span>, <span class="math">\(3 \to 6\)</span>, <span class="math">\(4 \to 1\)</span>, <span class="math">\(5 \to 5\)</span>, and <span class="math">\(6 \to 3\)</span>, then the cycles of <span class="math">\(\sigma\)</span> are <span class="math">\((1, 2, 4)\)</span>, <span class="math">\((3, 6)\)</span>, and <span class="math">\((5)\)</span>.</p>
+<p>For each <span class="math">\(k\)</span>, let <span class="math">\(X_k = \frac{1}{L}\)</span>, where <span class="math">\(L\)</span> is the length of the cycle of <span class="math">\(\sigma\)</span> containing the number <span class="math">\(k\)</span>. So for the permutation we described, <span class="math">\(X_1 = X_2 = X_4 = 1/3\)</span>, <span class="math">\(X_3 = X_6 = 1/2\)</span>, and <span class="math">\(X_5 = 1\)</span>. Then the number of cycles is <span class="math">\(X_1 + \cdots + X_n\)</span>, since each cycle contributes <span class="math">\(L\)</span> copies of <span class="math">\(1/L\)</span>. As usual, these variables are highly dependent (if <span class="math">\(X_i = 1/5\)</span>, there&rsquo;d better be four other <span class="math">\(X_j\)</span> that equal <span class="math">\(1/5\)</span> as well), but we can still apply linearity of expectation.</p>
+<p>The probability that <span class="math">\(k\)</span> is in a cycle of length <span class="math">\(1\)</span> is <span class="math">\(1/n\)</span>, since <span class="math">\(\sigma\)</span> would have to send <span class="math">\(k\)</span> to itself.</p>
+<p>The probability it is in a cycle of length <span class="math">\(2\)</span> is the probability <span class="math">\(k\)</span> is sent to some other number, times the probability that the other number is sent back to <span class="math">\(k\)</span>, i.e. <span class="math">\(\frac{n-1}{n} \cdot \frac{1}{n - 1}\)</span>, which is <span class="math">\(\frac{1}{n}\)</span>.</p>
+<p>In general, the probability of being in a cycle of length <span class="math">\(L\)</span> is <span class="math">\(\frac{n-1}{n} \frac{n-2}{n-1} \cdots \frac{n-(L-1)}{n-(L-2)} \cdot \frac{1}{n-(L-1)} = \frac{1}{n}\)</span>. Curiously, this is independent of <span class="math">\(L\)</span>.</p>
+<p>So the expected value of <span class="math">\(X_k\)</span> is <span class="math">\(\frac{1}{n} \sum_{L=1}^n \frac{1}{L} = \frac{H_n}{n}\)</span>, where <span class="math">\(H_n\)</span> is the <span class="math">\(n\)</span>th <a href="https://en.wikipedia.org/wiki/Harmonic_number">harmonic number</a>. Then the expected number of cycles is <span class="math">\(E[X_1] + \cdots + E[X_n] = H_n\)</span>.</p>
+<h1>Buffon&rsquo;s Needle</h1>
+<p>We&rsquo;ll finish up with a rather surprising application to the Buffon&rsquo;s needle problem:</p>
+<blockquote>
+<p>Consider a gigantic piece of lined paper, with the lines spaced one unit apart. If we throw a needle of length <span class="math">\(1\)</span> onto the paper, what is the probability it crosses a line?</p>
+</blockquote>
+<p>Technically, we&rsquo;re only interested in the probability that the needle crosses the line. But because it can cross at most once, this is equal to the expected number of crossings. So if we let <span class="math">\(X_a\)</span> be the expected number of crossings for a needle of length <span class="math">\(a\)</span>, we&rsquo;re interested in <span class="math">\(E[X_1]\)</span>.</p>
+<p>Take a needle of length <span class="math">\(a + b\)</span>, and paint it, covering the first <span class="math">\(a\)</span> units of it red, and the other <span class="math">\(b\)</span> units blue. Then throw it on the paper. The expected number of crossings is the expected number of red crossings, plus the expected number of blue crossings. But each segment of the needle is just a smaller needle, so the expected number of red crossings is <span class="math">\(E[X_a]\)</span>, and the expected number of blue crossings is <span class="math">\(E[X_b]\)</span>. This lets us conclude, unsurprisingly, that <span class="math">\(E[X_{a+b}] = E[X_a] + E[X_b]\)</span>. This tells us that <span class="math">\(E[X_a]\)</span> is linear in <span class="math">\(a\)</span>, and so <span class="math">\(E[X_a] = Ca\)</span> for some unknown constant <span class="math">\(C\)</span>. (Well, we&rsquo;ve gotta assume <span class="math">\(X_a\)</span> is continuous in <span class="math">\(a\)</span>, which it is, but shh&hellip;)</p>
+<p>Furthermore, put a sharp bend in the needle right at the color boundary. Each segment is still a linear needle, so the number of red crossings is still <span class="math">\(E[X_a]\)</span>, and likewise with blue crossings. So the expected number of crossings for this bent needle is <em>still</em> <span class="math">\(E[X_{a+b}]\)</span>, despite the kink!</p>
+<p>By induction, if you put a finite number of sharp bends in a needle, it doesn&rsquo;t change the expected number of crossings. All that matters is the total length. And by <s>handwaving</s> a continuity argument, this is true for continuous bends as well. So <span class="math">\(X_a\)</span> doesn&rsquo;t just measure the expected number of crossings for a needle of length <span class="math">\(a\)</span>, but any reasonable curve of length <span class="math">\(a\)</span>. (Much to my delight, this phenomenon is called &ldquo;Buffon&rsquo;s noodle&rdquo;.) This means that if we throw a rigid noodle of length <span class="math">\(a\)</span> on the paper, the expected number of crossings is <span class="math">\(E[X_a] = Ca\)</span>.</p>
+<p>So let&rsquo;s consider a particular kind of noodle: a circle with diameter <span class="math">\(1\)</span>. No matter how it&rsquo;s thrown onto the paper, it will cross the lines exactly twice. It has circumference <span class="math">\(\pi\)</span>, and so we can determine that <span class="math">\(C = \frac{2}{\pi}\)</span>. Thus, for the original needle problem, <span class="math">\(p = X_1 = \frac{2}{\pi}\)</span>.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-linearity-expectation&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

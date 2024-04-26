@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - The Mathematical Hydra</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/hydra" title="Permalink to The Mathematical Hydra">The Mathematical Hydra</a>
+    </h1>
+    <div class="article-date">September 29, 2019</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/interactive">interactive</a>
+      <a href="https://mathmondays.com/tag/puzzles">puzzles</a>
+      <a href="https://mathmondays.com/tag/mathematical-logic">mathematical-logic</a>
+    </div>
+  </header>
+
+  <section><p>Imagine you’re tasked with killing a hydra. As usual, the hydra is defeated when all of its heads are cut off, and whenever a head is cut off, the hydra grows new ones.</p>
+<p>However, this mathematical hydra is much more frightening than a “traditional” one. It’s got a tree-like structure – heads growing out of its heads – and it can regrow entire groups of heads at once! Can you still win?</p>
+<p>Also, this post is the first one with interactivity! Feel free to report bugs on the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">GitHub issues page</a>.</p>
+
+
+<hr>
+<p>For the purposes of our game, a hydra is a rooted tree. The root, on the left, is the body, and the leaves are the heads. Intermediate nodes are part of the necks of the hydra, and cannot (yet) be cut off.</p>
+<p align="center">
+<img src="/images/hydra/anatomy.svg" width="70%" height="auto" alt="Anatomy of a hydra">
+</p>
+
+<p>You can cut off one head at a time, and when you do, the hydra may grow more heads, according to the following rules:</p>
+<ul>
+<li>If the head is connected directly to the root, then the hydra does nothing.</li>
+<li>Otherwise, look at the parent node (the one directly underneath the one you just cut off). The hydra grows two new copies of that node <em>and all its children</em>, attaching them to the grandparent as appropriate.</li>
+</ul>
+<hr>
+<p>This is hard to convey through text, so let’s walk through an example. Let’s start with a pretty simple hydra, and cut off one of the heads. (Purple indicates newly-grown heads.)</p>
+<p><img alt="First step of killing the hydra" height="auto" src="/images/hydra/example-1.svg" width="100%"></p>
+<p>We used to have two heads, and four nodes total, but now we have three, and seven nodes. That’s not good. Let’s try chopping off another one.</p>
+<p><img alt="Second step of killing the hydra" height="auto" src="/images/hydra/example-2.svg" width="100%"></p>
+<p>This increases the total number of heads, but now, we can cut off the three smallest heads, one at a time, without incident.</p>
+<p><img alt="Third step of killing the hydra" height="auto" src="/images/hydra/example-3.svg" width="100%"></p>
+<p>We’ve made some visible progress now. Cutting off one of the remaining heads will reveal three more, but we can extinguish them easily.</p>
+<p><img alt="Fourth step of killing the hydra" height="auto" src="/images/hydra/example-4.svg" width="100%"></p>
+<p>Repeating this process on the last head will kill the hydra.</p>
+<p><img alt="Fifth step of killing the hydra" height="auto" src="/images/hydra/example-5.svg" width="100%"></p>
+<hr>
+<p>We managed to defeat this hydra, but it was a pretty small one. What about something a bit larger? Let’s add one more head to that neck.</p>
+<p>This time, you can try to kill it yourself: the illustration below is interactive!</p>
+<p><button id="reset-button" type="button">Reset</button>
+<span id="click-counter" style="float:right;"></span></p>
+<div id="hydra-interactive" style="border-style: solid;border-width: 3px;border-radius: 5px;background-color: #fff"></div>
+
+<hr>
+<p>Depending on how persistent you are, you might not be surprised to learn that you can indeed kill this hydra, though it’ll take tens of thousands of moves to do so (29528 moves by my count). In fact, you can kill any hydra, though I’ll make no guarantees about how long it will take.</p>
+<p>But what may be surprising is that you can’t avoid killing the hydra, even if you try. No matter how large the hydra, or what order you cut off its heads, you will always defeat it in a finite number of moves.</p>
+<p>And even better, this holds true even for faster-regenerating hydras. What if, instead of growing back two copies of the subtree, the hydra grows back three copies? Or a hundred? What if, on the <span class="math">\(N\)</span>th turn of the game, it grows back <span class="math">\(N\)</span> copies? <span class="math">\(N^2\)</span>? <span class="math">\(N!\)</span>? What if the hydra just gets to pick how many copies to regrow, as many as it wants?</p>
+<p>It doesn’t matter.</p>
+<p>You always win.</p>
+<hr>
+<p>The proof here relies on <a href="https://en.wikipedia.org/wiki/Ordinal_number">ordinal numbers</a>. If you’re not familiar, there’s a good <a href="https://www.youtube.com/watch?v=SrU9YDoXE88">video from Vsauce</a> about them. The key property to know is that the ordinals are “well-ordered”; that is, there is no infinitely long descending sequence<sup id="sf-hydra-1-back"><a href="#sf-hydra-1" class="simple-footnote" title="In fact, the ordinals are the prototype of every well-founded set, and this is what makes them important.">1</a></sup>.</p>
+<p>We assign an ordinal number to each hydra, in such a way that cutting off a head produces a hydra with a strictly smaller ordinal. As we play the hydra game, the sequence of hydras we encounter produces a corresponding sequence of ordinals. Since the ordinal sequence is strictly decreasing, it must eventually terminate, and so the hydra sequence must terminate as well. The only way that the hydra sequence can terminate is if we have no more heads to cut off; i.e., we’ve defeated the hydra.</p>
+<p>The assignment is done by assigning values to the nodes, and accumulating down to the root:</p>
+<ul>
+<li>A head is assigned <span class="math">\(0\)</span>. Similarly, a trivial (dead) hydra is assigned <span class="math">\(0\)</span>.</li>
+<li>If a node has children with ordinals <span class="math">\(\alpha_1, \alpha_2, \ldots, \alpha_n\)</span>, then we assign the ordinal <span class="math">\(\omega^{\alpha_1} + \omega^{\alpha_2} + \cdots + \omega^{\alpha_n}\)</span>.<sup id="sf-hydra-2-back"><a href="#sf-hydra-2" class="simple-footnote" title="Without loss of generality, we can relabel the subhydras so that the ordinals are non-strictly descending. This avoids problems coming from the non-commutativity of ordinal addition.">2</a></sup></li>
+</ul>
+<p>What happens when we cut off a head?</p>
+<ul>
+<li>If it’s directly attached to the body, then it contributes a term of <span class="math">\(\omega^0 = 1\)</span> to the whole ordinal. Killing this head removes this term, decreasing the ordinal.</li>
+<li>Otherwise, consider the ordinal of that head’s parent and grandparent. Before we cut off the head, the ordinal of the parent must have been of the form <span class="math">\(\alpha + 1\)</span>. This means the ordinal of the grandparent has a term <span class="math">\(\omega^{\alpha + 1}\)</span>. When we cut off the head, the parent ordinal decreases to <span class="math">\(\alpha\)</span>, but there’s now two more copies of it. This replaces the <span class="math">\(\omega^{\alpha + 1}\)</span> term in the grandparent with <span class="math">\(3 \omega^\alpha\)</span>, which is strictly smaller. And because the rest of the tree remains unchanged, this means the ordinal assigned to the hydra as a whole also decreases.</li>
+</ul>
+<p>To illustrate this process, let’s look the ordinals that correspond to the hydras we saw earlier. It may help to read them in reverse order.</p>
+<p align="center">
+<img src="/images/hydra/ordinals.svg" width="100%" height="auto" alt="Ordinal sequence for previous hydra">
+</p>
+
+<p>We can also see why the hydra’s regeneration speed doesn’t matter. No matter how large <span class="math">\(N\)</span> is, as long as it’s finite, <span class="math">\(\omega^{\alpha + 1}\)</span> will be strictly larger than <span class="math">\(N \omega^{\alpha}\)</span>.</p>
+<p>One way to think about this is that a neck that forks at height <span class="math">\(k+1\)</span> is literally <em>infinitely worse</em> than a neck that forks at height <span class="math">\(k\)</span>. By cutting off a head, you simplify it at height <span class="math">\(k+1\)</span>, at the expense of introducing some forking at height <span class="math">\(k\)</span>, which isn’t as bad.</p>
+<hr>
+<p>A last interesting fact: this proof relied on ordinal numbers, which have a whole lot of infinities (<span class="math">\(\omega\)</span>s) tied up in them. But everything in this hydra game is finite; from an initial hydra, there’s only finitely many hydras we can encounter, each of which has only finitely many heads. Is there a proof that avoids any mention of infinity?</p>
+<p>In 1982, Laurence Kirby and Jeff Paris proved that there isn’t, in the following sense: any proof technique strong enough to prove the hydra’s eventual demise is strong enough to prove the consistency of Peano arithmetic. In particular, it’s impossible to prove the hydra theorem from within Peano arithmetic.</p>
+<hr>
+<script src="/js/hydra/main.js"></script>
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script><ol class="simple-footnotes"><li id="sf-hydra-1">In fact, the ordinals are the prototype of every well-founded set, and this is what makes them important. <a href="#sf-hydra-1-back" class="simple-footnote-back">↩</a></li><li id="sf-hydra-2">Without loss of generality, we can relabel the subhydras so that the ordinals are non-strictly descending. This avoids problems coming from the non-commutativity of ordinal addition. <a href="#sf-hydra-2-back" class="simple-footnote-back">↩</a></li></ol></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-hydra&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

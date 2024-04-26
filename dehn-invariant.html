@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <title>Math Mondays - The Dehn Invariant, or, Tangrams In Space</title>
+
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" type="text/css" href="https://mathmondays.com/theme/css/style.min.css?aa78b755" />
+
+  <!-- RSS FEED -->
+  <link href="https://mathmondays.com/feed.xml" type="application/atom+xml" rel="alternate"
+    title="Math Mondays Atom Feed" />
+
+  <!-- Favicon links -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Plausible analytics script -->
+  <script defer data-domain="mathmondays.com" src="https://plausible.mathmondays.com/js/script.js"></script>
+</head>
+
+<body>
+  <header id="site-header-bar" class="color-bar">
+    <div id="site-header" class="width-wrapper">
+      <h1 id="header-sitename">Math Mondays</h1>
+
+      <div id="header-navbar">
+        <nav>
+          <ul>
+            <li><a href="https://mathmondays.com/">home</a></li>
+            <li><a href="https://mathmondays.com/about">about</a></li>
+            <li><a href="https://mathmondays.com/archives">archives</a></li>
+            <li><a href="https://github.com/HenrySwanson/HenrySwanson.github.io/issues">feedback</a></li>
+          </ul>
+        </nav>
+
+        <div id="social-icons-container">
+          <!-- Values may be overridden by CSS, but at least they won't load huge at first -->
+          <a href="mailto:henryswanson94@gmail.com" style="text-decoration: none;" title="email">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+  <path d="m 22.04663,18.138401 12.174681,8.938025 V 6.5 Z M 0.778689,6.5 V 27.076426 L 12.95311,18.137149 Z M 17.5,22.484489 14.593302,19.706522 0.778689,28.5 H 34.221311 L 20.406373,19.706522 Z M 33.218033,6.5 H 1.781967 L 17.5,18.95493 Z m 0,0"></path>
+</svg>            </div>
+          </a>
+          <a href="https://github.com/HenrySwanson" style="text-decoration: none;" title="github">
+            <div class="svg-icon-box">
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em">
+<path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8C0 11.54 2.29 14.53 5.47 15.59C5.87 15.66 6.02 15.42 6.02 15.21C6.02 15.02 6.01 14.39 6.01 13.72C4 14.09 3.48 13.23 3.32 12.78C3.23 12.55 2.84 11.84 2.5 11.65C2.22 11.5 1.82 11.13 2.49 11.12C3.12 11.11 3.57 11.7 3.72 11.94C4.44 13.15 5.59 12.81 6.05 12.6C6.12 12.08 6.33 11.73 6.56 11.53C4.78 11.33 2.92 10.64 2.92 7.58C2.92 6.71 3.23 5.99 3.74 5.43C3.66 5.23 3.38 4.41 3.82 3.31C3.82 3.31 4.49 3.1 6.02 4.13C6.66 3.95 7.34 3.86 8.02 3.86C8.7 3.86 9.38 3.95 10.02 4.13C11.55 3.09 12.22 3.31 12.22 3.31C12.66 4.41 12.38 5.23 12.3 5.43C12.81 5.99 13.12 6.7 13.12 7.58C13.12 10.65 11.25 11.33 9.47 11.53C9.76 11.78 10.01 12.26 10.01 13.01C10.01 14.08 10 14.94 10 15.21C10 15.42 10.15 15.67 10.55 15.59C13.71 14.53 16 11.53 16 8C16 3.58 12.42 0 8 0Z"/>
+</svg>            </div>
+          </a>
+          <a href="feed.xml" style="text-decoration: none;" title="rss">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 448" width="1em" height="1em">
+  <path
+     d="m 128.081,383.9587 c 0,35.369 -28.672,64.041 -64.041,64.041 -35.369,0 -64.04,-28.672 -64.04,-64.041 0,-35.369 28.672,-64.041 64.041,-64.041 35.369,0 64.04,28.673 64.04,64.041 z m 175.66,47.25 C 295.387,276.6087 171.556,152.6217 16.791,144.2587 7.656,143.7647 0,151.1047 0,160.2527 v 48.069 c 0,8.415 6.49,15.472 14.887,16.018 111.832,7.284 201.473,96.702 208.772,208.772 0.547,8.397 7.604,14.887 16.018,14.887 h 48.069 c 9.149,0.001 16.489,-7.655 15.995,-16.79 z m 144.249,0.288 C 439.596,197.6767 251.465,8.4446954 16.503,0.00969543 7.473,-0.31430457 0,6.9806954 0,16.015695 v 48.068 c 0,8.625 6.835,15.645 15.453,15.999 191.179,7.839 344.627,161.316005 352.465,352.465005 0.353,8.618 7.373,15.453 15.999,15.453 h 48.068 c 9.034,-10e-4 16.329,-7.474 16.005,-16.504 z"
+     id="path843" />
+</svg>            </div>
+          </a>
+          <a href="https://stackexchange.com/users/2216552/henry-swanson" style="text-decoration: none;" title="stack-exchange">
+            <div class="svg-icon-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 93 93" width="1em" height="1em">
+  <style
+     id="style851">.st0{fill:#376db6}.st1{fill:#4ca2da}.st2{fill:#91d8f4}.st3{fill:#1e5397}</style>
+  <path
+     class="st0"
+     d="M 9.1,40.5 H 83.9 V 55.9 H 9.1 Z"
+     id="path853" />
+  <path
+     class="st1"
+     d="M 9.1,20.6 H 83.9 V 36 H 9.1 Z"
+     id="path855" />
+  <path
+     class="st2"
+     d="M 72.2,0 H 21.1 c -6.6,0 -12,5.5 -12,12.3 v 4 h 74.8 v -4 C 83.9,5.5 78.7,0 72.2,0 Z"
+     id="path857" />
+  <path
+     class="st3"
+     d="m 8.85,60.3 v 4 c 0,6.8 5.4,12.3 12,12.3 h 32 v 16.3 l 15.8,-16.3 h 3.5 c 6.6,0 12,-5.5 12,-12.3 v -4 z"
+     id="path859" />
+</svg>            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="width-wrapper">
+<article>
+  
+  <header>
+    <h1 class="article-title">
+      <a href="https://mathmondays.com/dehn-invariant" title="Permalink to The Dehn Invariant, or, Tangrams In Space">The Dehn Invariant, or, Tangrams In Space</a>
+    </h1>
+    <div class="article-date">March 30, 2020</div>
+
+    <div class="article-tags">
+      tags:
+      <a href="https://mathmondays.com/tag/geometry">geometry</a>
+    </div>
+  </header>
+
+  <section><p><span class="mathdefs">
+<span class="math">\(\newcommand{\ZZ}{\Bbb Z}
+\newcommand{\QQ}{\Bbb Q}
+\newcommand{\RR}{\Bbb R}\)</span>
+</span></p>
+<p>Fans of wooden children’s toys may remember <a href="https://en.wikipedia.org/wiki/Tangram">tangrams</a>, a puzzle composed of 7 flat pieces that can be rearranged into numerous different configurations.</p>
+<p><img alt="Tangrams in square and cat configurations" src="/images/dehn/tangrams.svg"></p>
+<p>As mathematicians, we’re interested in shapes that are slightly simpler than cats or houses.</p>
+
+<p>For example, we might try to design a set of tangrams that can be rearranged into an equilateral triangle. One possibility is shown below.</p>
+<p><img alt="Equidecomposition of square and triangle" src="/images/dehn/square-to-triangle.svg"></p>
+<p>How about a pentagon?</p>
+<p><img alt="Equidecomposition of square and pentagon" src="/images/dehn/square-to-pentagon.svg"></p>
+<p>We don’t have to start with a square, how about a set that can become a star or a triangle?</p>
+<p><img alt="Equidecomposition of six-pointed star and triangle" src="/images/dehn/star-to-triangle.svg"></p>
+<p>What pairs of polygons can we design tangram sets for? One way to reframe this problem is in terms of <em>scissors-congruence</em>, which is pretty much what it sounds like. Two polygons are “scissors-congruent” if we can take the first polygon, make a finite number of straight-line cuts to it, and rearrange the pieces into the second polygon. Clearly, two polygons are scissors-congruent if and only if we can design a set of tangrams that connect the two.</p>
+<hr>
+<p>Given two polygons, how can we tell if they’re scissors-congruent?</p>
+<p>One thing we can do is check their areas, since, if they have different areas, there’s no way they can be scissors-congruent. It turns out that this is the <em>only</em> obstacle – <strong>if two polygons have the same area, they must be scissors-congruent</strong>!</p>
+<p>This surprising result is known as the Wallace–Bolyai–Gerwien theorem, and was proven in the 1830s. We’ll walk through a proof.</p>
+<p>It suffices to show that any polygon of area <span class="math">\(A\)</span> is scissors-congruent to an <span class="math">\(A \times 1\)</span> rectangle. This is because, if <span class="math">\(P_1\)</span> and <span class="math">\(P_2\)</span> are scissors-congruent to some third shape <span class="math">\(Q\)</span>, then we can rearrange <span class="math">\(P_1\)</span> into <span class="math">\(P_2\)</span> by going through <span class="math">\(Q\)</span> as an intermediate step. We start by breaking our polygon into triangles:</p>
+<p><img alt="Triangulation of a polygon" src="/images/dehn/wbg-1.svg"></p>
+<p>Next, we’ll transform each triangle into a rectangle, by cutting it halfway up its height, and folding down the apex:</p>
+<p><img alt="Cutting a triangle into a rectangle" src="/images/dehn/wbg-2.svg"></p>
+<p>Now we need to change the dimensions of this rectangle, but this step requires some creativity. We need the height of the rectangle to be between <span class="math">\(1\)</span> and <span class="math">\(2\)</span>. If it isn’t, we can repeatedly cut it in half until it does. (If the height is less than <span class="math">\(1\)</span>, then we run this process in reverse to double it instead.)</p>
+<p><img alt="Repeatedly halving a rectangle" src="/images/dehn/wbg-3.svg"></p>
+<p>Then, we do a sliding maneuver to convert this rectangle into one with height <span class="math">\(1\)</span>. Notice that we need <span class="math">\(u &lt; 1\)</span>, or else <span class="math">\(u \ell\)</span> would be greater than <span class="math">\(\ell\)</span>, and we couldn’t draw this diagram.</p>
+<p><img alt="Minor width adjustment of a rectangle" src="/images/dehn/wbg-4.svg"></p>
+<p>After doing this to all the triangles, the final step is to glue all these rectangles together, end-to-end, to get the desired <span class="math">\(A \times 1\)</span> rectangle.</p>
+<hr>
+<p>The natural question to ask next is: can we generalize this? What about 3D shapes? Are any two polyhedra of equal volume also scissors-congruent?</p>
+<p>This is the third of <a href="https://en.wikipedia.org/wiki/Hilbert%27s_problems">Hilbert’s twenty-three problems</a>, and his student, Max Dehn, proved in 1903 that, unlike in two dimensions, the answer is “no”. He did so by constructing a quantity (now known as the “Dehn invariant”) that stays unchanged under scissors-congruence. Two shapes with different Dehn invariants, therefore, cannot be scissors-congruent. For example, a cube and a tetrahedron of equal volume are not scissors-congruent.</p>
+<p>Unlike area and volume, the Dehn invariant isn’t as simple as a real number, and we’ll need to do a bit of legwork to define it. The key observation to make is that a cut can only do one of three things to an edge:</p>
+<ul>
+<li>miss it completely</li>
+<li>cut it at a point</li>
+<li>split it along its entire length</li>
+</ul>
+<p>By looking at what these operations do to edges, we can cobble together a quantity that stays invariant.</p>
+<p>In the first situation, the edge stays unchanged. That one’s easy.</p>
+<p>In the second situation, one edge is turned into two edges. The new edges have the same dihedral angle<sup id="sf-dehn-invariant-1-back"><a href="#sf-dehn-invariant-1" class="simple-footnote" title="The dihedral angle of an edge is the angle between the two faces adjacent to it. You can think of it as a measure of the ‘sharpness’ of an edge; a 90° edge is like the edge of a countertop, but a 15° edge will cut like a knife.">1</a></sup> as the original, and their lengths sum to the original length.</p>
+<p><img alt="Cutting an edge transversely" src="/images/dehn/edge-cut-transverse.svg"></p>
+<p>In the third situation, we again get two edges, but this time, the length stays the same, and the dihedral angle changes.</p>
+<p><img alt="Cutting an edge along its length" src="/images/dehn/edge-cut-lengthwise.svg"></p>
+<p>Lastly, cuts also create new edges, as they slice through a face. We’d like these to count for nothing, count as zero.</p>
+<p>Now that we know what cuts do to edges, how do we use this to define an invariant? If an edge is represented by the ordered pair <span class="math">\((\ell_i, \theta_i)\)</span>, we want to enforce the following equivalence relations: 
+</p>
+<div class="math">$$ (\ell_1 + \ell_2, \theta) \cong (\ell_1, \theta) + (\ell_2, \theta) \qquad (\ell, \theta_1 + \theta_2) \cong (\ell, \theta_1) + (\ell, \theta_2) $$</div>
+<p>These two rules imply some further relations. Consider the sum of <span class="math">\(n\)</span> copies of <span class="math">\((\ell, \theta)\)</span>. Applying the first rule repeatedly gives <span class="math">\((n \ell, \theta)\)</span>, and the second rule gives <span class="math">\((\ell, n \theta)\)</span>. This can be extended to negative <span class="math">\(n\)</span> as well, so for any integer <span class="math">\(n\)</span>,
+</p>
+<div class="math">$$ n (\ell, \theta) = (n \ell, \theta) = (\ell, n \theta) $$</div>
+<p>If you’re familiar with tensors, you might notice that these are exactly the conditions for a tensor product! If not, don’t worry, you can think of these as ordered pairs still, but we’ll use the symbol <span class="math">\(\otimes\)</span> instead of a comma. It may make more sense when we go through the examples.</p>
+<p>We still have to deal with the new edges created from cuts in the faces, but these almost resolve themselves. The edges we create come in pairs with supplementary angles. So if the edge pair we create has length <span class="math">\(\ell\)</span>, we get <span class="math">\((\ell, \theta) + (\ell, \pi - \theta) = (\ell, \pi)\)</span>. Using the third rule above, we can drag a <span class="math">\(2\)</span> from the left to the right, giving us <span class="math">\((\ell/2, 2\pi)\)</span>. If we declare that <span class="math">\(2\pi\)</span> is equivalent to <span class="math">\(0\)</span> (a reasonable demand, given that we’re working with angles), then these edge pairs automatically cancel each other out, as desired.</p>
+<p>We can now define the Dehn invariant: it takes values in <span class="math">\(\RR \otimes_\ZZ \RR/2 \pi\)</span> (lengths and angles), and it’s equal to the sum of <span class="math">\(\ell_i \otimes \theta_i\)</span> over all the edges. Is something that concise truly unchanged by scissors-congruence?</p>
+<p>When we make a cut, either it misses an existing edge, and so the corresponding term in the sum does not change, or it intersects it, in which case that term is replaced by two terms that sum to the original. It also creates new edges, by cutting into the faces. But as we saw earlier, these edges come in pairs that sum to zero, and so the total value of the invariant remains unchanged.</p>
+<hr>
+<p>Armed with this invariant, we can now answer the question: are the cube and the tetrahedron are scissors-congruent? Let’s say both have volume 1. The cube has 12 edges, each with dihedral angle <span class="math">\(\pi / 2\)</span>. To get the volume to be <span class="math">\(1\)</span>, we need edges of length <span class="math">\(1\)</span>, so the Dehn invariant of this cube is:
+</p>
+<div class="math">$$ 12 (1 \otimes \frac{\pi}{2}) = 3 (1 \otimes 2 \pi) = (3 \otimes 2 \pi) = 0 $$</div>
+<p>A tetrahedron has 6 edges, each with dihedral angle <span class="math">\(\arccos(1/3)\)</span>. The volume of a tetrahedron with side length <span class="math">\(a\)</span> is <span class="math">\(a^3 / 6 \sqrt 2\)</span>, so the side length of our tetrahedron needs to be <span class="math">\(a = (72)^{1/6}\)</span>, making the Dehn invariant equal to:
+</p>
+<div class="math">$$ 6 (a \otimes \arccos(1/3)) = 6 a \otimes \arccos(1/3) $$</div>
+<p>With some knowledge of modules, one can show that this is non-zero,
+<sup id="sf-dehn-invariant-2-back"><a href="#sf-dehn-invariant-2" class="simple-footnote" title="First, note that for any rational \(p/q\), we have \(\ell \otimes \frac{p}{q} \pi = \frac{\ell}{2q} \otimes 2 p \pi = 0\). This means that \(\RR \otimes_\ZZ \RR/2\pi \cong \RR \otimes_\ZZ \RR/(2\pi\QQ)\). Since both of those modules are divisible, this is equal to \(\RR \otimes_\QQ \RR/(2 \pi \QQ)\), which, being a tensor product of \(\QQ\)-vector spaces, is a \(\QQ\)-vector space itself. In particular, if \(\ell \ne 0\) and \(\theta \notin 2 \pi \QQ\), then \(\ell \otimes \theta\) is a non-zero vector.">2</a></sup>
+but the crux of the idea is that <span class="math">\(\arccos(1/3)\)</span> is not a rational multiple of <span class="math">\(\pi\)</span>, so we can never get the right hand side of this tensor to collapse to zero. This shows that no matter how many pieces you cut it into, a cube can never be reassembled into a tetrahedron.</p>
+<p>One interesting consequence of this: in geometry class, you probably saw some cut-and-paste constructions for proving the area of a parallelogram, or a triangle. This result shows there can never be such a proof for pyramids – calculus is unavoidable!</p>
+<hr>
+<p>A final note: we’ve shown that there are at least two obstructions for two scissors-congruence in 3D: volume and Dehn invariant. Are they the only ones? The answer is yes! In other words, if two polyhedra do have the same volume and Dehn invariant, then they are indeed scissors-congruent. The proof of that is much harder, and a good presentation can be found <a href="http://www.math.brown.edu/~res/MathNotes/jessen.pdf">here</a>. </p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script><ol class="simple-footnotes"><li id="sf-dehn-invariant-1">The dihedral angle of an edge is the angle between the two faces adjacent to it. You can think of it as a measure of the ‘sharpness’ of an edge; a 90° edge is like the edge of a countertop, but a 15° edge will cut like a knife. <a href="#sf-dehn-invariant-1-back" class="simple-footnote-back">↩</a></li><li id="sf-dehn-invariant-2">First, note that for any rational <span class="math">\(p/q\)</span>, we have <span class="math">\(\ell \otimes \frac{p}{q} \pi = \frac{\ell}{2q} \otimes 2 p \pi = 0\)</span>. This means that <span class="math">\(\RR \otimes_\ZZ \RR/2\pi \cong \RR \otimes_\ZZ \RR/(2\pi\QQ)\)</span>. Since both of those modules are divisible, this is equal to <span class="math">\(\RR \otimes_\QQ \RR/(2 \pi \QQ)\)</span>, which, being a tensor product of <span class="math">\(\QQ\)</span>-vector spaces, is a <span class="math">\(\QQ\)</span>-vector space itself. In particular, if <span class="math">\(\ell \ne 0\)</span> and <span class="math">\(\theta \notin 2 \pi \QQ\)</span>, then <span class="math">\(\ell \otimes \theta\)</span> is a non-zero vector. <a href="#sf-dehn-invariant-2-back" class="simple-footnote-back">↩</a></li></ol></section>
+
+  <footer>
+
+    <!-- Generate the view counter -->
+    <div style="text-align:right">
+      <img src="https://visitor-badge.glitch.me/badge?page_id=math-mondays-dehn-invariant&left_color=%235c6679&right_color=%23e86655" style="display:inline">
+    </div>
+
+  </footer>
+
+</article>
+  </main>
+
+  <footer id="site-footer-bar" class="color-bar">
+    <div id="site-footer" class="width-wrapper">
+      <span>generated by <a href="https://getpelican.com">Pelican</a></span>
+      ·
+      <span>cookie-less analytics via <a href="https://plausible.io/">Plausible</a></span>
+      ·
+      <span>see the <a href="https://github.com/HenrySwanson/HenrySwanson.github.io">source code</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>
