@@ -1,4 +1,4 @@
-![build status badge](https://github.com/HenrySwanson/HenrySwanson.github.io/actions/workflows/build-site.yml/badge.svg)
+![build status badge](https://github.com/HenrySwanson/HenrySwanson.github.io/actions/workflows/build-and-deploy.yml/badge.svg)
 
 Sometimes I like to write about math.
 
