@@ -23,7 +23,8 @@ jobs:
 
       # Set up Node
       - name: Set up Node
-        uses: actions/setup-node@v4
+        # v4 gives errors about require() within some node modules. fix later.
+        uses: actions/setup-node@v3
         with:
           node-version: 16
 
