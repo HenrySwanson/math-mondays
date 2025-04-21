@@ -48,12 +48,16 @@ If the last step seems ridiculous to you, don't worry. It's completely non-obvio
 
 # Sperner's Lemma
 
-Consider a polygon $P$ in the plane, and some dissection of it into triangles $T_i$. As promised in the previous section, color the vertices with three colors; we'll use red, green, and blue. We will call a segment **purple** if it has one red and one blue endpoint. A triangle with exactly one corner of each color will be called **trichromatic**. (Great terminology, eh?)
+Consider a polygon $P$ in the plane, and some dissection of it into triangles $T_i$. We can interpret this dissection as a graph: the vertices are the vertices of the triangles, and the edges come from the sides of the triangle, potentially broken up by other triangles' vertices.
+
+Note: we're going to distinguish between **edges** (connects two vertices) and **faces** (the original sides of the polygon and the triangles, composed of multiple edges).
+
+As promised in the previous section, color the vertices with three colors; we'll use red, green, and blue. We will call an edge **purple** if it has one red and one blue endpoint. A triangle with exactly one corner of each color will be called **trichromatic**. (Great terminology, eh?)
 
 A **Sperner coloring** is a coloring of the vertices of $T_i$, using three colors, with the following properties:
 
 * no face of $P$, nor any face of one of the $T_i$, contains vertices of all three colors
-* there are an odd number of purple segments on the boundary of $P$
+* there are an odd number of purple edges on the boundary of $P$
 
 For example, the following are Sperner colorings:
 
@@ -63,7 +67,7 @@ For example, the following are Sperner colorings:
 ![Sperner Coloring 2](/images/monsky/sperner-2.svg){:height="200px"}
 </div>
 
-But these are not -- the first has lines of more than two colors, and the second has an even number of purple boundary segments:
+But these are not -- the first has faces with all three colors, and the second has an even number of purple boundary segments:
 
 <div class="image-container" markdown="1">
 ![Non-Sperner Coloring 1](/images/monsky/sperner-3.svg){:height="200px"}
@@ -112,11 +116,11 @@ A **valuation** is a function that assigns a notion of "value" or "size" to numb
 
 We'll assign the obvious rules to $\infty$, such as, $a + \infty = \infty$, and $\min(a, \infty) = a$.
 
-One example of a valuation, that might help guide your intuition, is the "multiplicity of a root". For some polynomial $p(x) = a_0 + a_1 x + \cdots + a_n x^n$, let $\nu(p)$ be the index of the first non-zero coefficient. For example, $\nu(3x^4 - x^5 + 7x^8) = 4$, and $\nu(1 + x - x^2) = 0$. If all coefficients are zero, define $\nu(p) = \infty$. In essence, $\nu(p)$ is "how many" roots $p$ has at $0$; e.g., is $0$ a single root? A double root? Not a root at all?
+One example of a valuation, that might help guide your intuition, is the "multiplicity of a root". For some polynomial $p(x) = a_0 + a_1 x + \cdots + a_n x^n$, let $\nu(p)$ be the smallest $k$ for which $a_k$ is non-zero. For example, $\nu(3x^4 - x^5 + 7x^8) = 4$, and $\nu(1 + x - x^2) = 0$. If all coefficients are zero, define $\nu(p) = \infty$. In essence, $\nu(p)$ is "how many" roots $p$ has at $0$; e.g., is $0$ a single root? A double root? Not a root at all?
 
 Is this a valuation?
 
-Well we satisfied the first property by fiat. The second one is pretty easy to see; when you multiply two polynomials, the lowest term has the sum of the degrees. And the third one ain't too bad either. If both $p$ and $q$ have zero coefficients on $x^k$, $p+q$ certainly will too. The converse isn't true though, it's possible that the low-degree terms in $p$ and $q$ could cancel, and so $\nu(p+q)$ could be larger than either $\nu(p)$ or $\nu(q)$. This is why we have an inequality, instead of an equality.
+Well we satisfied the first property by fiat. The second one is pretty easy to see; when you multiply two polynomials, the lowest term in their product is the product of their lowest terms. And the third one isn't too bad either. If both $p$ and $q$ have a $0$ at $x^k$, $p+q$ certainly will too. The converse isn't true though, it's possible that the low-degree terms in $p$ and $q$ could cancel, and so $\nu(p+q)$ could then be larger than either $\nu(p)$ or $\nu(q)$. This is why we have an inequality, instead of an equality.
 
 ---
 
@@ -149,7 +153,7 @@ Given a point $(x,y)$ in the plane, we'll color it:
 
 * red if $\nu_2(x) > 0$ and $\nu_2(y) > 0$
 * green if $\nu_2(x) \le 0$ and $\nu_2(x) \le \nu_2(y)$
-* blue if $\nu_2(y) \le 0$ and $\nu_2(y) < \nu_2(x)$
+* blue if $\nu_2(y) \le 0$ and $\nu_2(x) > \nu_2(y)$
 
 This coloring has some interesting properties, which we'll establish quickly.
 
@@ -175,9 +179,16 @@ y_g & y_b
 x_g y_b - x_b y_g
 $$
 
-To show that $\det M$ is non-zero, we can show that its $2$-adic valuation is nonzero. This might seem harder, but since the only thing we know about these points is their valuations, it's the only shot we have!
+To show that $\det M$ is non-zero, we can show that its $2$-adic valuation is finite. This might seem harder, but since the only thing we know about these points is their valuations, it's the only shot we have!
 
-By the previous claim, $P_g - P_r$ is green, and $P_b - P_r$ is blue. From the coloring rules, we then know that $\nu_2(y_b) < \nu_2(x_b)$ and $\nu_2(x_g) \le \nu_2(y_g)$. So $\nu_2(x_g y_b)$ is strictly less than $\nu_2(x_b y_g)$. The third property then tells us that $\nu_2(\det M) = \nu_2(x_g y_b) \le 0$. Therefore, $\det M \ne 0$, and so $P_r$, $P_g$, and $P_b$ cannot be collinear.
+By the previous claim, $P_g - P_r$ is green, and $P_b - P_r$ is blue. From the coloring rules, we then know that:
+
+1. $\nu_2(x_g) \le 0$
+2. $\nu_2(x_g) \le \nu_2(y_g)$
+3. $\nu_2(y_b) \le 0$
+4. $\nu_2(x_b) > \nu_2(y_b)$
+
+From combining (2) and (4), we know that $\nu_2(x_b y_g) > \nu_2(x_g y_b)$, and so the valuation of $x_b y_g - x_g y_b$ is the smaller of the two, $\nu_2(x_g y_b)$. From (1) and (3), we know that $\nu_2(x_g y_b) \le 0$; therefore $\nu_2(\det M) \le 0$ as well. In particular, it's finite, and so $M \ne 0$, meaning $P_r$, $P_g$, and $P_b$ cannot be collinear.
 
 
 # Putting it Together
@@ -203,18 +214,36 @@ But because $n$ is odd, $\nu_2(1/n) = 0$. Contradiction.
 
 # Appendix
 
-We promised a proof that a valuation on $\QQ$ can be extended to a valuation on $\RR$. More generally, for a field extension $L/K$, a valuation $\nu$ on $K$ can be extended to a valuation on $L$.
+We promised a proof that a valuation on $\QQ$ can be extended to a valuation on $\RR$. More generally, for a field extension $L/K$, a valuation $\nu$ on $K$ can be extended to a valuation on $L$, but that is too general to fit in a footnote, so we'll stick to $\QQ$.
 
-Unfortunately, I've got diagrams to finish making before Monday ends, so I'll amend this later ;)
+First, we'll start with algebraic extensions. Let $\nu$ be a valuation on $\QQ$, $L/\QQ$ be an algebraic extension of degree $n$, and for each $\alpha \in L$, define
+$$\nu'(\alpha) = \frac{1}{n} \nu(N_{L/\QQ}(\alpha))$$
 
-<!--
-*Proof*: We'll extend one element at a time. If we have a valuation on $K$, we'll extend it to a valuation on $K(\alpha)$, where $\alpha \in L$.
+where $N_{L/\QQ}$ is the field norm (i.e., the product of the $n$ Galois conjugates).
 
-If $\alpha$ is transcendental over $K$, then we will write it as $t$ instead. First we extend the valuation to the polynomial ring $K[t]$, by defining $\nu(\sum_i a_i t^i)$ to be $\max(\nu(a_i))$. After that, we'll extend it to the fraction field $K(t)$ by defining $\nu(p/q) = \nu(p) / \nu(q)$, which will be a valuation for the same reason we could extend from $\ZZ$ to $\QQ$ earlier.
+Does this extend our valuation? For a rational number $r$, $N_{L/\QQ}(r) = r^n$, and so $\nu(r) = \frac{1}{n} \nu(r^n) = \nu(r)$, as desired.
 
-To show that what we defined on $K[t]$ is a valuation, let $p = \sum_i a_i t^i$ and $q = \sum_i b_i t^i$. If $\nu(p) = \max(\nu(a_i))$ is zero, then all the $\nu(a_i)$ are zero. But then all the $a_i$ must have been zero, giving $p = 0$.
+Is this a valuation? The first property is trivial; the field norm is zero iff its input is zero, and since $n$ is at least 1, we can't get $\infty$ except at $\alpha = 0$. The second property comes easily from the multiplicativity of the field norm.
 
-Showing multiplicativity is an exercise to the reader cause I'm actually stuck on it lol TODO
+The third property is harder. For now, assume that $\nu'(\gamma) \ge 0$ implies $\nu'(1 + \gamma) \ge 0$.
 
-If $\alpha$ is algebraic, then let $f(x) = x^n + a_{n-1} x^{n-1} + \cdots + a_1 x + a_0$ be the minimal polynomial of $\alpha$. We define
--->
+Let $\alpha, \beta \in L$, and without loss of generality, $\nu'(\alpha) \le \nu'(\beta)$. Defining $\gamma$ as $\beta / \alpha$, we have $\nu'(\gamma) = \nu'(\beta) - \nu'(\alpha) \ge 0$, and so $\nu'(1 + \gamma) \ge 0$. This lets us get what we want:
+
+$$ \nu'(\alpha + \beta) = \nu'(\alpha (1 + \gamma)) = \nu'(\alpha) + \nu'(1 + \gamma) \ge \nu'(\alpha) = \min(\nu'(\alpha), \nu'(\beta)) $$
+
+Finally, note that the definition of $\nu'(\alpha)$ is actually independent of $L$. If we do this in a degree $k$ extension of $L$, then $N_{L/\QQ}(\alpha)$ becomes $N_{L/\QQ}(\alpha)^k$, but this is canceled out by the increased denominator in $\frac{1}{nk}$.
+
+Altogether, this means we can extend any valuation on $\QQ$ to a valuation on $\overline{\QQ}$. To get all the way to $\CC$, we have to consider the transcendentals. Fortunately, because the new elements are transcendental, we don't have many restrictions on what we set their valuations to. We can build up a valuation by well-ordering (or some equivalent like Zorn's lemma).
+
+Starting with $K_0 = \overline{\QQ}$, pick some $t$ transcendental over $K_i$, and set its valuation arbitrarily. Let $K_{i+1} = K_i(t)$, and repeat. After completing this transfinite induction, we will have a valuation on all of $\CC$.
+
+Note: For the purposes of Monsky's theorem, we only have to do this for each number appearing in the coordinates of our vertices, and there are finitely many of those, so our result is independent of the axiom of choice.
+
+# Appendix II
+
+In the above proof, we assumed that $\nu'(\gamma) \ge 0$ implied $\nu'(1 + \gamma) \ge 0$. When I first wrote up this article seven years ago (good grief), I thought this would be a pretty straightforward proof. The gist of it relies on a fact similar to "$\alpha$ is an algebraic integer iff $N(\alpha)$ is an integer", but for discrete valuation rings instead.
+
+$$ \nu'(\gamma) \ge 0 \iff \nu(N(\gamma)) \ge 0 \iff N(\gamma) \in A \iff \gamma \in B $$
+
+where $A$ is the "valuation ring" of $\QQ$, and $B$ the valuation ring of $L$. Since $B$ is a ring, $\gamma + 1$ is also in $B$, and so we can play the whole chain in reverse, arriving at $\nu'(1 + \gamma) \ge 0$, as desired.
+

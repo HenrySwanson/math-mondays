@@ -2,11 +2,11 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 574:
+/***/ 943:
 /***/ ((__unused_webpack_module, exports) => {
 
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Announcement = exports.WaningPhase = exports.WaxingPhase = void 0;
 // Common Subprocedures
 var WaxingPhase = /** @class */ (function () {
@@ -74,7 +74,7 @@ exports.Announcement = Announcement;
 
 /***/ }),
 
-/***/ 122:
+/***/ 501:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -105,11 +105,11 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Graphics = exports.startState = void 0;
-var iter_1 = __webpack_require__(81);
-var matrix_1 = __webpack_require__(589);
-var common_1 = __webpack_require__(574);
+var iter_1 = __webpack_require__(142);
+var matrix_1 = __webpack_require__(405);
+var common_1 = __webpack_require__(943);
 var ACTIVE_COLOR = "#ffff00";
 var WANING_COLOR = "#ffcc00";
 var INACTIVE_COLOR = "#808080";
@@ -401,18 +401,18 @@ var Graphics = /** @class */ (function () {
         this.name = this.group.text(name).font(LETTER_FONT);
         this.number = this.group.text("").font(NUMBER_FONT);
         this.candidate = this.group.circle(COIN_DIAMETER).hide();
-        this["switch"] = this.group.polygon([0, 0, 0, SWITCH_HEIGHT, SWITCH_WIDTH, SWITCH_HEIGHT / 2]);
+        this.switch = this.group.polygon([0, 0, 0, SWITCH_HEIGHT, SWITCH_WIDTH, SWITCH_HEIGHT / 2]);
         // Position the elements
         // Circle is positioned at the center
         var cx = this.circle.cx();
         var cy = this.circle.cy();
         this.name.center(cx, cy);
         this.candidate.center(cx + PRISONER_RADIUS, cy - PRISONER_RADIUS);
-        this["switch"].center(cx + PRISONER_SPACING / 2, cy);
+        this.switch.center(cx + PRISONER_SPACING / 2, cy);
         // Color them
         this.circle.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
         this.candidate.fill(CANDIDATE_COLOR).stroke(BORDER_COLOR);
-        this["switch"].fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
+        this.switch.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
         // Push the circle to the rearmost
         this.circle.back();
     }
@@ -482,7 +482,7 @@ var Graphics = /** @class */ (function () {
         this.number.center(this.circle.cx() - PRISONER_RADIUS, this.circle.cy() + PRISONER_RADIUS);
     };
     Graphics.prototype.drawSwitch = function (willFlip) {
-        this["switch"].fill(willFlip ? ACTIVE_COLOR : INACTIVE_COLOR);
+        this.switch.fill(willFlip ? ACTIVE_COLOR : INACTIVE_COLOR);
     };
     Graphics.prototype.move = function (x, y) {
         this.group.untransform();
@@ -506,7 +506,7 @@ function trySolveEquations(numVariables, equations) {
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_d && !_d.done && (_a = _c["return"])) _a.call(_c);
+                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
             }
             finally { if (e_1) throw e_1.error; }
         }
@@ -519,7 +519,7 @@ function trySolveEquations(numVariables, equations) {
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
-                if (_f && !_f.done && (_b = _e["return"])) _b.call(_e);
+                if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
             }
             finally { if (e_2) throw e_2.error; }
         }
@@ -561,7 +561,7 @@ function trySolveEquations(numVariables, equations) {
 
 /***/ }),
 
-/***/ 877:
+/***/ 170:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -582,10 +582,10 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-exports.__esModule = true;
-var SVG = __webpack_require__(500);
-var simple_1 = __webpack_require__(28);
-var fancy_1 = __webpack_require__(122);
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+var SVG = __webpack_require__(425);
+var simple_1 = __webpack_require__(968);
+var fancy_1 = __webpack_require__(501);
 // TODO: don't duplicate constants like this!
 var PRISONER_RADIUS = 20;
 var PRISONER_SPACING = 80;
@@ -783,13 +783,13 @@ experiment2.drawEverything();
 
 /***/ }),
 
-/***/ 28:
+/***/ 968:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Graphics = exports.startState = void 0;
-var common_1 = __webpack_require__(574);
+var common_1 = __webpack_require__(943);
 var ACTIVE_COLOR = "#ffff00";
 var WANING_COLOR = "#ffcc00";
 var INACTIVE_COLOR = "#808080";
@@ -1011,7 +1011,7 @@ var Graphics = /** @class */ (function () {
         this.number = this.group.text("").font(NUMBER_FONT);
         this.coin = this.group.circle(COIN_DIAMETER).hide();
         this.candidate = this.group.circle(COIN_DIAMETER).hide();
-        this["switch"] = this.group.polygon([0, 0, 0, SWITCH_HEIGHT, SWITCH_WIDTH, SWITCH_HEIGHT / 2]);
+        this.switch = this.group.polygon([0, 0, 0, SWITCH_HEIGHT, SWITCH_WIDTH, SWITCH_HEIGHT / 2]);
         // Position the elements
         // Circle is positioned at the center
         var cx = this.circle.cx();
@@ -1019,12 +1019,12 @@ var Graphics = /** @class */ (function () {
         this.name.center(cx, cy);
         this.coin.center(cx + PRISONER_RADIUS, cy + PRISONER_RADIUS);
         this.candidate.center(cx + PRISONER_RADIUS, cy - PRISONER_RADIUS);
-        this["switch"].center(cx + PRISONER_SPACING / 2, cy);
+        this.switch.center(cx + PRISONER_SPACING / 2, cy);
         // Color them
         this.circle.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
         this.coin.stroke(BORDER_COLOR);
         this.candidate.fill(CANDIDATE_COLOR).stroke(BORDER_COLOR);
-        this["switch"].fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
+        this.switch.fill(INACTIVE_COLOR).stroke(BORDER_COLOR);
         // Push the circle to the rearmost
         this.circle.back();
     }
@@ -1114,7 +1114,7 @@ var Graphics = /** @class */ (function () {
         this.number.center(this.circle.cx() - PRISONER_RADIUS, this.circle.cy() + PRISONER_RADIUS);
     };
     Graphics.prototype.drawSwitch = function (willFlip) {
-        this["switch"].fill(willFlip ? ACTIVE_COLOR : INACTIVE_COLOR);
+        this.switch.fill(willFlip ? ACTIVE_COLOR : INACTIVE_COLOR);
     };
     Graphics.prototype.move = function (x, y) {
         this.group.untransform();
@@ -1127,11 +1127,11 @@ exports.Graphics = Graphics;
 
 /***/ }),
 
-/***/ 81:
+/***/ 142:
 /***/ ((__unused_webpack_module, exports) => {
 
 
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.zip = exports.max_by = exports.range = void 0;
 function range(a, b) {
     if (b < a) {
@@ -1157,7 +1157,7 @@ exports.zip = zip;
 
 /***/ }),
 
-/***/ 589:
+/***/ 405:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -1177,9 +1177,9 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Matrix = void 0;
-var iter_1 = __webpack_require__(81);
+var iter_1 = __webpack_require__(142);
 var Matrix = /** @class */ (function () {
     function Matrix(rows, nRows, nCols) {
         this.rows = rows;
@@ -1245,107 +1245,107 @@ exports.Matrix = Matrix;
 
 /***/ }),
 
-/***/ 500:
+/***/ 425:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "A": () => (/* binding */ A),
-/* harmony export */   "Animator": () => (/* binding */ Animator),
-/* harmony export */   "Array": () => (/* binding */ SVGArray),
-/* harmony export */   "Box": () => (/* binding */ Box),
-/* harmony export */   "Circle": () => (/* binding */ Circle),
-/* harmony export */   "ClipPath": () => (/* binding */ ClipPath),
-/* harmony export */   "Color": () => (/* binding */ Color),
-/* harmony export */   "Container": () => (/* binding */ Container),
-/* harmony export */   "Controller": () => (/* binding */ Controller),
-/* harmony export */   "Defs": () => (/* binding */ Defs),
-/* harmony export */   "Dom": () => (/* binding */ Dom),
-/* harmony export */   "Ease": () => (/* binding */ Ease),
-/* harmony export */   "Element": () => (/* binding */ Element),
-/* harmony export */   "Ellipse": () => (/* binding */ Ellipse),
-/* harmony export */   "EventTarget": () => (/* binding */ EventTarget),
-/* harmony export */   "ForeignObject": () => (/* binding */ ForeignObject),
-/* harmony export */   "Fragment": () => (/* binding */ Fragment),
-/* harmony export */   "G": () => (/* binding */ G),
-/* harmony export */   "Gradient": () => (/* binding */ Gradient),
-/* harmony export */   "Image": () => (/* binding */ Image),
-/* harmony export */   "Line": () => (/* binding */ Line),
-/* harmony export */   "List": () => (/* binding */ List),
-/* harmony export */   "Marker": () => (/* binding */ Marker),
-/* harmony export */   "Mask": () => (/* binding */ Mask),
-/* harmony export */   "Matrix": () => (/* binding */ Matrix),
-/* harmony export */   "Morphable": () => (/* binding */ Morphable),
-/* harmony export */   "NonMorphable": () => (/* binding */ NonMorphable),
-/* harmony export */   "Number": () => (/* binding */ SVGNumber),
-/* harmony export */   "ObjectBag": () => (/* binding */ ObjectBag),
-/* harmony export */   "PID": () => (/* binding */ PID),
-/* harmony export */   "Path": () => (/* binding */ Path),
-/* harmony export */   "PathArray": () => (/* binding */ PathArray),
-/* harmony export */   "Pattern": () => (/* binding */ Pattern),
-/* harmony export */   "Point": () => (/* binding */ Point),
-/* harmony export */   "PointArray": () => (/* binding */ PointArray),
-/* harmony export */   "Polygon": () => (/* binding */ Polygon),
-/* harmony export */   "Polyline": () => (/* binding */ Polyline),
-/* harmony export */   "Queue": () => (/* binding */ Queue),
-/* harmony export */   "Rect": () => (/* binding */ Rect),
-/* harmony export */   "Runner": () => (/* binding */ Runner),
-/* harmony export */   "SVG": () => (/* binding */ SVG),
-/* harmony export */   "Shape": () => (/* binding */ Shape),
-/* harmony export */   "Spring": () => (/* binding */ Spring),
-/* harmony export */   "Stop": () => (/* binding */ Stop),
-/* harmony export */   "Style": () => (/* binding */ Style),
-/* harmony export */   "Svg": () => (/* binding */ Svg),
-/* harmony export */   "Symbol": () => (/* binding */ Symbol),
-/* harmony export */   "Text": () => (/* binding */ Text),
-/* harmony export */   "TextPath": () => (/* binding */ TextPath),
-/* harmony export */   "Timeline": () => (/* binding */ Timeline),
-/* harmony export */   "TransformBag": () => (/* binding */ TransformBag),
-/* harmony export */   "Tspan": () => (/* binding */ Tspan),
-/* harmony export */   "Use": () => (/* binding */ Use),
-/* harmony export */   "adopt": () => (/* binding */ adopt),
-/* harmony export */   "assignNewId": () => (/* binding */ assignNewId),
-/* harmony export */   "clearEvents": () => (/* binding */ clearEvents),
-/* harmony export */   "create": () => (/* binding */ create),
-/* harmony export */   "defaults": () => (/* binding */ defaults),
-/* harmony export */   "dispatch": () => (/* binding */ dispatch),
-/* harmony export */   "easing": () => (/* binding */ easing),
-/* harmony export */   "eid": () => (/* binding */ eid),
-/* harmony export */   "extend": () => (/* binding */ extend),
-/* harmony export */   "find": () => (/* binding */ baseFind),
-/* harmony export */   "getClass": () => (/* binding */ getClass),
-/* harmony export */   "getEventTarget": () => (/* binding */ getEventTarget),
-/* harmony export */   "getEvents": () => (/* binding */ getEvents),
-/* harmony export */   "getWindow": () => (/* binding */ getWindow),
-/* harmony export */   "makeInstance": () => (/* binding */ makeInstance),
-/* harmony export */   "makeMorphable": () => (/* binding */ makeMorphable),
-/* harmony export */   "mockAdopt": () => (/* binding */ mockAdopt),
-/* harmony export */   "namespaces": () => (/* binding */ namespaces),
-/* harmony export */   "nodeOrNew": () => (/* binding */ nodeOrNew),
-/* harmony export */   "off": () => (/* binding */ off),
-/* harmony export */   "on": () => (/* binding */ on),
-/* harmony export */   "parser": () => (/* binding */ parser),
-/* harmony export */   "regex": () => (/* binding */ regex),
-/* harmony export */   "register": () => (/* binding */ register),
-/* harmony export */   "registerMorphableType": () => (/* binding */ registerMorphableType),
-/* harmony export */   "registerWindow": () => (/* binding */ registerWindow),
-/* harmony export */   "restoreWindow": () => (/* binding */ restoreWindow),
-/* harmony export */   "root": () => (/* binding */ root),
-/* harmony export */   "saveWindow": () => (/* binding */ saveWindow),
-/* harmony export */   "utils": () => (/* binding */ utils),
-/* harmony export */   "windowEvents": () => (/* binding */ windowEvents),
-/* harmony export */   "withWindow": () => (/* binding */ withWindow),
-/* harmony export */   "wrapWithAttrCheck": () => (/* binding */ wrapWithAttrCheck)
+/* harmony export */   A: () => (/* binding */ A),
+/* harmony export */   Animator: () => (/* binding */ Animator),
+/* harmony export */   Array: () => (/* binding */ SVGArray),
+/* harmony export */   Box: () => (/* binding */ Box),
+/* harmony export */   Circle: () => (/* binding */ Circle),
+/* harmony export */   ClipPath: () => (/* binding */ ClipPath),
+/* harmony export */   Color: () => (/* binding */ Color),
+/* harmony export */   Container: () => (/* binding */ Container),
+/* harmony export */   Controller: () => (/* binding */ Controller),
+/* harmony export */   Defs: () => (/* binding */ Defs),
+/* harmony export */   Dom: () => (/* binding */ Dom),
+/* harmony export */   Ease: () => (/* binding */ Ease),
+/* harmony export */   Element: () => (/* binding */ Element),
+/* harmony export */   Ellipse: () => (/* binding */ Ellipse),
+/* harmony export */   EventTarget: () => (/* binding */ EventTarget),
+/* harmony export */   ForeignObject: () => (/* binding */ ForeignObject),
+/* harmony export */   Fragment: () => (/* binding */ Fragment),
+/* harmony export */   G: () => (/* binding */ G),
+/* harmony export */   Gradient: () => (/* binding */ Gradient),
+/* harmony export */   Image: () => (/* binding */ Image),
+/* harmony export */   Line: () => (/* binding */ Line),
+/* harmony export */   List: () => (/* binding */ List),
+/* harmony export */   Marker: () => (/* binding */ Marker),
+/* harmony export */   Mask: () => (/* binding */ Mask),
+/* harmony export */   Matrix: () => (/* binding */ Matrix),
+/* harmony export */   Morphable: () => (/* binding */ Morphable),
+/* harmony export */   NonMorphable: () => (/* binding */ NonMorphable),
+/* harmony export */   Number: () => (/* binding */ SVGNumber),
+/* harmony export */   ObjectBag: () => (/* binding */ ObjectBag),
+/* harmony export */   PID: () => (/* binding */ PID),
+/* harmony export */   Path: () => (/* binding */ Path),
+/* harmony export */   PathArray: () => (/* binding */ PathArray),
+/* harmony export */   Pattern: () => (/* binding */ Pattern),
+/* harmony export */   Point: () => (/* binding */ Point),
+/* harmony export */   PointArray: () => (/* binding */ PointArray),
+/* harmony export */   Polygon: () => (/* binding */ Polygon),
+/* harmony export */   Polyline: () => (/* binding */ Polyline),
+/* harmony export */   Queue: () => (/* binding */ Queue),
+/* harmony export */   Rect: () => (/* binding */ Rect),
+/* harmony export */   Runner: () => (/* binding */ Runner),
+/* harmony export */   SVG: () => (/* binding */ SVG),
+/* harmony export */   Shape: () => (/* binding */ Shape),
+/* harmony export */   Spring: () => (/* binding */ Spring),
+/* harmony export */   Stop: () => (/* binding */ Stop),
+/* harmony export */   Style: () => (/* binding */ Style),
+/* harmony export */   Svg: () => (/* binding */ Svg),
+/* harmony export */   Symbol: () => (/* binding */ Symbol),
+/* harmony export */   Text: () => (/* binding */ Text),
+/* harmony export */   TextPath: () => (/* binding */ TextPath),
+/* harmony export */   Timeline: () => (/* binding */ Timeline),
+/* harmony export */   TransformBag: () => (/* binding */ TransformBag),
+/* harmony export */   Tspan: () => (/* binding */ Tspan),
+/* harmony export */   Use: () => (/* binding */ Use),
+/* harmony export */   adopt: () => (/* binding */ adopt),
+/* harmony export */   assignNewId: () => (/* binding */ assignNewId),
+/* harmony export */   clearEvents: () => (/* binding */ clearEvents),
+/* harmony export */   create: () => (/* binding */ create),
+/* harmony export */   defaults: () => (/* binding */ defaults),
+/* harmony export */   dispatch: () => (/* binding */ dispatch),
+/* harmony export */   easing: () => (/* binding */ easing),
+/* harmony export */   eid: () => (/* binding */ eid),
+/* harmony export */   extend: () => (/* binding */ extend),
+/* harmony export */   find: () => (/* binding */ baseFind),
+/* harmony export */   getClass: () => (/* binding */ getClass),
+/* harmony export */   getEventTarget: () => (/* binding */ getEventTarget),
+/* harmony export */   getEvents: () => (/* binding */ getEvents),
+/* harmony export */   getWindow: () => (/* binding */ getWindow),
+/* harmony export */   makeInstance: () => (/* binding */ makeInstance),
+/* harmony export */   makeMorphable: () => (/* binding */ makeMorphable),
+/* harmony export */   mockAdopt: () => (/* binding */ mockAdopt),
+/* harmony export */   namespaces: () => (/* binding */ namespaces),
+/* harmony export */   nodeOrNew: () => (/* binding */ nodeOrNew),
+/* harmony export */   off: () => (/* binding */ off),
+/* harmony export */   on: () => (/* binding */ on),
+/* harmony export */   parser: () => (/* binding */ parser),
+/* harmony export */   regex: () => (/* binding */ regex),
+/* harmony export */   register: () => (/* binding */ register),
+/* harmony export */   registerMorphableType: () => (/* binding */ registerMorphableType),
+/* harmony export */   registerWindow: () => (/* binding */ registerWindow),
+/* harmony export */   restoreWindow: () => (/* binding */ restoreWindow),
+/* harmony export */   root: () => (/* binding */ root),
+/* harmony export */   saveWindow: () => (/* binding */ saveWindow),
+/* harmony export */   utils: () => (/* binding */ utils),
+/* harmony export */   windowEvents: () => (/* binding */ windowEvents),
+/* harmony export */   withWindow: () => (/* binding */ withWindow),
+/* harmony export */   wrapWithAttrCheck: () => (/* binding */ wrapWithAttrCheck)
 /* harmony export */ });
 /*!
 * @svgdotjs/svg.js - A lightweight library for manipulating and animating SVG.
-* @version 3.1.2
+* @version 3.2.0
 * https://svgjs.dev/
 *
 * @copyright Wout Fierens <wout@mick-wout.com>
 * @license MIT
 *
-* BUILT: Wed Jan 26 2022 23:19:07 GMT+0100 (Mitteleuropäische Normalzeit)
+* BUILT: Mon Jun 12 2023 10:34:51 GMT+0200 (Central European Summer Time)
 */;
 const methods$1 = {};
 const names = [];
@@ -1580,7 +1580,7 @@ function makeInstance(element, isHTML = false) {
   wrapper.innerHTML = element; // We can use firstChild here because we know,
   // that the first char is < and thus an element
 
-  element = adopter(wrapper.firstChild); // make sure, that element doesnt have its wrapper attached
+  element = adopter(wrapper.firstChild); // make sure, that element doesn't have its wrapper attached
 
   wrapper.removeChild(wrapper.firstChild);
   return element;
@@ -2562,7 +2562,7 @@ class Point {
 
 }
 function point(x, y) {
-  return new Point(x, y).transform(this.screenCTM().inverse());
+  return new Point(x, y).transformO(this.screenCTM().inverseO());
 }
 
 function closeEnough(a, b, threshold) {
@@ -2587,7 +2587,7 @@ class Matrix {
     const theta = o.rotate || o.theta || 0;
     const origin = new Point(o.origin || o.around || o.ox || o.originX, o.oy || o.originY);
     const ox = origin.x;
-    const oy = origin.y; // We need Point to be invalid if nothing was passed because we cannot default to 0 here. Thats why NaN
+    const oy = origin.y; // We need Point to be invalid if nothing was passed because we cannot default to 0 here. That is why NaN
 
     const position = new Point(o.position || o.px || o.positionX || NaN, o.py || o.positionY || NaN);
     const px = position.x;
@@ -2952,7 +2952,7 @@ class Matrix {
 
     if (isFinite(t.px) || isFinite(t.py)) {
       const origin = new Point(ox, oy).transform(transformer); // TODO: Replace t.px with isFinite(t.px)
-      // Doesnt work because t.px is also 0 if it wasnt passed
+      // Doesn't work because t.px is also 0 if it wasn't passed
 
       const dx = isFinite(t.px) ? t.px - origin.x : 0;
       const dy = isFinite(t.py) ? t.py - origin.y : 0;
@@ -3193,7 +3193,7 @@ registerMethods({
       //                        that means, their clientRect is always as big as the content.
       //                        Furthermore this size is incorrect if the element is further transformed by its parents
       // computedStyle: Only returns meaningful values if css was used with px. We dont go this route here!
-      // getBBox: returns the bounding box of its content - that doesnt help!
+      // getBBox: returns the bounding box of its content - that doesn't help!
       let {
         width,
         height
@@ -3765,11 +3765,18 @@ class Dom extends EventTarget {
   } // Clone element
 
 
-  clone(deep = true) {
+  clone(deep = true, assignNewIds = true) {
     // write dom data to the dom so the clone can pickup the data
-    this.writeDataToDom(); // clone element and assign new id
+    this.writeDataToDom(); // clone element
 
-    return new this.constructor(assignNewId(this.node.cloneNode(deep)));
+    let nodeClone = this.node.cloneNode(deep);
+
+    if (assignNewIds) {
+      // assign new id
+      nodeClone = assignNewId(nodeClone);
+    }
+
+    return new this.constructor(nodeClone);
   } // Iterates over all children and invokes a given block
 
 
@@ -3854,7 +3861,7 @@ class Dom extends EventTarget {
     if (!parent.node.parentNode) return null; // get parent element
 
     parent = adopt(parent.node.parentNode);
-    if (!type) return parent; // loop trough ancestors if type is given
+    if (!type) return parent; // loop through ancestors if type is given
 
     do {
       if (typeof type === 'string' ? parent.matches(type) : parent instanceof type) return parent;
@@ -4578,7 +4585,7 @@ class Gradient extends Container {
   }
 
   targets() {
-    return baseFind('svg [fill*="' + this.id() + '"]');
+    return baseFind('svg [fill*=' + this.id() + ']');
   } // Alias string conversion to fill
 
 
@@ -4600,7 +4607,7 @@ class Gradient extends Container {
 
 
   url() {
-    return 'url("#' + this.id() + '")';
+    return 'url(#' + this.id() + ')';
   }
 
 }
@@ -4639,7 +4646,7 @@ class Pattern extends Container {
   }
 
   targets() {
-    return baseFind('svg [fill*="' + this.id() + '"]');
+    return baseFind('svg [fill*=' + this.id() + ']');
   } // Alias string conversion to fill
 
 
@@ -4661,7 +4668,7 @@ class Pattern extends Container {
 
 
   url() {
-    return 'url("#' + this.id() + '")';
+    return 'url(#' + this.id() + ')';
   }
 
 }
@@ -6455,15 +6462,15 @@ class Timeline extends EventTarget {
 
     this._lastStepTime = this._time;
     this.fire('time', this._time); // This is for the case that the timeline was seeked so that the time
-    // is now before the startTime of the runner. Thats why we need to set
+    // is now before the startTime of the runner. That is why we need to set
     // the runner to position 0
     // FIXME:
-    // However, reseting in insertion order leads to bugs. Considering the case,
+    // However, resetting in insertion order leads to bugs. Considering the case,
     // where 2 runners change the same attribute but in different times,
-    // reseting both of them will lead to the case where the later defined
+    // resetting both of them will lead to the case where the later defined
     // runner always wins the reset even if the other runner started earlier
     // and therefore should win the attribute battle
-    // this can be solved by reseting them backwards
+    // this can be solved by resetting them backwards
 
     for (let k = this._runners.length; k--;) {
       // Get and run the current runner and ignore it if its inactive
@@ -6569,7 +6576,7 @@ class Runner extends EventTarget {
 
     this.enabled = true;
     this._time = 0;
-    this._lastTime = 0; // At creation, the runner is in reseted state
+    this._lastTime = 0; // At creation, the runner is in reset state
 
     this._reseted = true; // Save transforms applied to this runner
 
@@ -6582,7 +6589,7 @@ class Runner extends EventTarget {
     this._swing = false;
     this._wait = 0;
     this._times = 1;
-    this._frameId = null; // Stores how long a runner is stored after beeing done
+    this._frameId = null; // Stores how long a runner is stored after being done
 
     this._persist = this._isDeclarative ? true : null;
   }
@@ -6860,7 +6867,7 @@ class Runner extends EventTarget {
 
 
     const declarative = this._isDeclarative;
-    this.done = !declarative && !justFinished && this._time >= duration; // Runner is running. So its not in reseted state anymore
+    this.done = !declarative && !justFinished && this._time >= duration; // Runner is running. So its not in reset state anymore
 
     this._reseted = false;
     let converged = false; // Call initialise and the run function
@@ -6873,7 +6880,7 @@ class Runner extends EventTarget {
       converged = this._run(declarative ? dt : position);
       this.fire('step', this);
     } // correct the done flag here
-    // declaritive animations itself know when they converged
+    // declarative animations itself know when they converged
 
 
     this.done = this.done || converged && declarative;
@@ -6974,7 +6981,7 @@ class Runner extends EventTarget {
 
   _tryRetarget(method, target, extra) {
     if (this._history[method]) {
-      // if the last method wasnt even initialised, throw it away
+      // if the last method wasn't even initialised, throw it away
       if (!this._history[method].caller.initialised) {
         const index = this._queue.indexOf(this._history[method].caller);
 
@@ -7118,7 +7125,7 @@ registerMethods({
 
     // this function searches for all runners on the element and deletes the ones
     // which run before the current one. This is because absolute transformations
-    // overwfrite anything anyway so there is no need to waste time computing
+    // overwrite anything anyway so there is no need to waste time computing
     // other runners
     _clearTransformRunnersBefore(currentRunner) {
       this._transformationRunners.clearBefore(currentRunner.id);
@@ -7133,7 +7140,7 @@ registerMethods({
 
     _addRunner(runner) {
       this._transformationRunners.add(runner); // Make sure that the runner merge is executed at the very end of
-      // all Animator functions. Thats why we use immediate here to execute
+      // all Animator functions. That is why we use immediate here to execute
       // the merge right after all frames are run
 
 
@@ -7252,7 +7259,7 @@ extend(Runner, {
 
 
     const isMatrix = Matrix.isMatrixLike(transforms);
-    affine = transforms.affine != null ? transforms.affine : affine != null ? affine : !isMatrix; // Create a morepher and set its type
+    affine = transforms.affine != null ? transforms.affine : affine != null ? affine : !isMatrix; // Create a morpher and set its type
 
     const morpher = new Morphable(this._stepper).type(affine ? TransformBag : Matrix);
     let origin;
@@ -7366,7 +7373,7 @@ extend(Runner, {
   },
 
   _queueNumberDelta(method, to) {
-    to = new SVGNumber(to); // Try to change the target if we have this method already registerd
+    to = new SVGNumber(to); // Try to change the target if we have this method already registered
 
     if (this._tryRetarget(method, to)) return this; // Make a morpher and queue the animation
 
@@ -7389,7 +7396,7 @@ extend(Runner, {
   },
 
   _queueObject(method, to) {
-    // Try to change the target if we have this method already registerd
+    // Try to change the target if we have this method already registered
     if (this._tryRetarget(method, to)) return this; // Make a morpher and queue the animation
 
     const morpher = new Morphable(this._stepper).to(to);
@@ -7922,7 +7929,7 @@ class ClipPath extends Container {
   }
 
   targets() {
-    return baseFind('svg [clip-path*="' + this.id() + '"]');
+    return baseFind('svg [clip-path*=' + this.id() + ']');
   }
 
 }
@@ -7943,7 +7950,7 @@ registerMethods({
       // use given clip or create a new one
       const clipper = element instanceof ClipPath ? element : this.parent().clip().add(element); // apply mask
 
-      return this.attr('clip-path', 'url("#' + clipper.id() + '")');
+      return this.attr('clip-path', 'url(#' + clipper.id() + ')');
     },
 
     // Unclip element
@@ -8151,7 +8158,7 @@ class Mask extends Container {
   }
 
   targets() {
-    return baseFind('svg [mask*="' + this.id() + '"]');
+    return baseFind('svg [mask*=' + this.id() + ']');
   }
 
 }
@@ -8171,7 +8178,7 @@ registerMethods({
       // use given mask or create a new one
       const masker = element instanceof Mask ? element : this.parent().mask().add(element); // apply mask
 
-      return this.attr('mask', 'url("#' + masker.id() + '")');
+      return this.attr('mask', 'url(#' + masker.id() + ')');
     },
 
     // Unmask element
@@ -8352,7 +8359,7 @@ registerMethods({
       return baseFind('svg textPath').filter(node => {
         return (node.attr('href') || '').includes(this.id());
       }); // Does not work in IE11. Use when IE support is dropped
-      // return baseFind('svg textPath[*|href*="' + this.id() + '"]')
+      // return baseFind('svg textPath[*|href*=' + this.id() + ']')
     }
 
   }
@@ -8468,7 +8475,7 @@ makeMorphable();
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__(877);
+/******/ 	var __webpack_exports__ = __webpack_require__(170);
 /******/ 	
 /******/ })()
 ;
