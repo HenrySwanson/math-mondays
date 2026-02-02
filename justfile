@@ -14,7 +14,7 @@ assets: typecheck
   rm -Rf content/images
   rm -Rf content/js
   rm -Rf asset-generator/web-bundles
-  cd asset-generator && node dist/index.js && webpack --mode production
+  cd asset-generator && node dist/index.js && npx webpack --mode production
   cp -r asset-generator/static/. content/images
   cp -r asset-generator/web-bundles/. content/js
 
