@@ -106,7 +106,8 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Graphics = exports.startState = void 0;
+exports.Graphics = void 0;
+exports.startState = startState;
 var iter_1 = __webpack_require__(142);
 var matrix_1 = __webpack_require__(405);
 var common_1 = __webpack_require__(943);
@@ -125,7 +126,6 @@ var NUMBER_FONT = { family: "Helvetica, Arial, sans-serif", size: "12pt" };
 function startState(captain) {
     return UpperBoundPhase.start(captain);
 }
-exports.startState = startState;
 var UpperBoundPhase = /** @class */ (function () {
     function UpperBoundPhase(inner) {
         this.inner = inner;
@@ -788,7 +788,8 @@ experiment2.drawEverything();
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Graphics = exports.startState = void 0;
+exports.Graphics = void 0;
+exports.startState = startState;
 var common_1 = __webpack_require__(943);
 var ACTIVE_COLOR = "#ffff00";
 var WANING_COLOR = "#ffcc00";
@@ -805,7 +806,6 @@ var NUMBER_FONT = { family: "Helvetica, Arial, sans-serif", size: "12pt" };
 function startState(captain) {
     return UpperBoundPhase.start(captain);
 }
-exports.startState = startState;
 var UpperBoundPhase = /** @class */ (function () {
     function UpperBoundPhase(inner) {
         this.inner = inner;
@@ -1132,18 +1132,18 @@ exports.Graphics = Graphics;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.zip = exports.max_by = exports.range = void 0;
+exports.range = range;
+exports.max_by = max_by;
+exports.zip = zip;
 function range(a, b) {
     if (b < a) {
         return [];
     }
     return Array(b - a).fill(0).map(function (_, i) { return i + a; });
 }
-exports.range = range;
 function max_by(array, key) {
     return array.reduce(function (a, b) { return key(a) >= key(b) ? a : b; });
 }
-exports.max_by = max_by;
 function zip(ts, us) {
     var len = Math.min(ts.length, us.length);
     var out = [];
@@ -1152,7 +1152,6 @@ function zip(ts, us) {
     }
     return out;
 }
-exports.zip = zip;
 //# sourceMappingURL=iter.js.map
 
 /***/ }),
