@@ -8,4 +8,4 @@ beautifulsoup4==4.11.1
 cssmin==0.2.0
 libsass==0.21.0
 ghp-import==2.1.0
-markdown==3.4.1
+markdown==3.8.1
