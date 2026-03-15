@@ -1,17 +1,17 @@
+# Responsible for building and deploying the static pages that make up
+# the website.
 name: Build and Deploy Site
 
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push events only for the master branch
   push:
-    branches: [ master ]
+    branches: [ '**' ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains one job called "build" and one called "deploy"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -19,35 +19,26 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+
+      - name: Install just
+        run: sudo apt install just
 
       # Set up Node
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: asset-generator/.nvmrc
 
       - name: Install Node packages
         run: |
           cd asset-generator && npm ci
 
-      - name: Clear asset directory
-        run: |
-          rm -Rf content/images
-          rm -Rf content/js
+      - name: Run tests
+        run: just test
 
-      - name: Generate dynamic assets
-        run: |
-          cd asset-generator
-          rm -Rf dist web-bundles
-          tsc
-          node dist/index.js
-          webpack --mode production
-
-      - name: Copy dynamic assets into the site directory
-        run: |
-          cp -r asset-generator/static/. content/images
-          cp -r asset-generator/web-bundles/. content/js
+      - name: Generate assets
+        run: just assets
 
       # Set up Python
       - name: Set up Python
@@ -69,7 +60,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # upload just the output folder
           path: './output'
@@ -77,6 +68,8 @@ jobs:
   # The deploy job
   deploy:
     runs-on: ubuntu-latest
+    # Only deploy if this commit was to master
+    if: ${{ github.ref == 'refs/heads/master' }}
     needs: build
     permissions:
       pages: write
